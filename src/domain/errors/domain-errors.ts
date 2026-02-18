@@ -126,3 +126,127 @@ export class DuplicateFeedbackError extends DomainError {
     );
   }
 }
+
+// Phase 3: Relationship errors
+
+export class UserNotFoundError extends DomainError {
+  constructor(userId: string) {
+    super(`User ${userId} not found`);
+  }
+}
+
+export class SessionAlreadyClaimedError extends DomainError {
+  constructor(sessionId: string) {
+    super(`Session ${sessionId} is already claimed by another user`);
+  }
+}
+
+export class FriendRequestAlreadyExistsError extends DomainError {
+  constructor(requesterId: string, targetId: string) {
+    super(
+      `Pending friend request already exists from ${requesterId} to ${targetId}`,
+    );
+  }
+}
+
+export class CannotFriendSelfError extends DomainError {
+  constructor() {
+    super("Cannot send a friend request to yourself");
+  }
+}
+
+export class UserBlockedError extends DomainError {
+  constructor() {
+    super("Cannot perform this action on a blocked user");
+  }
+}
+
+export class InsufficientDialogueHistoryError extends DomainError {
+  constructor(required: number, actual: number) {
+    super(
+      `At least ${required} completed dialogue(s) required, got ${actual}`,
+    );
+  }
+}
+
+export class FriendshipNotFoundError extends DomainError {
+  constructor(id: string) {
+    super(`Friendship ${id} not found`);
+  }
+}
+
+export class FriendRequestNotFoundError extends DomainError {
+  constructor(id: string) {
+    super(`Friend request ${id} not found`);
+  }
+}
+
+export class FriendRequestAlreadyResolvedError extends DomainError {
+  constructor(id: string, status: string) {
+    super(`Friend request ${id} is already ${status}`);
+  }
+}
+
+export class InvalidDisclosureLevelError extends DomainError {
+  constructor(current: number, requested: number) {
+    super(
+      `Disclosure level can only increase: current ${current}, requested ${requested}`,
+    );
+  }
+}
+
+export class FriendshipNotActiveError extends DomainError {
+  constructor(id: string) {
+    super(`Friendship ${id} is not active`);
+  }
+}
+
+export class RateLimitExceededError extends DomainError {
+  constructor() {
+    super("Rate limit exceeded. Please try again later");
+  }
+}
+
+export class InsufficientDisclosureLevelError extends DomainError {
+  constructor(required: number, actual: number) {
+    super(
+      `Disclosure level ${required} required for this action, current level is ${actual}`,
+    );
+  }
+}
+
+export class DuplicateBlockError extends DomainError {
+  constructor() {
+    super("User is already blocked");
+  }
+}
+
+export class MeetingConditionsNotMetError extends DomainError {
+  constructor(reason: string) {
+    super(`Offline meeting conditions not met: ${reason}`);
+  }
+}
+
+export class MeetingNotFoundError extends DomainError {
+  constructor(id: string) {
+    super(`Meeting proposal ${id} not found`);
+  }
+}
+
+export class MeetingAlreadyResolvedError extends DomainError {
+  constructor(id: string, status: string) {
+    super(`Meeting proposal ${id} is already ${status}`);
+  }
+}
+
+export class AuthRequiredError extends DomainError {
+  constructor() {
+    super("Authentication is required for this action");
+  }
+}
+
+export class FeatureDisabledError extends DomainError {
+  constructor(feature: string) {
+    super(`Feature ${feature} is currently disabled`);
+  }
+}

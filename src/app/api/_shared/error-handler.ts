@@ -10,10 +10,41 @@ import {
   SessionNotCompletedError,
   ExpiredSessionError,
   InvalidDialogueTransitionError,
+  AuthRequiredError,
+  FeatureDisabledError,
+  UserNotFoundError,
+  SessionAlreadyClaimedError,
+  FriendRequestAlreadyExistsError,
+  FriendRequestAlreadyResolvedError,
+  DuplicateBlockError,
+  UserBlockedError,
+  FriendshipNotFoundError,
+  FriendRequestNotFoundError,
+  FriendshipNotActiveError,
+  MeetingNotFoundError,
+  MeetingAlreadyResolvedError,
+  RateLimitExceededError,
 } from "@/domain/errors/domain-errors";
 
 export function handleError(error: unknown): NextResponse {
-  if (error instanceof UnauthorizedParticipantError) {
+  if (error instanceof AuthRequiredError) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 401 },
+    );
+  }
+
+  if (error instanceof FeatureDisabledError) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 404 },
+    );
+  }
+
+  if (
+    error instanceof UserBlockedError ||
+    error instanceof UnauthorizedParticipantError
+  ) {
     return NextResponse.json(
       { error: error.message },
       { status: 403 },
@@ -21,9 +52,24 @@ export function handleError(error: unknown): NextResponse {
   }
 
   if (
+    error instanceof UserNotFoundError ||
+    error instanceof FriendshipNotFoundError ||
+    error instanceof FriendRequestNotFoundError ||
+    error instanceof MeetingNotFoundError
+  ) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 404 },
+    );
+  }
+
+  if (
     error instanceof DuplicateSubmissionError ||
     error instanceof DuplicateProposalError ||
-    error instanceof DuplicateFeedbackError
+    error instanceof DuplicateFeedbackError ||
+    error instanceof FriendRequestAlreadyExistsError ||
+    error instanceof SessionAlreadyClaimedError ||
+    error instanceof DuplicateBlockError
   ) {
     return NextResponse.json(
       { error: error.message },
@@ -31,8 +77,18 @@ export function handleError(error: unknown): NextResponse {
     );
   }
 
+  if (error instanceof RateLimitExceededError) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 429 },
+    );
+  }
+
   if (
     error instanceof ProposalAlreadyResolvedError ||
+    error instanceof FriendRequestAlreadyResolvedError ||
+    error instanceof MeetingAlreadyResolvedError ||
+    error instanceof FriendshipNotActiveError ||
     error instanceof SessionNotActiveError ||
     error instanceof SessionNotCompletedError ||
     error instanceof ExpiredSessionError ||

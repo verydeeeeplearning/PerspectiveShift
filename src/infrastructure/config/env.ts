@@ -20,6 +20,10 @@ const EnvSchema = z.object({
     .enum(["true", "false"])
     .optional()
     .default("true"),
+  FEATURE_RELATIONSHIP: z
+    .enum(["true", "false"])
+    .optional()
+    .default("false"),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
