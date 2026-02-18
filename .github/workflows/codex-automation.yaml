@@ -1,0 +1,103 @@
+name: Codex Automation
+
+on:
+  # PR 생성/업데이트 시 자동 코드 리뷰
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+  # Issue/PR 댓글에서 @codex 멘션 시 실행
+  issue_comment:
+    types: [created]
+
+  # CI 실패 시 자동 수정 시도
+  workflow_run:
+    workflows: ["Agent Verification"]
+    types: [completed]
+
+jobs:
+  # PR 코드 리뷰
+  review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Codex Review
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: |
+            Review this pull request. Focus on:
+            - Clean Architecture dependency rule violations
+            - TypeScript type safety issues
+            - Test coverage gaps
+            - Security concerns (PII leaks, injection)
+            Post a clear, actionable review comment.
+          sandbox: read-only
+
+  # @codex 멘션 응답
+  mention:
+    if: >
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.body, '@codex')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Codex Task
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          sandbox: workspace-write
+
+  # CI 실패 시 자동 수정
+  autofix:
+    if: >
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.head_branch != 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Codex Autofix
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: |
+            The CI pipeline failed on this branch. Run the following to identify failures:
+            1. pnpm lint
+            2. pnpm test
+            3. pnpm build
+            Fix the issues and commit the changes.
+          sandbox: workspace-write

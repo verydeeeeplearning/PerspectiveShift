@@ -40,6 +40,9 @@ Thumbs.db
 
 # testing
 coverage/
+test-results/
+*.junit.xml
+vitest.timestamp-*
 
 # vercel
 .vercel
