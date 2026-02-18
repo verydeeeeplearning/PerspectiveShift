@@ -75,7 +75,8 @@ export function getContainer(): Container {
 
   const piiScrubber = new RegexPiiScrubber();
   const openaiKey = process.env.OPENAI_API_KEY;
-  const llmExtractor = openaiKey
+  const hasValidKey = openaiKey && !openaiKey.includes("your-") && openaiKey.length > 20;
+  const llmExtractor = hasValidKey
     ? new OpenAiStanceExtractor(openaiKey)
     : createFallbackExtractor();
   const baselineProvider = new KgssBaselineProvider();
@@ -89,10 +90,10 @@ export function getContainer(): Container {
   const feedbackRepository = new SupabaseFeedbackRepository(supabase);
 
   // Phase 2 LLM adapters (with fallbacks)
-  const facilitator = openaiKey
+  const facilitator = hasValidKey
     ? new OpenAiFacilitator(openaiKey)
     : new FallbackFacilitator();
-  const summaryGenerator = openaiKey
+  const summaryGenerator = hasValidKey
     ? new OpenAiSummaryGenerator(openaiKey)
     : new FallbackSummaryGenerator();
 

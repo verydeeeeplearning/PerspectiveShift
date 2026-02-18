@@ -16,7 +16,7 @@ export function ProposalCard({ candidate, onPropose }: ProposalCardProps) {
     >
       <div className="flex justify-between items-start mb-3">
         <div>
-          <span className="text-sm text-gray-500">의견 거리</span>
+          <span className="text-sm text-gray-500">생각의 차이</span>
           <p className="font-medium">
             {(candidate.distance * 100).toFixed(0)}%
           </p>
