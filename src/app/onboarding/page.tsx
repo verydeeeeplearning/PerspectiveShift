@@ -60,6 +60,14 @@ export default function OnboardingPage() {
     }
   }, [result, router]);
 
+  useEffect(() => {
+    if (result) {
+      router.push(
+        `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
+      );
+    }
+  }, [result, router]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -72,14 +80,6 @@ export default function OnboardingPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (result) {
-      router.push(
-        `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
-      );
-    }
-  }, [result, router]);
 
   if (result) {
     return null;
