@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "text": "AI 기술 발전에 대한 정부의 규제가 더 강화되어야 한다",
+    "type": "OX",
+    "dimension": "TECH_REGULATION",
+    "phase": "core",
+    "polarity": 1
+  },
+  {
+    "id": 2,
+    "text": "고소득자의 세금을 높여 복지를 확대해야 한다",
+    "type": "OX",
+    "dimension": "REDISTRIBUTION",
+    "phase": "core",
+    "polarity": 1
+  },
+  {
+    "id": 3,
+    "text": "개인의 경제적 성공은 주로 본인의 노력에 달려 있다",
+    "type": "OX",
+    "dimension": "MERITOCRACY",
+    "phase": "core",
+    "polarity": 1
+  },
+  {
+    "id": 4,
+    "text": "회사가 야근을 완전히 금지해야 한다",
+    "type": "RUBRIC",
+    "dimension": "WORK_LIFE",
+    "phase": "core",
+    "polarity": 1
+  },
+  {
+    "id": 5,
+    "text": "AI가 일자리를 빼앗기보다 더 많은 기회를 만들 것이다",
+    "type": "RUBRIC",
+    "dimension": "TECH_OPTIMISM",
+    "phase": "core",
+    "polarity": 1
+  },
+  {
+    "id": 6,
+    "text": "대학 입시에서 지역·소득 기반 정원 할당이 필요하다",
+    "type": "OX",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "phase": "extended",
+    "polarity": 1
+  },
+  {
+    "id": 7,
+    "text": "개인 데이터 활용은 편의성보다 프라이버시 보호가 우선이다",
+    "type": "RUBRIC",
+    "dimension": "TECH_REGULATION",
+    "phase": "extended",
+    "polarity": 1
+  },
+  {
+    "id": 8,
+    "text": "기본소득제 도입이 필요하다",
+    "type": "RUBRIC",
+    "dimension": "REDISTRIBUTION",
+    "phase": "extended",
+    "polarity": 1
+  },
+  {
+    "id": 9,
+    "text": "한국 사회에서 가장 시급하게 바꿔야 할 것은 무엇인가요?",
+    "type": "OPEN_ENDED",
+    "dimension": "TECH_REGULATION",
+    "phase": "extended",
+    "polarity": 1
+  },
+  {
+    "id": 10,
+    "text": "나와 다른 생각을 가진 사람과 대화할 때 가장 중요한 것은 무엇인가요?",
+    "type": "OPEN_ENDED",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "phase": "extended",
+    "polarity": 1
+  }
+]
