@@ -36,6 +36,9 @@ export class Answer {
   }
 
   static openEnded(questionId: number, text: string): Answer {
+    if (text.trim().length === 0) {
+      throw new Error("Open-ended answer cannot be empty");
+    }
     return new Answer(questionId, text.trim(), new Date());
   }
 
