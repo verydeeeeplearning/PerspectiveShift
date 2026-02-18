@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "=== [memory-review] Memory → Invariant Promotion Review ==="
+echo ""
+
+if [ ! -f .claude/memory/global.md ]; then
+  echo "[memory-review] No global memory file found. Nothing to review."
+  exit 0
+fi
+
+echo "[memory-review] Current global memory entries:"
+echo ""
+
+count=$(grep -c '^### \[' .claude/memory/global.md 2>/dev/null || echo "0")
+echo "  Total entries: $count"
+
+unpromoted=$(grep -c '승격 여부: 미승격' .claude/memory/global.md 2>/dev/null || echo "0")
+echo "  Unpromoted entries: $unpromoted"
+
+if [ "$unpromoted" -gt 0 ]; then
+  echo ""
+  echo "[memory-review] TIP: If a correction appears 2+ times, consider promoting to .claude/invariants/"
+fi
+
+echo ""
+echo "=== [memory-review] Review complete ==="

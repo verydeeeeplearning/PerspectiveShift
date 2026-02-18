@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "=== [doc-sync] Document Synchronization Check ==="
+echo ""
+
+issues=0
+
+# --- 1) Required governance files ---
+echo "[doc-sync] Checking governance files..."
+for f in AGENTS.md ARCHITECTURE.md CONSTITUTION.md POLICIES.md PROTOCOL.md PR_POLICY.md; do
+  if [ ! -e "$f" ]; then
+    echo "  ✗ Required file missing: $f"
+    issues=$((issues + 1))
+  fi
+done
+
+# --- 2) Front-matter 검증 ---
+echo ""
+echo "[doc-sync] Checking front-matter in governance docs..."
+for f in CONSTITUTION.md POLICIES.md PROTOCOL.md PR_POLICY.md; do
+  if [ -f "$f" ]; then
+    if ! head -5 "$f" | grep -q "status:"; then
+      echo "  ⚠ Missing front-matter 'status' in: $f"
+    fi
+    if ! head -10 "$f" | grep -q "last_reviewed:"; then
+      echo "  ⚠ Missing front-matter 'last_reviewed' in: $f"
+    fi
+  fi
+done
+
+echo ""
+echo "=== [doc-sync] Check complete (issues: $issues) ==="

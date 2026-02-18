@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "[fmt] Running formatter..."
+
+if [ -f package.json ] && grep -q '"format"' package.json 2>/dev/null; then
+  pnpm run format
+elif [ -f package.json ] && grep -q '"prettier"' package.json 2>/dev/null; then
+  pnpm exec prettier --write "src/**/*.{ts,tsx,js,jsx,json,css,md}"
+elif [ -f node_modules/.bin/prettier ]; then
+  pnpm exec prettier --write "src/**/*.{ts,tsx,js,jsx,json,css,md}"
+else
+  echo "[fmt] No formatter configured yet. Skipping."
+  echo "[fmt] → After 'pnpm install', prettier will be available."
+fi

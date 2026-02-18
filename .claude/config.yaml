@@ -1,0 +1,36 @@
+# Agent Configuration — PerspectiveShift
+
+project:
+  name: "PerspectiveShift"
+  description: "LLM Agent 기반 구조화된 대화 플랫폼"
+  domain: "civic-tech"
+
+tech_stack:
+  language: "TypeScript"
+  framework: "Next.js (App Router)"
+  package_manager: "pnpm"
+  test_framework: "vitest"
+  lint_tool: "eslint"
+  database: "Supabase (PostgreSQL)"
+  llm_provider: "OpenAI"
+  llm_model: "gpt-5-mini"
+  agent_framework: "LangGraph"
+  agent_monitoring: "LangSmith"
+
+agent:
+  type: "Claude Code"
+  autonomy_level: "medium"
+
+workflow:
+  require_spec_before_implementation: true
+  require_eval_with_new_feature: true
+  require_pr_template: true
+
+verification:
+  max_retry_on_failure: 3
+  escalate_after_retries: true
+  before_after_verification: true
+
+entropy_management:
+  gardening_frequency: "weekly"
+  memory_promotion_review: "weekly"

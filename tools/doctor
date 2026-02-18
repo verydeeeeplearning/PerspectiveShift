@@ -1,0 +1,98 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "=== [doctor] Environment Health Check ==="
+echo ""
+
+errors=0
+warnings=0
+
+# --- 1) Required governance files ---
+echo "[doctor] Checking governance files..."
+for f in AGENTS.md ARCHITECTURE.md CONSTITUTION.md POLICIES.md PROTOCOL.md PR_POLICY.md; do
+  if [ ! -e "$f" ]; then
+    echo "  ✗ MISSING: $f"
+    errors=$((errors + 1))
+  else
+    echo "  ✓ $f"
+  fi
+done
+
+# --- 2) Required spec/doc files ---
+echo ""
+echo "[doctor] Checking specs and docs..."
+for f in specs/environment.spec.md specs/constitution.md evals/README.md evals/eval-config.yaml docs/_meta/doc-conventions.md docs/plans/README.md; do
+  if [ ! -e "$f" ]; then
+    echo "  ✗ MISSING: $f"
+    errors=$((errors + 1))
+  else
+    echo "  ✓ $f"
+  fi
+done
+
+# --- 3) Required tools ---
+echo ""
+echo "[doctor] Checking standard entrypoints..."
+for f in tools/bootstrap tools/doctor tools/fmt tools/lint tools/test tools/ci; do
+  if [ ! -e "$f" ]; then
+    echo "  ✗ MISSING: $f"
+    echo "    → Fix: create the file and run: chmod +x $f"
+    errors=$((errors + 1))
+  else
+    echo "  ✓ $f"
+  fi
+done
+
+# --- 4) Agent config ---
+echo ""
+echo "[doctor] Checking agent config (.claude/)..."
+for f in .claude/config.yaml .claude/invariants/architecture.yaml .claude/invariants/naming.yaml .claude/invariants/quality.yaml; do
+  if [ ! -e "$f" ]; then
+    echo "  ✗ MISSING: $f"
+    errors=$((errors + 1))
+  else
+    echo "  ✓ $f"
+  fi
+done
+
+# --- 5) Stack detection ---
+echo ""
+echo "[doctor] Stack detection..."
+if [ -f package.json ]; then
+  echo "  ✓ Detected: Node.js (package.json)"
+  if [ -f pnpm-lock.yaml ]; then echo "    Package manager: pnpm"; fi
+  if [ -f yarn.lock ]; then echo "    Package manager: yarn"; fi
+  if [ -f package-lock.json ]; then echo "    Package manager: npm"; fi
+
+  if command -v node >/dev/null 2>&1; then
+    echo "    Node.js: $(node --version)"
+  else
+    echo "    ⚠ Node.js not found in PATH"
+    warnings=$((warnings + 1))
+  fi
+
+  if command -v pnpm >/dev/null 2>&1; then
+    echo "    pnpm: $(pnpm --version)"
+  else
+    echo "    ⚠ pnpm not found — install: npm install -g pnpm"
+    warnings=$((warnings + 1))
+  fi
+else
+  echo "  ⚠ No package.json found. Run ./tools/bootstrap to initialize."
+  warnings=$((warnings + 1))
+fi
+
+# --- Summary ---
+echo ""
+echo "=== [doctor] Summary ==="
+echo "  Errors:   $errors"
+echo "  Warnings: $warnings"
+
+if [ "$errors" -ne 0 ]; then
+  echo ""
+  echo "[doctor] FAIL: $errors issue(s) found. Fix the items marked ✗ above."
+  exit 2
+fi
+
+echo ""
+echo "[doctor] OK — all checks passed."

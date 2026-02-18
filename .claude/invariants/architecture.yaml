@@ -1,0 +1,72 @@
+# Architecture Invariants — PerspectiveShift
+
+invariants:
+
+  - id: "arch-001"
+    name: "의존성 방향 강제"
+    rule: |
+      의존성은 다음 방향으로만 허용된다:
+      Domain → Application → Infrastructure → Presentation
+      역방향 의존성은 금지된다.
+    enforcement: "lint"
+    severity: "error"
+    error_message: |
+      [ARCH-001] 역방향 의존성 감지: {{source_layer}} → {{target_layer}}
+      교정: 의존성을 역전하려면 인터페이스/프로토콜을 사용하세요.
+      참조: ARCHITECTURE.md의 "레이어 구조" 섹션
+
+  - id: "arch-002"
+    name: "교차 관심사는 Providers를 통해 진입"
+    rule: |
+      인증, 로깅, LLM 호출, 모니터링 등 교차 관심사는
+      Providers 인터페이스를 통해서만 비즈니스 로직에 진입한다.
+    enforcement: "lint"
+    severity: "error"
+    error_message: |
+      [ARCH-002] 교차 관심사의 직접 import 감지
+      교정: Providers 인터페이스를 통해 주입하세요.
+
+  - id: "arch-003"
+    name: "경계에서 데이터 파싱"
+    rule: |
+      외부에서 들어오는 모든 데이터는 모듈 경계에서 스키마 검증/파싱한다.
+      검증되지 않은 외부 데이터를 내부 로직에 전달하지 않는다.
+    enforcement: "review"
+    severity: "warning"
+    error_message: |
+      [ARCH-003] 외부 데이터가 검증 없이 내부로 전달됨
+      교정: 모듈 진입점에서 스키마 검증을 추가하세요 (zod 등).
+
+  - id: "arch-004"
+    name: "파일 크기 제한"
+    rule: |
+      단일 소스 파일은 300줄을 초과하지 않는다. 초과 시 모듈 분리.
+    enforcement: "lint"
+    severity: "warning"
+    error_message: |
+      [ARCH-004] 파일이 300줄을 초과합니다 (현재: {{line_count}}줄)
+      교정: 책임을 분리하여 여러 모듈로 나누세요.
+
+  - id: "arch-005"
+    name: "Identity-Stance-Dialogue 데이터 분리"
+    rule: |
+      Identity, Stance, Dialogue 도메인 데이터는 논리적으로 분리한다.
+      매칭 엔진은 anonymized stance vector만 접근 가능하며,
+      identity 테이블과 직접 JOIN하지 않는다.
+    enforcement: "review"
+    severity: "error"
+    error_message: |
+      [ARCH-005] 데이터 도메인 경계 위반 감지
+      교정: 매칭 엔진은 stance 데이터만 접근하세요. Identity 직접 접근 금지.
+      참조: ARCHITECTURE.md의 "데이터 분리 원칙" 섹션
+
+  - id: "arch-006"
+    name: "LLM 호출 전 PII Scrubbing 필수"
+    rule: |
+      사용자 생성 텍스트가 LLM API로 전송되기 전
+      반드시 PII Scrubbing 파이프라인을 거친다.
+    enforcement: "review"
+    severity: "error"
+    error_message: |
+      [ARCH-006] PII Scrubbing 없이 LLM API 호출 감지
+      교정: PII Scrubber를 거친 후 LLM API를 호출하세요.

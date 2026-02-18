@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "=== [bootstrap] PerspectiveShift Project Setup ==="
+echo ""
+echo "[bootstrap] NOTE: This script requires network access."
+echo ""
+
+# Check if pnpm is installed
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "[bootstrap] ERROR: pnpm not found."
+  echo "  → Install: npm install -g pnpm"
+  echo "  → Or: corepack enable && corepack prepare pnpm@latest --activate"
+  exit 1
+fi
+
+echo "[bootstrap] pnpm found: $(pnpm --version)"
+
+# Install dependencies
+if [ -f pnpm-lock.yaml ] || [ -f package.json ]; then
+  echo "[bootstrap] Running: pnpm install"
+  pnpm install
+else
+  echo "[bootstrap] No package.json found."
+  echo "  → Run 'pnpm create next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias @/*' to initialize"
+  exit 0
+fi
+
+echo ""
+echo "[bootstrap] Done."

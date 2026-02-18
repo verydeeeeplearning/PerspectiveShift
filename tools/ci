@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "=== [ci] Running full verification pipeline ==="
+echo ""
+
+echo "[ci] Step 1/4: fmt..."
+./tools/fmt
+echo ""
+
+echo "[ci] Step 2/4: lint..."
+./tools/lint
+echo ""
+
+echo "[ci] Step 3/4: test..."
+./tools/test
+echo ""
+
+if [ -x ./tools/build ]; then
+  echo "[ci] Step 4/4: build..."
+  ./tools/build
+  echo ""
+else
+  echo "[ci] Step 4/4: build... (skipped: ./tools/build not present)"
+  echo ""
+fi
+
+echo "=== [ci] OK — all checks passed ==="

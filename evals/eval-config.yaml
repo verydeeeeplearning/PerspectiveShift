@@ -1,0 +1,22 @@
+# Eval Configuration — PerspectiveShift
+
+eval_pipeline:
+  runner: "vitest"
+  golden_dir: "evals/golden/"
+  regression_dir: "evals/regression/"
+
+  triggers:
+    - "PR 생성 시"
+    - "main 브랜치 머지 시"
+
+failure_policy:
+  golden_failure: "block_merge"
+  regression_failure: "block_merge"
+  new_failure_action: "create_regression_case"
+
+promotion:
+  auto_promote_fixed_bugs: true
+
+case_format:
+  required_fields: ["id", "description", "input", "expected_behavior"]
+  optional_fields: ["acceptable_variations", "pass_criteria", "tags"]

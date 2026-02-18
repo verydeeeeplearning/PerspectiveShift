@@ -1,0 +1,40 @@
+# Naming Invariants — PerspectiveShift
+
+invariants:
+
+  - id: "name-001"
+    name: "파일 네이밍 규칙"
+    rule: |
+      - 소스 파일: kebab-case (예: user-service.ts)
+      - 테스트 파일: 소스파일명.test.ts (예: user-service.test.ts)
+      - React 컴포넌트: PascalCase (예: UserProfile.tsx)
+      - API Route: kebab-case 디렉토리 (예: api/onboarding/route.ts)
+    enforcement: "lint"
+    severity: "warning"
+    error_message: |
+      [NAME-001] 파일명이 네이밍 규칙을 위반합니다: {{filename}}
+      교정: kebab-case(일반 파일) 또는 PascalCase(컴포넌트)를 사용하세요.
+
+  - id: "name-002"
+    name: "타입/인터페이스 네이밍"
+    rule: |
+      - 타입/인터페이스: PascalCase
+      - I 접두사 사용하지 않음 (IUser ✗ → User ✓)
+      - 열거형: PascalCase, 멤버는 UPPER_SNAKE_CASE
+    enforcement: "lint"
+    severity: "warning"
+    error_message: |
+      [NAME-002] 타입/인터페이스 네이밍 규칙 위반: {{identifier}}
+      교정: PascalCase를 사용하고, I 접두사를 제거하세요.
+
+  - id: "name-003"
+    name: "함수/변수 네이밍"
+    rule: |
+      - 함수/메서드: camelCase
+      - 상수: UPPER_SNAKE_CASE
+      - 불리언: is_, has_, can_, should_ 접두사 권장
+    enforcement: "lint"
+    severity: "info"
+    error_message: |
+      [NAME-003] 함수/변수 네이밍 관례 불일치: {{identifier}}
+      교정: TypeScript 관례(camelCase)를 따르세요.

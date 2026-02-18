@@ -1,0 +1,47 @@
+# Quality Invariants — PerspectiveShift
+
+invariants:
+
+  - id: "qual-001"
+    name: "테스트 커버리지 요구사항"
+    rule: |
+      - 새 비즈니스 로직(Application/Domain 레이어)은 테스트를 동반
+      - 유틸리티 함수는 반드시 단위 테스트 보유
+    enforcement: "review"
+    severity: "error"
+    error_message: |
+      [QUAL-001] 새 비즈니스 로직에 테스트가 없습니다
+      교정: 해당 모듈의 테스트 파일을 생성하고 핵심 경로를 테스트하세요.
+
+  - id: "qual-002"
+    name: "구조화된 로깅"
+    rule: |
+      console.log 같은 비구조화 로깅 금지.
+      프로젝트의 구조화된 로거를 사용하라.
+    enforcement: "lint"
+    severity: "warning"
+    error_message: |
+      [QUAL-002] 비구조화 로깅 감지: {{statement}}
+      교정: 프로젝트의 구조화된 로거를 사용하세요.
+
+  - id: "qual-003"
+    name: "에러 처리"
+    rule: |
+      - 빈 catch 블록 금지
+      - 에러는 삼키지 않고, 로깅하거나 상위로 전파
+    enforcement: "lint"
+    severity: "error"
+    error_message: |
+      [QUAL-003] 빈 catch 블록 또는 에러 삼키기 감지
+      교정: 에러를 로깅하거나 상위로 전파하세요.
+
+  - id: "qual-004"
+    name: "TODO/FIXME 관리"
+    rule: |
+      - TODO 주석은 관련 이슈 번호 포함 (예: // TODO(#123): ...)
+      - HACK 주석은 이유와 해결 시점 포함
+    enforcement: "review"
+    severity: "info"
+    error_message: |
+      [QUAL-004] TODO/FIXME에 이슈 번호가 없습니다: {{comment}}
+      교정: 관련 이슈를 생성하고 번호를 추가하세요.
