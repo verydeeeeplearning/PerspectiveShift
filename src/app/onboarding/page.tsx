@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingFlow, type AnswerMap } from "./components/OnboardingFlow";
 import { calculateStance } from "./actions";
@@ -73,10 +73,15 @@ export default function OnboardingPage() {
     );
   }
 
+  useEffect(() => {
+    if (result) {
+      router.push(
+        `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
+      );
+    }
+  }, [result, router]);
+
   if (result) {
-    router.push(
-      `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
-    );
     return null;
   }
 
