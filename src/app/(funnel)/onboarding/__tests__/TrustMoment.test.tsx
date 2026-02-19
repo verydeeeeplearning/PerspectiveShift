@@ -10,13 +10,13 @@ describe("TrustMoment", () => {
       screen.getByText("당신의 생각은 안전합니다"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("✓ 닉네임만 사용, 실명 비공개"),
+      screen.getByText("닉네임만 사용, 실명 비공개"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("✓ 답변 원문은 분석 후 즉시 삭제"),
+      screen.getByText("답변 원문은 분석 후 즉시 삭제"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("✓ 언제든 모든 데이터 삭제 가능"),
+      screen.getByText("언제든 모든 데이터 삭제 가능"),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "시작하기" })).toBeInTheDocument();
   });

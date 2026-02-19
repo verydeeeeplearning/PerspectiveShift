@@ -72,10 +72,10 @@ export default function OnboardingPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
-          <p className="text-lg text-gray-600">
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-border-soft border-t-indigo-depth" />
+          <p className="text-base text-text-secondary">
             Thought Map을 생성하고 있습니다...
           </p>
         </div>
@@ -89,17 +89,22 @@ export default function OnboardingPage() {
 
   if (!hasSeenTrustMoment) {
     return (
-      <main className="mx-auto flex max-w-2xl flex-col px-4 py-8">
+      <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
         <TrustMoment onProceed={() => setHasSeenTrustMoment(true)} />
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex max-w-2xl flex-col px-4 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold">나의 생각 발견하기</h1>
-        <p className="mt-2 text-gray-600">
+    <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
+      <div className="mb-8 space-y-2">
+        <span className="text-[11px] font-semibold tracking-widest uppercase text-text-secondary">
+          입장 탐색
+        </span>
+        <h1 className="text-2xl font-bold font-heading text-text-primary tracking-[-0.02em]">
+          나의 생각 발견하기
+        </h1>
+        <p className="text-sm text-text-secondary leading-relaxed">
           몇 가지 질문에 답하고, 나만의 Thought Map을 확인하세요
         </p>
       </div>

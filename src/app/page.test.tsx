@@ -20,13 +20,13 @@ describe("Home Page", () => {
   it("renders the main heading", () => {
     render(<Home />);
     expect(
-      screen.getByRole("heading", { name: /PerspectiveShift/i }),
+      screen.getByRole("heading", { name: /새로운 관점을/i }),
     ).toBeInTheDocument();
   });
 
   it("renders the description text", () => {
     render(<Home />);
-    expect(screen.getByText(/다양한 관점을 연결하는/)).toBeInTheDocument();
+    expect(screen.getByText(/안전하고 구조화된 대화를 통해/)).toBeInTheDocument();
   });
 
   it("renders CTA button for onboarding", () => {
