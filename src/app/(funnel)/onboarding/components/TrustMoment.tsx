@@ -63,12 +63,7 @@ export function TrustMoment({ onProceed, onEvent }: TrustMomentProps) {
   };
 
   return (
-    <section className="mx-auto w-full max-w-xl space-y-8" aria-label="신뢰 안내">
-      {/* Section Label */}
-      <span className="block text-[11px] font-semibold tracking-widest uppercase text-text-secondary">
-        시작하기
-      </span>
-
+    <section className="mx-auto w-full max-w-xl space-y-8 text-center" aria-label="신뢰 안내">
       {/* Hero Title */}
       <h2 className="text-[32px] leading-[1.2] font-bold font-heading text-text-primary tracking-[-0.02em]">
         당신의 관점을
@@ -83,14 +78,14 @@ export function TrustMoment({ onProceed, onEvent }: TrustMomentProps) {
 
       {/* Trust Checklist */}
       <PaperCard padding="spacious">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
+        <div className="space-y-4 text-left">
+          <div className="flex items-center gap-2 justify-center">
             <span aria-hidden>🔒</span>
             <h3 className="text-base font-semibold text-text-primary">
               당신의 생각은 안전합니다
             </h3>
           </div>
-          <ul className="space-y-2 text-sm text-text-secondary">
+          <ul className="space-y-2 text-sm text-text-secondary inline-block text-left">
             <li className="flex items-start gap-2">
               <span className="text-status-safety mt-0.5">✓</span>
               <span>닉네임만 사용, 실명 비공개</span>

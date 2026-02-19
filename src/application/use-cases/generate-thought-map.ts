@@ -36,17 +36,21 @@ export class GenerateThoughtMapUseCase {
       precision: stanceResult.precision,
     });
 
-    await this.deps.stanceRepository.save({
-      id: crypto.randomUUID(),
-      sessionId: stanceResult.sessionId,
-      vector,
-      mapType: thoughtMap.mapType.name,
-      reasoning: stanceResult.reasoning,
-      readiness: stanceResult.readiness,
-      precision: stanceResult.precision,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    try {
+      await this.deps.stanceRepository.save({
+        id: crypto.randomUUID(),
+        sessionId: stanceResult.sessionId,
+        vector,
+        mapType: thoughtMap.mapType.name,
+        reasoning: stanceResult.reasoning,
+        readiness: stanceResult.readiness,
+        precision: stanceResult.precision,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    } catch {
+      // DB save is best-effort; Thought Map result is still returned
+    }
 
     const baseline = this.deps.baselineProvider.getBaseline();
 
