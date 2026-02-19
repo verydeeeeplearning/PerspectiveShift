@@ -2,6 +2,8 @@ export interface FeedbackOutput {
   id: string;
   sessionId: string;
   satisfaction: number;
+  feelHeardScore: number;
+  affectiveWarmth: number;
   rematchWillingness: boolean;
   emotionCheckIn: string | null;
   createdAt: string;

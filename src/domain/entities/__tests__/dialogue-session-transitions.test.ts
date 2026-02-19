@@ -29,7 +29,7 @@ function makeSession(overrides: Partial<{
 
 function turn(
   participantId: string,
-  step: "POSITION" | "QUESTION" | "ANSWER" | "REFLECTION",
+  step: "AFFIRMATION" | "POSITION" | "QUESTION" | "ANSWER" | "REFLECTION" | "JOINT_SUMMARY",
   content = "test content",
 ) {
   turnCounter++;
@@ -45,13 +45,14 @@ function turn(
 
 function advanceToStep(
   session: DialogueSession,
-  targetStep: "QUESTION" | "ANSWER" | "REFLECTION",
+  targetStep: "QUESTION" | "ANSWER" | "REFLECTION" | "JOINT_SUMMARY",
 ) {
-  const steps: Array<"POSITION" | "QUESTION" | "ANSWER" | "REFLECTION"> = [
+  const steps: Array<"POSITION" | "QUESTION" | "ANSWER" | "REFLECTION" | "JOINT_SUMMARY"> = [
     "POSITION",
     "QUESTION",
     "ANSWER",
     "REFLECTION",
+    "JOINT_SUMMARY",
   ];
   const targetIdx = steps.indexOf(targetStep);
 
@@ -62,8 +63,8 @@ function advanceToStep(
 }
 
 describe("DialogueSession State Machine - Deep Tests", () => {
-  describe("Happy Path: POSITION → QUESTION → ANSWER → REFLECTION → COMPLETED", () => {
-    it("progresses through all 4 steps to completion", () => {
+  describe("Happy Path: POSITION → QUESTION → ANSWER → REFLECTION → JOINT_SUMMARY → COMPLETED", () => {
+    it("progresses through all steps to completion", () => {
       const s = makeSession();
 
       s.submitTurn(turn("alice", "POSITION", "My position..."));
@@ -83,15 +84,19 @@ describe("DialogueSession State Machine - Deep Tests", () => {
       expect(s.currentStep).toBe("REFLECTION");
 
       s.submitTurn(turn("bob", "REFLECTION", "I learned..."));
+      expect(s.currentStep).toBe("JOINT_SUMMARY");
+
+      s.submitTurn(turn("alice", "JOINT_SUMMARY", "We agreed..."));
+      s.submitTurn(turn("bob", "JOINT_SUMMARY", "Summary..."));
       expect(s.status).toBe("COMPLETED");
     });
 
-    it("accumulates 8 turns total", () => {
+    it("accumulates 10 turns total", () => {
       const s = makeSession();
-      advanceToStep(s, "REFLECTION");
-      s.submitTurn(turn("alice", "REFLECTION"));
-      s.submitTurn(turn("bob", "REFLECTION"));
-      expect(s.turns).toHaveLength(8);
+      advanceToStep(s, "JOINT_SUMMARY");
+      s.submitTurn(turn("alice", "JOINT_SUMMARY"));
+      s.submitTurn(turn("bob", "JOINT_SUMMARY"));
+      expect(s.turns).toHaveLength(10);
     });
   });
 
@@ -174,9 +179,9 @@ describe("DialogueSession State Machine - Deep Tests", () => {
 
     it("throws SessionNotActiveError for completed session", () => {
       const s = makeSession();
-      advanceToStep(s, "REFLECTION");
-      s.submitTurn(turn("alice", "REFLECTION"));
-      s.submitTurn(turn("bob", "REFLECTION"));
+      advanceToStep(s, "JOINT_SUMMARY");
+      s.submitTurn(turn("alice", "JOINT_SUMMARY"));
+      s.submitTurn(turn("bob", "JOINT_SUMMARY"));
       expect(() =>
         s.submitTurn(turn("alice", "POSITION")),
       ).toThrow(SessionNotActiveError);

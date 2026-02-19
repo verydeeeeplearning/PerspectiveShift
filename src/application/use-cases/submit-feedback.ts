@@ -25,6 +25,8 @@ export class SubmitFeedbackUseCase {
     satisfaction: number,
     rematchWillingness: boolean,
     emotionCheckIn: string | null,
+    feelHeardScore: number = 3,
+    affectiveWarmth: number = 5,
   ): Promise<FeedbackOutput> {
     const session =
       await this.deps.dialogueRepository.findSessionById(sessionId);
@@ -48,6 +50,8 @@ export class SubmitFeedbackUseCase {
       sessionId,
       participantId,
       satisfaction,
+      feelHeardScore,
+      affectiveWarmth,
       rematchWillingness,
       emotionCheckIn,
       createdAt: new Date(),
@@ -59,6 +63,8 @@ export class SubmitFeedbackUseCase {
       id: feedback.id,
       sessionId: feedback.sessionId,
       satisfaction: feedback.satisfaction,
+      feelHeardScore: feedback.feelHeardScore,
+      affectiveWarmth: feedback.affectiveWarmth,
       rematchWillingness: feedback.rematchWillingness,
       emotionCheckIn: feedback.emotionCheckIn,
       createdAt: feedback.createdAt.toISOString(),

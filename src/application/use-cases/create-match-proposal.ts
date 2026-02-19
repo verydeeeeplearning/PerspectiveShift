@@ -24,6 +24,7 @@ export class CreateMatchProposalUseCase {
   async execute(
     initiatorSessionId: string,
     targetSessionId: string,
+    options?: { topicLevel?: number; effortGrade?: string; facilitatorIntensity?: string },
   ): Promise<MatchProposalOutput> {
     const existing =
       await this.deps.matchRepository.findPendingProposal(
@@ -81,6 +82,9 @@ export class CreateMatchProposalUseCase {
       targetSessionId: proposal.targetSessionId,
       score: proposal.score.value,
       status: proposal.status,
+      topicLevel: options?.topicLevel,
+      effortGrade: options?.effortGrade,
+      facilitatorIntensity: options?.facilitatorIntensity,
       expiresAt: proposal.expiresAt.toISOString(),
       createdAt: proposal.createdAt.toISOString(),
     };

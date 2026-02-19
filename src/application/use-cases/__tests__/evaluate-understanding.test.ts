@@ -20,7 +20,7 @@ function makeCompletedSession() {
     updatedAt: now,
     lastActivityAt: now,
   });
-  const steps = ["POSITION", "QUESTION", "ANSWER", "REFLECTION"] as const;
+  const steps = ["POSITION", "QUESTION", "ANSWER", "REFLECTION", "JOINT_SUMMARY"] as const;
   let counter = 0;
   for (const step of steps) {
     for (const pid of ["alice", "bob"]) {

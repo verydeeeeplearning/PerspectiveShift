@@ -20,6 +20,7 @@ import type { RealtimeBroadcaster } from "@/domain/interfaces/realtime-broadcast
 import type { RateLimiter } from "@/domain/interfaces/rate-limiter";
 import type { MeetingRepository } from "@/domain/interfaces/meeting-repository";
 import type { EventTracker } from "@/domain/interfaces/event-tracker";
+import type { ValueExtractor } from "@/domain/interfaces/value-extractor";
 import { RegexPiiScrubber } from "../external/regex-pii-scrubber";
 import { OpenAiStanceExtractor } from "../external/openai-stance-extractor";
 import { KgssBaselineProvider } from "../external/kgss-baseline-provider";
@@ -72,6 +73,22 @@ import { MarkMessagesReadUseCase } from "@/application/use-cases/mark-messages-r
 import { CreateOfflineProposalUseCase } from "@/application/use-cases/create-offline-proposal";
 import { RespondToOfflineProposalUseCase } from "@/application/use-cases/respond-to-offline-proposal";
 import { SubmitSafetyCheckinUseCase } from "@/application/use-cases/submit-safety-checkin";
+import { SubmitSelfAffirmationUseCase } from "@/application/use-cases/submit-self-affirmation";
+import { SubmitConfidenceUseCase } from "@/application/use-cases/submit-confidence";
+import { CalculateMisperceptionUseCase } from "@/application/use-cases/calculate-misperception";
+import { SubmitReflectionUseCase } from "@/application/use-cases/submit-reflection";
+import { GenerateJointSummaryUseCase } from "@/application/use-cases/generate-joint-summary";
+import { UpdateReceptivenessUseCase } from "@/application/use-cases/update-receptiveness";
+import { ScheduleFollowUpUseCase } from "@/application/use-cases/schedule-follow-up";
+import { SubmitFollowUpCheckinUseCase } from "@/application/use-cases/submit-follow-up-checkin";
+import type { ReceptivenessRepository } from "@/domain/interfaces/receptiveness-repository";
+import type { FollowUpCheckinRepository } from "@/domain/interfaces/follow-up-checkin-repository";
+import type { LightProtocolRepository } from "@/domain/interfaces/light-protocol-repository";
+import { StartLightProtocolUseCase } from "@/application/use-cases/start-light-protocol";
+import { SubmitLightProtocolUseCase } from "@/application/use-cases/submit-light-protocol";
+import { CheckRealtimeEligibilityUseCase } from "@/application/use-cases/check-realtime-eligibility";
+import { OpenAIValueExtractor } from "../external/openai-value-extractor";
+import { FallbackValueExtractor } from "../external/fallback-value-extractor";
 import questionsData from "../external/data/questions.json";
 import type { QuestionProps } from "@/domain/entities/question";
 
@@ -130,6 +147,21 @@ export interface Container {
   createOfflineProposalUseCase: CreateOfflineProposalUseCase;
   respondToOfflineProposalUseCase: RespondToOfflineProposalUseCase;
   submitSafetyCheckinUseCase: SubmitSafetyCheckinUseCase;
+  valueExtractor: ValueExtractor;
+  submitSelfAffirmationUseCase: SubmitSelfAffirmationUseCase;
+  submitConfidenceUseCase: SubmitConfidenceUseCase;
+  calculateMisperceptionUseCase: CalculateMisperceptionUseCase;
+  submitReflectionUseCase: SubmitReflectionUseCase;
+  generateJointSummaryUseCase: GenerateJointSummaryUseCase;
+  receptivenessRepository: ReceptivenessRepository;
+  followUpRepository: FollowUpCheckinRepository;
+  updateReceptivenessUseCase: UpdateReceptivenessUseCase;
+  scheduleFollowUpUseCase: ScheduleFollowUpUseCase;
+  submitFollowUpCheckinUseCase: SubmitFollowUpCheckinUseCase;
+  lightProtocolRepository: LightProtocolRepository;
+  startLightProtocolUseCase: StartLightProtocolUseCase;
+  submitLightProtocolUseCase: SubmitLightProtocolUseCase;
+  checkRealtimeEligibilityUseCase: CheckRealtimeEligibilityUseCase;
 }
 
 let container: Container | null = null;
@@ -164,6 +196,20 @@ export function getContainer(): Container {
   const realtimeBroadcaster = new SupabaseRealtimeBroadcaster(supabase);
   const rateLimiter = new InMemoryRateLimiter();
   const eventTracker = new SupabaseEventRepository(supabase);
+  const stubReceptivenessRepo: ReceptivenessRepository = {
+    async findByUserId() { return null; }, async save() {},
+    async countAllUsers() { return 0; }, async countUsersWithScoreBelow() { return 0; },
+  };
+  const stubLightProtocolRepo: LightProtocolRepository = { async save() {}, async findById() { return null; },
+    async update() {}, async findByFriendship() { return []; }, async findActiveByFriendship() { return null; } };
+  const stubFollowUpRepo: FollowUpCheckinRepository = {
+    async save() {}, async findById() { return null; },
+    async findBySessionAndParticipant() { return null; },
+    async findPendingByParticipant() { return []; }, async update() {},
+  };
+  const valueExtractor: ValueExtractor = hasValidKey
+    ? new OpenAIValueExtractor(openaiKey)
+    : new FallbackValueExtractor();
 
   container = {
     piiScrubber,
@@ -224,19 +270,30 @@ export function getContainer(): Container {
     }),
     respondToOfflineProposalUseCase: new RespondToOfflineProposalUseCase({ meetingRepository, friendshipRepository }),
     submitSafetyCheckinUseCase: new SubmitSafetyCheckinUseCase({ meetingRepository, friendshipRepository, eventTracker }),
+    valueExtractor,
+    submitSelfAffirmationUseCase: new SubmitSelfAffirmationUseCase(stanceRepository, valueExtractor),
+    submitConfidenceUseCase: new SubmitConfidenceUseCase(stanceRepository),
+    calculateMisperceptionUseCase: new CalculateMisperceptionUseCase({ baselineProvider }),
+    submitReflectionUseCase: new SubmitReflectionUseCase({ dialogueRepository }),
+    generateJointSummaryUseCase: new GenerateJointSummaryUseCase({
+      dialogueRepository,
+      summaryGenerator,
+    }),
+    receptivenessRepository: stubReceptivenessRepo,
+    followUpRepository: stubFollowUpRepo,
+    updateReceptivenessUseCase: new UpdateReceptivenessUseCase({ receptivenessRepository: stubReceptivenessRepo }),
+    scheduleFollowUpUseCase: new ScheduleFollowUpUseCase({ followUpRepository: stubFollowUpRepo }),
+    submitFollowUpCheckinUseCase: new SubmitFollowUpCheckinUseCase({ followUpRepository: stubFollowUpRepo }),
+    lightProtocolRepository: stubLightProtocolRepo,
+    startLightProtocolUseCase: new StartLightProtocolUseCase({ friendshipRepository, lightProtocolRepository: stubLightProtocolRepo }),
+    submitLightProtocolUseCase: new SubmitLightProtocolUseCase({ friendshipRepository, lightProtocolRepository: stubLightProtocolRepo }),
+    checkRealtimeEligibilityUseCase: new CheckRealtimeEligibilityUseCase({ friendshipRepository }),
   };
-
   return container;
 }
 
 function createFallbackExtractor(): LlmStanceExtractor {
-  return {
-    async extract() {
-      return { axes: {}, reasoning: "", readiness: 0.5 };
-    },
-  };
+  return { async extract() { return { axes: {}, reasoning: "", readiness: 0.5 }; } };
 }
 
-export function resetContainer(): void {
-  container = null;
-}
+export function resetContainer(): void { container = null; }

@@ -24,7 +24,7 @@ function makeSession() {
 
 function makeTurn(
   participantId: string,
-  step: "POSITION" | "QUESTION" | "ANSWER" | "REFLECTION",
+  step: "AFFIRMATION" | "POSITION" | "QUESTION" | "ANSWER" | "REFLECTION" | "JOINT_SUMMARY",
   content = "test content",
 ) {
   return DialogueTurn.create({
@@ -96,7 +96,7 @@ describe("DialogueSession", () => {
     );
   });
 
-  it("completes session after REFLECTION by both", () => {
+  it("completes session after JOINT_SUMMARY by both", () => {
     const s = makeSession();
     s.submitTurn(makeTurn("alice", "POSITION"));
     s.submitTurn(makeTurn("bob", "POSITION"));
@@ -106,6 +106,8 @@ describe("DialogueSession", () => {
     s.submitTurn(makeTurn("bob", "ANSWER"));
     s.submitTurn(makeTurn("alice", "REFLECTION"));
     s.submitTurn(makeTurn("bob", "REFLECTION"));
+    s.submitTurn(makeTurn("alice", "JOINT_SUMMARY"));
+    s.submitTurn(makeTurn("bob", "JOINT_SUMMARY"));
     expect(s.status).toBe("COMPLETED");
     expect(s.isComplete()).toBe(true);
   });

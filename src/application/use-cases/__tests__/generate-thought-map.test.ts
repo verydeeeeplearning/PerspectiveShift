@@ -20,6 +20,7 @@ function mockBaselineProvider(): BaselineProvider {
       label: "한국 사회조사 데이터 기준 (N=1,500)",
     }),
     calculatePercentile: vi.fn().mockReturnValue(65),
+    getOppositeDistribution: vi.fn().mockReturnValue(0.3),
   };
 }
 

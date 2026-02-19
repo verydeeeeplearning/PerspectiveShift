@@ -17,4 +17,8 @@ export interface BaselineProvider {
     dimension: StanceDimension,
     value: number,
   ): number;
+  getOppositeDistribution(
+    dimension: StanceDimension,
+    stanceValue: number,
+  ): number;
 }

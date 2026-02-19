@@ -14,4 +14,5 @@ export interface Facilitator {
     content: string,
     originalPosition: string,
   ): Promise<DriftCheckResult>;
+  suggestReceptivenessTemplate(text: string): Promise<string[]>;
 }

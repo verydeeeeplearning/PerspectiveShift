@@ -67,4 +67,27 @@ export class OpenAiFacilitator implements Facilitator {
       suggestion: parsed.suggestion ?? null,
     };
   }
+
+  async suggestReceptivenessTemplate(text: string): Promise<string[]> {
+    const response = await this.client.chat.completions.create({
+      model: "gpt-5-mini",
+      temperature: 0.5,
+      max_tokens: 300,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "당신은 건설적 대화를 돕는 퍼실리테이터입니다. 사용자의 메시지를 더 수용적인 톤으로 변환하는 템플릿을 제안합니다. JSON 형식으로 {\"templates\": [\"...\", \"...\"]} 를 반환하세요. 1-3개의 대안 문장을 제안합니다. 인정, 완충어, 질문을 활용하세요.",
+        },
+        { role: "user", content: text },
+      ],
+    });
+
+    const raw = response.choices[0]?.message?.content;
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed.templates) ? parsed.templates : [];
+  }
 }

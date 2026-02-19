@@ -5,12 +5,21 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/app/_shared/hooks/useAuth";
 import { apiAuthGet, apiAuthPost, apiAuthDelete } from "@/app/_shared/api-client";
 import Link from "next/link";
+import { LightProtocolSection } from "./_components/LightProtocolSection";
+import { RealtimeChatButton } from "./_components/RealtimeChatButton";
+import type { ProtocolType } from "./_components/LightProtocolSection";
 
 interface FriendDetail {
   friendshipId: string;
   friendUserId: string;
   status: string;
   dialogueCount: number;
+  completedLightProtocols?: number;
+}
+
+interface RealtimeEligibility {
+  eligible: boolean;
+  reason?: string;
 }
 
 interface DisclosureInfo {
@@ -26,6 +35,7 @@ export default function FriendDetailPage() {
   const router = useRouter();
   const [friend, setFriend] = useState<FriendDetail | null>(null);
   const [disclosure, setDisclosure] = useState<DisclosureInfo | null>(null);
+  const [eligibility, setEligibility] = useState<RealtimeEligibility | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,8 +46,9 @@ export default function FriendDetailPage() {
     Promise.all([
       apiAuthGet<FriendDetail>(`/api/relationship/friends/${id}`),
       apiAuthGet<DisclosureInfo>(`/api/relationship/disclosure?friendshipId=${id}`),
+      apiAuthGet<RealtimeEligibility>(`/api/chat/${id}/eligibility`),
     ])
-      .then(([f, d]) => { setFriend(f); setDisclosure(d); })
+      .then(([f, d, e]) => { setFriend(f); setDisclosure(d); setEligibility(e); })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [id, isAuthenticated, authLoading, router]);
@@ -60,6 +71,14 @@ export default function FriendDetailPage() {
       router.replace("/friends");
     } catch (e) {
       setError(e instanceof Error ? e.message : "친구 해제 실패");
+    }
+  };
+
+  const handleStartProtocol = async (type: ProtocolType) => {
+    try {
+      await apiAuthPost("/api/light-protocol", { friendshipId: id, type, initiatorId: "me" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "프로토콜 시작 실패");
     }
   };
 
@@ -92,13 +111,14 @@ export default function FriendDetailPage() {
         )}
       </section>
 
+      <LightProtocolSection onStart={handleStartProtocol} />
+
       <section className="mb-6 space-y-3">
-        <Link
-          href={`/chat/${id}`}
-          className="block p-4 border rounded-lg hover:bg-gray-50 text-center font-medium"
-        >
-          채팅하기
-        </Link>
+        <RealtimeChatButton
+          friendshipId={id}
+          eligible={eligibility?.eligible ?? false}
+          reason={eligibility?.reason}
+        />
         {friend.dialogueCount >= 3 && (disclosure?.myLevel ?? 0) >= 2 && (
           <Link
             href={`/offline?friendshipId=${id}`}

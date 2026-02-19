@@ -10,6 +10,9 @@ export const RELATIONSHIP_EVENT_TYPES = {
   USER_UNBLOCKED: "user_unblocked",
   SAFETY_REPORT_SUBMITTED: "safety_report_submitted",
   SAFETY_CHECKIN_SUBMITTED: "safety_checkin_submitted",
+  SELF_AFFIRMATION_STARTED: "self_affirmation_started",
+  SELF_AFFIRMATION_COMPLETED: "self_affirmation_completed",
+  SELF_AFFIRMATION_SKIPPED: "self_affirmation_skipped",
 } as const;
 
 export type RelationshipEventType =

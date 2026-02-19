@@ -1,6 +1,7 @@
 import type { Answer } from "@/domain/entities/answer";
 
 export type OnboardingPhase =
+  | "warmup"
   | "core"
   | "initial_result"
   | "extended"
@@ -17,14 +18,25 @@ export interface OnboardingSessionState {
 export class OnboardingSession {
   private state: OnboardingSessionState;
 
-  constructor(sessionId: string) {
+  constructor(sessionId: string, startWithWarmup: boolean = false) {
     this.state = {
       sessionId,
-      phase: "core",
+      phase: startWithWarmup ? "warmup" : "core",
       currentQuestion: 1,
       answers: [],
       precision: "initial",
     };
+  }
+
+  transitionFromWarmupToCore(): void {
+    if (this.state.phase !== "warmup") {
+      throw new Error("Can only transition from warmup to core");
+    }
+    this.state.phase = "core";
+  }
+
+  skipWarmup(): void {
+    this.transitionFromWarmupToCore();
   }
 
   getState(): Readonly<OnboardingSessionState> {

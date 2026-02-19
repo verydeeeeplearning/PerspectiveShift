@@ -32,6 +32,21 @@ export class KgssBaselineProvider implements BaselineProvider {
     return Math.round(Math.max(1, Math.min(99, percentile)));
   }
 
+  getOppositeDistribution(
+    dimension: StanceDimension,
+    stanceValue: number,
+  ): number {
+    const dist = this.data.dimensions[dimension];
+    if (!dist) return 0;
+
+    // Return the average stance of people on the opposite side
+    // Simple approximation: mirror the user's position around the mean
+    // If user is above mean, return mean - (user - mean) * dampening
+    const dampening = 0.6;
+    const deviation = stanceValue - dist.mean;
+    return Math.max(-1, Math.min(1, dist.mean - deviation * dampening));
+  }
+
   private normalCdf(z: number): number {
     const a1 = 0.254829592;
     const a2 = -0.284496736;

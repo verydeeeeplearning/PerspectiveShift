@@ -5,6 +5,7 @@ function makeFriendship(
   overrides: Partial<{
     status: "ACTIVE" | "UNMATCHED" | "BLOCKED";
     dialogueCount: number;
+    completedLightProtocols: number;
   }> = {},
 ) {
   return Friendship.create({
@@ -13,6 +14,7 @@ function makeFriendship(
     userB: "bbb",
     status: overrides.status ?? "ACTIVE",
     dialogueCount: overrides.dialogueCount ?? 1,
+    completedLightProtocols: overrides.completedLightProtocols ?? 0,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -99,6 +101,49 @@ describe("Friendship", () => {
     it("returns false when blocked", () => {
       const f = makeFriendship({ status: "BLOCKED" });
       expect(f.meetsRealtimeThreshold()).toBe(false);
+    });
+  });
+
+  describe("incrementLightProtocolCount", () => {
+    it("increments light protocol count", () => {
+      const f = makeFriendship({ completedLightProtocols: 0 });
+      f.incrementLightProtocolCount();
+      expect(f.completedLightProtocols).toBe(1);
+    });
+  });
+
+  describe("isRealtimeEligible", () => {
+    it("returns true when ACTIVE, dialogueCount >= 2, and lightProtocols >= 1", () => {
+      const f = makeFriendship({
+        dialogueCount: 2,
+        completedLightProtocols: 1,
+      });
+      expect(f.isRealtimeEligible()).toBe(true);
+    });
+
+    it("returns false when dialogueCount < 2", () => {
+      const f = makeFriendship({
+        dialogueCount: 1,
+        completedLightProtocols: 1,
+      });
+      expect(f.isRealtimeEligible()).toBe(false);
+    });
+
+    it("returns false when lightProtocols is 0", () => {
+      const f = makeFriendship({
+        dialogueCount: 3,
+        completedLightProtocols: 0,
+      });
+      expect(f.isRealtimeEligible()).toBe(false);
+    });
+
+    it("returns false when BLOCKED", () => {
+      const f = makeFriendship({
+        status: "BLOCKED",
+        dialogueCount: 5,
+        completedLightProtocols: 2,
+      });
+      expect(f.isRealtimeEligible()).toBe(false);
     });
   });
 

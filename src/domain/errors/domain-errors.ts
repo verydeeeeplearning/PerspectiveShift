@@ -250,3 +250,21 @@ export class FeatureDisabledError extends DomainError {
     super(`Feature ${feature} is currently disabled`);
   }
 }
+
+// V2 Phase 1: Self-Affirmation errors
+
+export class InvalidCoreValueError extends DomainError {
+  constructor(value: string) {
+    super(
+      `Invalid core value: "${value}". Must be one of: FAIRNESS, FREEDOM, CARING, ACHIEVEMENT, SAFETY, TRUTH, RESPONSIBILITY, GROWTH`,
+    );
+  }
+}
+
+export class InvalidConfidenceLevelError extends DomainError {
+  constructor(value: string) {
+    super(
+      `Invalid confidence level: "${value}". Must be one of: LOW, MEDIUM, HIGH`,
+    );
+  }
+}

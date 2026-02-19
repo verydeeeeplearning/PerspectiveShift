@@ -6,6 +6,7 @@ export interface FriendshipProps {
   userB: string;
   status: FriendshipStatus;
   dialogueCount: number;
+  completedLightProtocols?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,6 +17,7 @@ export class Friendship {
   readonly userB: string;
   private _status: FriendshipStatus;
   private _dialogueCount: number;
+  private _completedLightProtocols: number;
   readonly createdAt: Date;
   private _updatedAt: Date;
 
@@ -25,6 +27,7 @@ export class Friendship {
     this.userB = props.userB;
     this._status = props.status;
     this._dialogueCount = props.dialogueCount;
+    this._completedLightProtocols = props.completedLightProtocols ?? 0;
     this.createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
   }
@@ -35,6 +38,10 @@ export class Friendship {
 
   get dialogueCount(): number {
     return this._dialogueCount;
+  }
+
+  get completedLightProtocols(): number {
+    return this._completedLightProtocols;
   }
 
   get updatedAt(): Date {
@@ -73,6 +80,19 @@ export class Friendship {
   incrementDialogueCount(): void {
     this._dialogueCount++;
     this._updatedAt = new Date();
+  }
+
+  incrementLightProtocolCount(): void {
+    this._completedLightProtocols++;
+    this._updatedAt = new Date();
+  }
+
+  isRealtimeEligible(): boolean {
+    return (
+      this._status === "ACTIVE" &&
+      this._dialogueCount >= 2 &&
+      this._completedLightProtocols >= 1
+    );
   }
 
   meetsRealtimeThreshold(): boolean {

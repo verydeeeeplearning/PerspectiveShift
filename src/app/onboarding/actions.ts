@@ -2,6 +2,7 @@
 
 import { Answer } from "@/domain/entities/answer";
 import { Question } from "@/domain/entities/question";
+import type { CoreValueKey } from "@/domain/value-objects/core-value";
 import { ExtractStanceUseCase } from "@/application/use-cases/extract-stance";
 import { GenerateThoughtMapUseCase } from "@/application/use-cases/generate-thought-map";
 import { RegexPiiScrubber } from "@/infrastructure/external/regex-pii-scrubber";
@@ -99,4 +100,29 @@ export async function calculateStance(
   });
 
   return generateUseCase.execute(stanceResult);
+}
+
+export async function submitSelfAffirmation(
+  sessionId: string,
+  coreValue: CoreValueKey,
+  experience?: string,
+): Promise<{ success: boolean }> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/onboarding/self-affirmation`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, coreValue, experience }),
+      },
+    );
+
+    if (!response.ok) {
+      return { success: false };
+    }
+
+    return { success: true };
+  } catch {
+    return { success: false };
+  }
 }
