@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/app/_shared/providers/AuthProvider";
 import { AppBackground } from "@/app/_shared/components/AppBackground";
 import { ServiceWorkerRegister } from "@/app/_shared/components/ServiceWorkerRegister";
-import { InstallPrompt } from "@/app/_shared/components/InstallPrompt";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,7 +53,6 @@ export default function RootLayout({
           <ServiceWorkerRegister />
           <AppBackground>
             {children}
-            <InstallPrompt />
           </AppBackground>
         </AuthProvider>
       </body>

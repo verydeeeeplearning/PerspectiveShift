@@ -7,7 +7,7 @@ import { ExtractStanceUseCase } from "@/application/use-cases/extract-stance";
 import { GenerateThoughtMapUseCase } from "@/application/use-cases/generate-thought-map";
 import { RegexPiiScrubber } from "@/infrastructure/external/regex-pii-scrubber";
 import { KgssBaselineProvider } from "@/infrastructure/external/kgss-baseline-provider";
-import type { StanceRepository } from "@/domain/interfaces/stance-repository";
+import { getContainer } from "@/infrastructure/config/di-container";
 import type { LlmStanceExtractor } from "@/domain/interfaces/llm-stance-extractor";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import type { AnswerMap } from "./components/OnboardingFlow";
@@ -17,19 +17,6 @@ import type { QuestionProps } from "@/domain/entities/question";
 const questions = questionsData.map((q) =>
   Question.create(q as QuestionProps),
 );
-
-function createInMemoryRepository(): StanceRepository {
-  const store = new Map<string, Parameters<StanceRepository["save"]>[0]>();
-  return {
-    async save(profile) {
-      store.set(profile.sessionId, profile);
-    },
-    async findBySessionId(sessionId) {
-      return store.get(sessionId) ?? null;
-    },
-    async update() {},
-  };
-}
 
 function createFallbackExtractor(): LlmStanceExtractor {
   return {
@@ -99,10 +86,10 @@ export async function calculateStance(
     answers,
   );
 
-  const repo = createInMemoryRepository();
+  const container = getContainer();
   const generateUseCase = new GenerateThoughtMapUseCase({
     baselineProvider: new KgssBaselineProvider(),
-    stanceRepository: repo,
+    stanceRepository: container.stanceRepository,
   });
 
   return generateUseCase.execute(stanceResult);
