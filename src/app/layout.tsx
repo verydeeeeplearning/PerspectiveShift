@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Serif_KR, Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/app/_shared/providers/AuthProvider";
 import { AppBackground } from "@/app/_shared/components/AppBackground";
 import "./globals.css";
@@ -12,20 +12,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const notoSerifKR = Noto_Serif_KR({
-  weight: ["400", "700"],
-  variable: "--font-noto-serif-kr",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const playfairDisplay = Playfair_Display({
-  weight: ["400", "600", "700"],
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -41,15 +27,23 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        {/* Pretendard (Korean sans-serif body font) */}
         <link
           rel="stylesheet"
           as="style"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
+        {/* Playfair Display + Noto Serif KR (heading Serif fonts via Google Fonts CDN) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSerifKR.variable} ${playfairDisplay.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-body`}
       >
         <AuthProvider>
           <AppBackground>{children}</AppBackground>
