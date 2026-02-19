@@ -261,6 +261,30 @@ export class InvalidCoreValueError extends DomainError {
   }
 }
 
+// V3 Phase 1: Onboarding Mode errors
+
+export class InvalidOnboardingModeError extends DomainError {
+  constructor(value: string) {
+    super(
+      `Invalid onboarding mode: "${value}". Must be one of: QUICK, STANDARD, PRECISE`,
+    );
+  }
+}
+
+export class InvalidPrecisionInputError extends DomainError {
+  constructor(detail: string) {
+    super(`Invalid precision input: ${detail}`);
+  }
+}
+
+export class RetakeLimitExceededError extends DomainError {
+  constructor() {
+    super(
+      "오늘은 이미 다시 풀어보셨어요. 내일 다시 해볼까요?",
+    );
+  }
+}
+
 export class InvalidConfidenceLevelError extends DomainError {
   constructor(value: string) {
     super(

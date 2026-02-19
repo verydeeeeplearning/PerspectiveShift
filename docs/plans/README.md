@@ -10,6 +10,20 @@
 - `docs/plans/active/001-phase-2-structured-dialogue.md`: Phase 2 상세 개발 계획
 - `docs/plans/active/001-phase-3-relationship-escalation.md`: Phase 3 (Relationship Escalation) 상세 개발 계획
 
+### v3.0 Enhancement Plans (Current)
+- `docs/plans/active/003-v3-enhancement-blueprint.md`: **v3 전체 청사진** — 11 Phases, Gap 분석, ADRs
+  - V3-P1: 정밀도 사다리 + 질문 Bank
+  - V3-P2: 공유 카드 3종 + Next Step Hub
+  - V3-P3: 매칭 카드 UX (Conversation Trailer + 에너지 체크 + 거절 UX)
+  - V3-P4: 대화 UX 개선 (스캐폴딩 + Coach + 밑줄/인용 + 톤 체크)
+  - V3-P5: Reflection 전면 개편 (퀴즈→주관식 + 슬라이더 검증 + 역할극)
+  - V3-P6: Peak-End 카드 + 공동 요약
+  - V3-P7: 나쁜 경험 복구 루틴
+  - V3-P8: 상태 기반 홈 + 리텐션 루프
+  - V3-P9: 이벤트 로깅 택소노미
+  - V3-P10: 마이크로카피 + A/B 인프라
+  - V3-P11: Stance Drift + Perspective Passport 고도화
+
 ### v2.0 Enhancement Plans (All Complete)
 - `docs/plans/active/002-v2-enhancement-blueprint.md`: **v2 전체 청사진** — Gap 분석, 의존성 그래프, ADRs
 - `docs/plans/active/002-v2-phase1-self-affirmation.md`: V2-P1 Self-Affirmation Warmup + Core Value **[Complete]**

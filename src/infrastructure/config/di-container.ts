@@ -21,6 +21,9 @@ import type { RateLimiter } from "@/domain/interfaces/rate-limiter";
 import type { MeetingRepository } from "@/domain/interfaces/meeting-repository";
 import type { EventTracker } from "@/domain/interfaces/event-tracker";
 import type { ValueExtractor } from "@/domain/interfaces/value-extractor";
+import type { ReceptivenessRepository } from "@/domain/interfaces/receptiveness-repository";
+import type { FollowUpCheckinRepository } from "@/domain/interfaces/follow-up-checkin-repository";
+import type { LightProtocolRepository } from "@/domain/interfaces/light-protocol-repository";
 import { RegexPiiScrubber } from "../external/regex-pii-scrubber";
 import { OpenAiStanceExtractor } from "../external/openai-stance-extractor";
 import { KgssBaselineProvider } from "../external/kgss-baseline-provider";
@@ -45,50 +48,40 @@ import { SupabaseRealtimeBroadcaster } from "../external/supabase-realtime-broad
 import { InMemoryRateLimiter } from "../external/in-memory-rate-limiter";
 import { SupabaseEventRepository } from "../persistence/supabase-event-repository";
 import { getSupabaseClient } from "../persistence/supabase-client";
-import { ExtractStanceUseCase } from "@/application/use-cases/extract-stance";
-import { GenerateThoughtMapUseCase } from "@/application/use-cases/generate-thought-map";
-import { SubmitAnswerUseCase } from "@/application/use-cases/submit-answer";
-import { FindMatchCandidatesUseCase } from "@/application/use-cases/find-match-candidates";
-import { CreateMatchProposalUseCase } from "@/application/use-cases/create-match-proposal";
-import { RespondToProposalUseCase } from "@/application/use-cases/respond-to-proposal";
-import { SubmitDialogueTurnUseCase } from "@/application/use-cases/submit-dialogue-turn";
-import { GetDialogueSessionUseCase } from "@/application/use-cases/get-dialogue-session";
-import { CheckExpiredSessionsUseCase } from "@/application/use-cases/check-expired-sessions";
-import { SubmitFeedbackUseCase } from "@/application/use-cases/submit-feedback";
-import { EvaluateUnderstandingUseCase } from "@/application/use-cases/evaluate-understanding";
-import { GenerateSummaryCardUseCase } from "@/application/use-cases/generate-summary-card";
-import { ClaimSessionUseCase } from "@/application/use-cases/claim-session";
-import { RequestFriendshipUseCase } from "@/application/use-cases/request-friendship";
-import { RespondToFriendRequestUseCase } from "@/application/use-cases/respond-to-friend-request";
-import { ListFriendsUseCase } from "@/application/use-cases/list-friends";
-import { UnfriendUseCase } from "@/application/use-cases/unfriend";
-import { UpdateDisclosureLevelUseCase } from "@/application/use-cases/update-disclosure-level";
-import { GetDisclosureLevelsUseCase } from "@/application/use-cases/get-disclosure-levels";
-import { SubmitSafetyReportUseCase } from "@/application/use-cases/submit-safety-report";
-import { BlockUserUseCase } from "@/application/use-cases/block-user";
-import { UnblockUserUseCase } from "@/application/use-cases/unblock-user";
-import { SendChatMessageUseCase } from "@/application/use-cases/send-chat-message";
-import { GetChatHistoryUseCase } from "@/application/use-cases/get-chat-history";
-import { MarkMessagesReadUseCase } from "@/application/use-cases/mark-messages-read";
-import { CreateOfflineProposalUseCase } from "@/application/use-cases/create-offline-proposal";
-import { RespondToOfflineProposalUseCase } from "@/application/use-cases/respond-to-offline-proposal";
-import { SubmitSafetyCheckinUseCase } from "@/application/use-cases/submit-safety-checkin";
-import { SubmitSelfAffirmationUseCase } from "@/application/use-cases/submit-self-affirmation";
-import { SubmitConfidenceUseCase } from "@/application/use-cases/submit-confidence";
-import { CalculateMisperceptionUseCase } from "@/application/use-cases/calculate-misperception";
-import { SubmitReflectionUseCase } from "@/application/use-cases/submit-reflection";
-import { GenerateJointSummaryUseCase } from "@/application/use-cases/generate-joint-summary";
-import { UpdateReceptivenessUseCase } from "@/application/use-cases/update-receptiveness";
-import { ScheduleFollowUpUseCase } from "@/application/use-cases/schedule-follow-up";
-import { SubmitFollowUpCheckinUseCase } from "@/application/use-cases/submit-follow-up-checkin";
-import type { ReceptivenessRepository } from "@/domain/interfaces/receptiveness-repository";
-import type { FollowUpCheckinRepository } from "@/domain/interfaces/follow-up-checkin-repository";
-import type { LightProtocolRepository } from "@/domain/interfaces/light-protocol-repository";
-import { StartLightProtocolUseCase } from "@/application/use-cases/start-light-protocol";
-import { SubmitLightProtocolUseCase } from "@/application/use-cases/submit-light-protocol";
-import { CheckRealtimeEligibilityUseCase } from "@/application/use-cases/check-realtime-eligibility";
+import {
+  ExtractStanceUseCase, GenerateThoughtMapUseCase, SubmitAnswerUseCase,
+  FindMatchCandidatesUseCase, CreateMatchProposalUseCase, RespondToProposalUseCase,
+  SubmitDialogueTurnUseCase, GetDialogueSessionUseCase, CheckExpiredSessionsUseCase,
+  SubmitFeedbackUseCase, EvaluateUnderstandingUseCase, GenerateSummaryCardUseCase,
+  ClaimSessionUseCase, RequestFriendshipUseCase, RespondToFriendRequestUseCase,
+  ListFriendsUseCase, UnfriendUseCase, UpdateDisclosureLevelUseCase, GetDisclosureLevelsUseCase,
+  SubmitSafetyReportUseCase, BlockUserUseCase, UnblockUserUseCase,
+  SendChatMessageUseCase, GetChatHistoryUseCase, MarkMessagesReadUseCase,
+  CreateOfflineProposalUseCase, RespondToOfflineProposalUseCase, SubmitSafetyCheckinUseCase,
+  SubmitSelfAffirmationUseCase, SubmitConfidenceUseCase, CalculateMisperceptionUseCase,
+  SubmitReflectionUseCase, GenerateJointSummaryUseCase,
+  UpdateReceptivenessUseCase, ScheduleFollowUpUseCase, SubmitFollowUpCheckinUseCase,
+  StartLightProtocolUseCase, SubmitLightProtocolUseCase, CheckRealtimeEligibilityUseCase,
+  SelectOnboardingModeUseCase, CalculatePrecisionUseCase, CheckRetakeLimitUseCase,
+  GenerateShareCardUseCase, DetermineNextStepUseCase, BuildMatchCardUseCase, SelectEnergyLevelUseCase, RecordDeclineReasonUseCase,
+  GetScaffoldForStepUseCase, GetCoachSuggestionsUseCase, CreateHighlightUseCase, CheckToneUseCase, SuggestReceptivenessTemplateUseCase,
+  GenerateReflectionQuizUseCase, SubmitQuizAnswerAndTextUseCase, SubmitMutualVerificationUseCase,
+  SubmitRoleplaySteelmanUseCase, SaveCommonGroundUseCase, DetermineReflectionPolicyUseCase,
+  BuildJointSummaryCardUseCase, WriteGiftMessageUseCase, RevealGiftMessageUseCase,
+  ExtractBlindSpotUseCase, CollectPeakEndKPIUseCase, SaveNextQuestionUseCase,
+  DetectBadExperienceUseCase, ApplyRecoveryRoutineUseCase, ExcludeDialogueFromRecordUseCase,
+  DetermineHomeStateUseCase, GenerateReplayCardUseCase, UpdatePerspectivePassportUseCase,
+  HandleThoughtChangeUseCase, BuildNotificationUseCase, ManageNotificationPreferenceUseCase,
+  TrackEventUseCase, GetMicrocopyForContextUseCase, CheckFeatureFlagUseCase, GetExperimentVariantUseCase, CalculateStanceDriftUseCase, ManageDriftPreferenceUseCase, SendDriftNotificationUseCase,
+} from "@/application/use-cases";
+import { stubReceptivenessRepo, stubLightProtocolRepo, stubFollowUpRepo } from "./stub-repositories";
 import { OpenAIValueExtractor } from "../external/openai-value-extractor";
 import { FallbackValueExtractor } from "../external/fallback-value-extractor";
+import { InMemoryEventEmitter } from "../external/in-memory-event-emitter";
+import { QuestionBank } from "@/domain/entities/question-bank";
+import { QuestionItem } from "@/domain/value-objects/question-item";
+import type { StanceDimension } from "@/domain/value-objects/stance-dimension";
+import type { QuestionType } from "@/domain/value-objects/question-type";
 import questionsData from "../external/data/questions.json";
 import type { QuestionProps } from "@/domain/entities/question";
 
@@ -96,72 +89,72 @@ function loadQuestions(): Question[] {
   return questionsData.map((q) => Question.create(q as QuestionProps));
 }
 
+function loadQuestionBank(): QuestionBank {
+  const items = questionsData.map((q) =>
+    QuestionItem.create({
+      id: String(q.id),
+      text: q.text,
+      type: q.type as QuestionType,
+      axis: q.dimension as StanceDimension,
+      isAnchor: q.phase === "core",
+    }),
+  );
+  return QuestionBank.create(items);
+}
+
 export interface Container {
-  piiScrubber: PiiScrubber;
-  llmExtractor: LlmStanceExtractor;
-  baselineProvider: BaselineProvider;
-  stanceRepository: StanceRepository;
-  questions: Question[];
-  submitAnswerUseCase: SubmitAnswerUseCase;
-  extractStanceUseCase: ExtractStanceUseCase;
-  generateThoughtMapUseCase: GenerateThoughtMapUseCase;
-  matchRepository: MatchRepository;
-  dialogueRepository: DialogueRepository;
-  feedbackRepository: FeedbackRepository;
-  facilitator: Facilitator;
-  summaryGenerator: SummaryGenerator;
-  findMatchCandidatesUseCase: FindMatchCandidatesUseCase;
-  createMatchProposalUseCase: CreateMatchProposalUseCase;
-  respondToProposalUseCase: RespondToProposalUseCase;
-  submitDialogueTurnUseCase: SubmitDialogueTurnUseCase;
-  getDialogueSessionUseCase: GetDialogueSessionUseCase;
-  checkExpiredSessionsUseCase: CheckExpiredSessionsUseCase;
-  submitFeedbackUseCase: SubmitFeedbackUseCase;
-  evaluateUnderstandingUseCase: EvaluateUnderstandingUseCase;
-  generateSummaryCardUseCase: GenerateSummaryCardUseCase;
-  userRepository: UserRepository;
-  friendRepository: FriendRepository;
-  friendshipRepository: FriendshipRepository;
-  disclosureRepository: DisclosureRepository;
-  blockRepository: BlockRepository;
-  claimSessionUseCase: ClaimSessionUseCase;
-  requestFriendshipUseCase: RequestFriendshipUseCase;
-  respondToFriendRequestUseCase: RespondToFriendRequestUseCase;
-  listFriendsUseCase: ListFriendsUseCase;
-  unfriendUseCase: UnfriendUseCase;
-  updateDisclosureLevelUseCase: UpdateDisclosureLevelUseCase;
-  getDisclosureLevelsUseCase: GetDisclosureLevelsUseCase;
-  messageRepository: MessageRepository;
-  receiptRepository: ReceiptRepository;
-  realtimeBroadcaster: RealtimeBroadcaster;
-  rateLimiter: RateLimiter;
-  sendChatMessageUseCase: SendChatMessageUseCase;
-  getChatHistoryUseCase: GetChatHistoryUseCase;
-  markMessagesReadUseCase: MarkMessagesReadUseCase;
-  safetyRepository: SafetyRepository;
-  submitSafetyReportUseCase: SubmitSafetyReportUseCase;
-  blockUserUseCase: BlockUserUseCase;
-  unblockUserUseCase: UnblockUserUseCase;
-  meetingRepository: MeetingRepository;
-  eventTracker: EventTracker;
-  createOfflineProposalUseCase: CreateOfflineProposalUseCase;
-  respondToOfflineProposalUseCase: RespondToOfflineProposalUseCase;
-  submitSafetyCheckinUseCase: SubmitSafetyCheckinUseCase;
-  valueExtractor: ValueExtractor;
-  submitSelfAffirmationUseCase: SubmitSelfAffirmationUseCase;
-  submitConfidenceUseCase: SubmitConfidenceUseCase;
-  calculateMisperceptionUseCase: CalculateMisperceptionUseCase;
-  submitReflectionUseCase: SubmitReflectionUseCase;
-  generateJointSummaryUseCase: GenerateJointSummaryUseCase;
-  receptivenessRepository: ReceptivenessRepository;
-  followUpRepository: FollowUpCheckinRepository;
-  updateReceptivenessUseCase: UpdateReceptivenessUseCase;
-  scheduleFollowUpUseCase: ScheduleFollowUpUseCase;
-  submitFollowUpCheckinUseCase: SubmitFollowUpCheckinUseCase;
-  lightProtocolRepository: LightProtocolRepository;
-  startLightProtocolUseCase: StartLightProtocolUseCase;
-  submitLightProtocolUseCase: SubmitLightProtocolUseCase;
-  checkRealtimeEligibilityUseCase: CheckRealtimeEligibilityUseCase;
+  piiScrubber: PiiScrubber; llmExtractor: LlmStanceExtractor;
+  baselineProvider: BaselineProvider; stanceRepository: StanceRepository; questions: Question[];
+  submitAnswerUseCase: SubmitAnswerUseCase; extractStanceUseCase: ExtractStanceUseCase;
+  generateThoughtMapUseCase: GenerateThoughtMapUseCase; matchRepository: MatchRepository;
+  dialogueRepository: DialogueRepository; feedbackRepository: FeedbackRepository;
+  facilitator: Facilitator; summaryGenerator: SummaryGenerator;
+  findMatchCandidatesUseCase: FindMatchCandidatesUseCase; createMatchProposalUseCase: CreateMatchProposalUseCase;
+  respondToProposalUseCase: RespondToProposalUseCase; submitDialogueTurnUseCase: SubmitDialogueTurnUseCase;
+  getDialogueSessionUseCase: GetDialogueSessionUseCase; checkExpiredSessionsUseCase: CheckExpiredSessionsUseCase;
+  submitFeedbackUseCase: SubmitFeedbackUseCase; evaluateUnderstandingUseCase: EvaluateUnderstandingUseCase;
+  generateSummaryCardUseCase: GenerateSummaryCardUseCase; userRepository: UserRepository;
+  friendRepository: FriendRepository; friendshipRepository: FriendshipRepository;
+  disclosureRepository: DisclosureRepository; blockRepository: BlockRepository;
+  claimSessionUseCase: ClaimSessionUseCase; requestFriendshipUseCase: RequestFriendshipUseCase;
+  respondToFriendRequestUseCase: RespondToFriendRequestUseCase; listFriendsUseCase: ListFriendsUseCase;
+  unfriendUseCase: UnfriendUseCase; updateDisclosureLevelUseCase: UpdateDisclosureLevelUseCase;
+  getDisclosureLevelsUseCase: GetDisclosureLevelsUseCase; messageRepository: MessageRepository;
+  receiptRepository: ReceiptRepository; realtimeBroadcaster: RealtimeBroadcaster; rateLimiter: RateLimiter;
+  sendChatMessageUseCase: SendChatMessageUseCase; getChatHistoryUseCase: GetChatHistoryUseCase;
+  markMessagesReadUseCase: MarkMessagesReadUseCase; safetyRepository: SafetyRepository;
+  submitSafetyReportUseCase: SubmitSafetyReportUseCase; blockUserUseCase: BlockUserUseCase;
+  unblockUserUseCase: UnblockUserUseCase; meetingRepository: MeetingRepository; eventTracker: EventTracker;
+  createOfflineProposalUseCase: CreateOfflineProposalUseCase; respondToOfflineProposalUseCase: RespondToOfflineProposalUseCase;
+  submitSafetyCheckinUseCase: SubmitSafetyCheckinUseCase; valueExtractor: ValueExtractor;
+  submitSelfAffirmationUseCase: SubmitSelfAffirmationUseCase; submitConfidenceUseCase: SubmitConfidenceUseCase;
+  calculateMisperceptionUseCase: CalculateMisperceptionUseCase; submitReflectionUseCase: SubmitReflectionUseCase;
+  generateJointSummaryUseCase: GenerateJointSummaryUseCase; receptivenessRepository: ReceptivenessRepository;
+  followUpRepository: FollowUpCheckinRepository; updateReceptivenessUseCase: UpdateReceptivenessUseCase;
+  scheduleFollowUpUseCase: ScheduleFollowUpUseCase; submitFollowUpCheckinUseCase: SubmitFollowUpCheckinUseCase;
+  lightProtocolRepository: LightProtocolRepository; startLightProtocolUseCase: StartLightProtocolUseCase;
+  submitLightProtocolUseCase: SubmitLightProtocolUseCase; checkRealtimeEligibilityUseCase: CheckRealtimeEligibilityUseCase;
+  selectOnboardingModeUseCase: SelectOnboardingModeUseCase;
+  calculatePrecisionUseCase: CalculatePrecisionUseCase; checkRetakeLimitUseCase: CheckRetakeLimitUseCase;
+  generateShareCardUseCase: GenerateShareCardUseCase; determineNextStepUseCase: DetermineNextStepUseCase;
+  buildMatchCardUseCase: BuildMatchCardUseCase;
+  selectEnergyLevelUseCase: SelectEnergyLevelUseCase; recordDeclineReasonUseCase: RecordDeclineReasonUseCase;
+  getScaffoldForStepUseCase: GetScaffoldForStepUseCase; getCoachSuggestionsUseCase: GetCoachSuggestionsUseCase;
+  createHighlightUseCase: CreateHighlightUseCase; checkToneUseCase: CheckToneUseCase; suggestReceptivenessTemplateUseCase: SuggestReceptivenessTemplateUseCase;
+  generateReflectionQuizUseCase: GenerateReflectionQuizUseCase; submitQuizAnswerUseCase: SubmitQuizAnswerAndTextUseCase;
+  submitMutualVerificationUseCase: SubmitMutualVerificationUseCase; submitRoleplaySteelmanUseCase: SubmitRoleplaySteelmanUseCase;
+  saveCommonGroundUseCase: SaveCommonGroundUseCase; determineReflectionPolicyUseCase: DetermineReflectionPolicyUseCase;
+  buildJointSummaryCardUseCase: BuildJointSummaryCardUseCase; writeGiftMessageUseCase: WriteGiftMessageUseCase;
+  revealGiftMessageUseCase: RevealGiftMessageUseCase; extractBlindSpotUseCase: ExtractBlindSpotUseCase;
+  collectPeakEndKPIUseCase: CollectPeakEndKPIUseCase; saveNextQuestionUseCase: SaveNextQuestionUseCase;
+  detectBadExperienceUseCase: DetectBadExperienceUseCase; applyRecoveryRoutineUseCase: ApplyRecoveryRoutineUseCase;
+  excludeDialogueFromRecordUseCase: ExcludeDialogueFromRecordUseCase;
+  determineHomeStateUseCase: DetermineHomeStateUseCase; generateReplayCardUseCase: GenerateReplayCardUseCase;
+  updatePerspectivePassportUseCase: UpdatePerspectivePassportUseCase; handleThoughtChangeUseCase: HandleThoughtChangeUseCase;
+  buildNotificationUseCase: BuildNotificationUseCase; manageNotificationPreferenceUseCase: ManageNotificationPreferenceUseCase;
+  trackEventUseCase: TrackEventUseCase;
+  getMicrocopyForContextUseCase: GetMicrocopyForContextUseCase; checkFeatureFlagUseCase: CheckFeatureFlagUseCase;
+  getExperimentVariantUseCase: GetExperimentVariantUseCase; calculateStanceDriftUseCase: CalculateStanceDriftUseCase; manageDriftPreferenceUseCase: ManageDriftPreferenceUseCase; sendDriftNotificationUseCase: SendDriftNotificationUseCase;
 }
 
 let container: Container | null = null;
@@ -191,32 +184,15 @@ export function getContainer(): Container {
   const blockRepository = new SupabaseBlockRepository(supabase);
   const safetyRepository = new SupabaseSafetyRepository(supabase);
   const messageRepository = new SupabaseMessageRepository(supabase);
-  const receiptRepository = new SupabaseReceiptRepository(supabase);
-  const meetingRepository = new SupabaseMeetingRepository(supabase);
+  const receiptRepository = new SupabaseReceiptRepository(supabase); const meetingRepository = new SupabaseMeetingRepository(supabase);
   const realtimeBroadcaster = new SupabaseRealtimeBroadcaster(supabase);
-  const rateLimiter = new InMemoryRateLimiter();
-  const eventTracker = new SupabaseEventRepository(supabase);
-  const stubReceptivenessRepo: ReceptivenessRepository = {
-    async findByUserId() { return null; }, async save() {},
-    async countAllUsers() { return 0; }, async countUsersWithScoreBelow() { return 0; },
-  };
-  const stubLightProtocolRepo: LightProtocolRepository = { async save() {}, async findById() { return null; },
-    async update() {}, async findByFriendship() { return []; }, async findActiveByFriendship() { return null; } };
-  const stubFollowUpRepo: FollowUpCheckinRepository = {
-    async save() {}, async findById() { return null; },
-    async findBySessionAndParticipant() { return null; },
-    async findPendingByParticipant() { return []; }, async update() {},
-  };
+  const rateLimiter = new InMemoryRateLimiter(); const eventTracker = new SupabaseEventRepository(supabase);
   const valueExtractor: ValueExtractor = hasValidKey
     ? new OpenAIValueExtractor(openaiKey)
     : new FallbackValueExtractor();
 
   container = {
-    piiScrubber,
-    llmExtractor,
-    baselineProvider,
-    stanceRepository,
-    questions,
+    piiScrubber, llmExtractor, baselineProvider, stanceRepository, questions,
     submitAnswerUseCase: new SubmitAnswerUseCase(),
     extractStanceUseCase: new ExtractStanceUseCase({ piiScrubber, llmExtractor, questions }),
     generateThoughtMapUseCase: new GenerateThoughtMapUseCase({ baselineProvider, stanceRepository }),
@@ -288,6 +264,27 @@ export function getContainer(): Container {
     startLightProtocolUseCase: new StartLightProtocolUseCase({ friendshipRepository, lightProtocolRepository: stubLightProtocolRepo }),
     submitLightProtocolUseCase: new SubmitLightProtocolUseCase({ friendshipRepository, lightProtocolRepository: stubLightProtocolRepo }),
     checkRealtimeEligibilityUseCase: new CheckRealtimeEligibilityUseCase({ friendshipRepository }),
+    selectOnboardingModeUseCase: new SelectOnboardingModeUseCase({ questionBank: loadQuestionBank() }),
+    calculatePrecisionUseCase: new CalculatePrecisionUseCase(), checkRetakeLimitUseCase: new CheckRetakeLimitUseCase(),
+    generateShareCardUseCase: new GenerateShareCardUseCase(), determineNextStepUseCase: new DetermineNextStepUseCase(),
+    buildMatchCardUseCase: new BuildMatchCardUseCase(), selectEnergyLevelUseCase: new SelectEnergyLevelUseCase(),
+    recordDeclineReasonUseCase: new RecordDeclineReasonUseCase(), getScaffoldForStepUseCase: new GetScaffoldForStepUseCase(),
+    getCoachSuggestionsUseCase: new GetCoachSuggestionsUseCase(), createHighlightUseCase: new CreateHighlightUseCase(),
+    checkToneUseCase: new CheckToneUseCase(), suggestReceptivenessTemplateUseCase: new SuggestReceptivenessTemplateUseCase(),
+    generateReflectionQuizUseCase: new GenerateReflectionQuizUseCase(), submitQuizAnswerUseCase: new SubmitQuizAnswerAndTextUseCase(),
+    submitMutualVerificationUseCase: new SubmitMutualVerificationUseCase(), submitRoleplaySteelmanUseCase: new SubmitRoleplaySteelmanUseCase(),
+    saveCommonGroundUseCase: new SaveCommonGroundUseCase(), determineReflectionPolicyUseCase: new DetermineReflectionPolicyUseCase(),
+    buildJointSummaryCardUseCase: new BuildJointSummaryCardUseCase(), writeGiftMessageUseCase: new WriteGiftMessageUseCase(),
+    revealGiftMessageUseCase: new RevealGiftMessageUseCase(), extractBlindSpotUseCase: new ExtractBlindSpotUseCase(),
+    collectPeakEndKPIUseCase: new CollectPeakEndKPIUseCase(), saveNextQuestionUseCase: new SaveNextQuestionUseCase(),
+    detectBadExperienceUseCase: new DetectBadExperienceUseCase(), applyRecoveryRoutineUseCase: new ApplyRecoveryRoutineUseCase(),
+    excludeDialogueFromRecordUseCase: new ExcludeDialogueFromRecordUseCase(),
+    determineHomeStateUseCase: new DetermineHomeStateUseCase(), generateReplayCardUseCase: new GenerateReplayCardUseCase(),
+    updatePerspectivePassportUseCase: new UpdatePerspectivePassportUseCase(), handleThoughtChangeUseCase: new HandleThoughtChangeUseCase(),
+    buildNotificationUseCase: new BuildNotificationUseCase(), manageNotificationPreferenceUseCase: new ManageNotificationPreferenceUseCase(),
+    trackEventUseCase: new TrackEventUseCase({ eventEmitter: new InMemoryEventEmitter() }),
+    getMicrocopyForContextUseCase: new GetMicrocopyForContextUseCase(), checkFeatureFlagUseCase: new CheckFeatureFlagUseCase(),
+    getExperimentVariantUseCase: new GetExperimentVariantUseCase(), calculateStanceDriftUseCase: new CalculateStanceDriftUseCase(), manageDriftPreferenceUseCase: new ManageDriftPreferenceUseCase(), sendDriftNotificationUseCase: new SendDriftNotificationUseCase(),
   };
   return container;
 }
