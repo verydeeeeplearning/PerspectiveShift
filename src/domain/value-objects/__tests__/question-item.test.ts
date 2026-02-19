@@ -25,10 +25,14 @@ describe("QuestionItem", () => {
       axis: "TECH_REGULATION",
       isAnchor: false,
       variant: "A",
+      allowUncertain: true,
+      tooltipText: "응답 성향 확인용 문항",
     });
 
     expect(q.isAnchor).toBe(false);
     expect(q.variant).toBe("A");
+    expect(q.allowUncertain).toBe(true);
+    expect(q.tooltipText).toBe("응답 성향 확인용 문항");
   });
 
   it("defaults variant to undefined for anchor questions", () => {
@@ -41,6 +45,8 @@ describe("QuestionItem", () => {
     });
 
     expect(q.variant).toBeUndefined();
+    expect(q.allowUncertain).toBe(false);
+    expect(q.tooltipText).toBeUndefined();
   });
 
   it("throws for empty text", () => {

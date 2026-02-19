@@ -83,4 +83,33 @@ describe("OpenEndedQuestion", () => {
     const button = screen.getByText("확인");
     expect(button).toBeDisabled();
   });
+
+  it("swipes example cards with prev/next buttons", () => {
+    render(
+      <OpenEndedQuestion
+        questionId={9}
+        text="질문"
+        onAnswer={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText(/예시 1\/3/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "다음 예시" }));
+    expect(screen.getByText(/예시 2\/3/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "이전 예시" }));
+    expect(screen.getByText(/예시 1\/3/)).toBeInTheDocument();
+  });
+
+  it("shows coach guidance when coach button is clicked", () => {
+    render(
+      <OpenEndedQuestion
+        questionId={9}
+        text="질문"
+        onAnswer={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Coach"));
+    expect(screen.getByText(/설득력이 올라가요/)).toBeInTheDocument();
+  });
 });

@@ -1,25 +1,31 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { OxQuestion } from "./OxQuestion";
-import { RubricQuestion } from "./RubricQuestion";
-import { OpenEndedQuestion } from "./OpenEndedQuestion";
+import { useCallback, useMemo, useState } from "react";
+import { type RubricAnswerValue } from "./RubricQuestion";
 import { ProgressBar } from "./ProgressBar";
-
-export interface QuestionData {
-  id: number;
-  text: string;
-  type: "OX" | "RUBRIC" | "OPEN_ENDED";
-  phase: "core" | "extended";
-}
-
-export type AnswerMap = Record<number, boolean | number | string>;
+import { PrecisionSelector } from "./PrecisionSelector";
+import { OnboardingQuestionRenderer } from "./OnboardingQuestionRenderer";
+import {
+  emitOnboardingEvent,
+  filterAnswersByQuestionSet,
+  getPrecisionSelectEvent,
+  toQuestionIdSet,
+  type AnswerMap,
+  type OnboardingEventName,
+  type QuestionData,
+} from "./onboarding-flow.helpers";
+import {
+  QUESTION_PRECISION_CONFIG,
+  type QuestionPrecision,
+} from "@/domain/value-objects/question-precision";
+export type { AnswerMap, OnboardingEventName, QuestionData } from "./onboarding-flow.helpers";
 
 interface OnboardingFlowProps {
   questions: QuestionData[];
   onCoreComplete: (answers: AnswerMap) => void;
   onExtendedComplete: (answers: AnswerMap) => void;
   onSkipExtended: () => void;
+  onEvent?: (eventName: OnboardingEventName) => void;
 }
 
 export function OnboardingFlow({
@@ -27,118 +33,260 @@ export function OnboardingFlow({
   onCoreComplete,
   onExtendedComplete,
   onSkipExtended,
+  onEvent,
 }: OnboardingFlowProps) {
+  const [precision, setPrecision] = useState<QuestionPrecision | null>(null);
+  const [isPrecisionEditorOpen, setIsPrecisionEditorOpen] = useState(false);
+  const [phase, setPhase] = useState<"core" | "extended">("core");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerMap>({});
-  const [phase, setPhase] = useState<"core" | "decide" | "extended">(
-    "core",
+
+  const coreQuestions = useMemo(
+    () => questions.filter((question) => question.phase === "core"),
+    [questions],
+  );
+  const extendedPool = useMemo(
+    () => questions.filter((question) => question.phase === "extended"),
+    [questions],
   );
 
-  const coreQuestions = questions.filter((q) => q.phase === "core");
-  const extendedQuestions = questions.filter(
-    (q) => q.phase === "extended",
+  const buildQuestionSequence = useCallback(
+    (targetPrecision: QuestionPrecision): QuestionData[] => {
+      const targetTotal = QUESTION_PRECISION_CONFIG[targetPrecision].totalQuestions;
+      const targetExtendedCount = Math.max(
+        0,
+        Math.min(extendedPool.length, targetTotal - coreQuestions.length),
+      );
+      return [
+        ...coreQuestions,
+        ...extendedPool.slice(0, targetExtendedCount),
+      ];
+    },
+    [coreQuestions, extendedPool],
   );
 
-  const activeQuestions =
-    phase === "extended" ? extendedQuestions : coreQuestions;
-  const question = activeQuestions[currentIndex];
+  const selectedQuestionSequence = useMemo(
+    () => (precision ? buildQuestionSequence(precision) : []),
+    [buildQuestionSequence, precision],
+  );
+
+  const emitEvent = useCallback(
+    (eventName: OnboardingEventName) => {
+      emitOnboardingEvent(eventName, onEvent);
+    },
+    [onEvent],
+  );
+
+  const currentPhaseQuestions = useMemo(() => {
+    if (!precision) {
+      return [] as QuestionData[];
+    }
+    if (phase === "core") {
+      return coreQuestions;
+    }
+    return selectedQuestionSequence.slice(coreQuestions.length);
+  }, [coreQuestions, phase, precision, selectedQuestionSequence]);
+
+  const currentQuestion = currentPhaseQuestions[currentIndex];
+
+  const completeFlow = useCallback(
+    (targetPrecision: QuestionPrecision, finalAnswers: AnswerMap) => {
+      if (targetPrecision === "quick") {
+        onCoreComplete(finalAnswers);
+        return;
+      }
+      onExtendedComplete(finalAnswers);
+    },
+    [onCoreComplete, onExtendedComplete],
+  );
+
+  const handlePrecisionSelect = useCallback(
+    (targetPrecision: QuestionPrecision) => {
+      const precisionSelectEvent = getPrecisionSelectEvent(targetPrecision);
+
+      if (!precision) {
+        emitEvent(precisionSelectEvent);
+        setPrecision(targetPrecision);
+        setPhase("core");
+        setCurrentIndex(0);
+        setAnswers({});
+        return;
+      }
+
+      if (precision !== targetPrecision) {
+        emitEvent("precision_change_midway");
+      }
+      emitEvent(precisionSelectEvent);
+
+      const nextSequence = buildQuestionSequence(targetPrecision);
+      const nextQuestionSet = toQuestionIdSet(nextSequence);
+      const nextAnswers = filterAnswersByQuestionSet(answers, nextQuestionSet);
+      const answeredQuestionIds = new Set(
+        Object.keys(nextAnswers).map((questionId) => Number(questionId)),
+      );
+      const firstUnansweredIndex = nextSequence.findIndex(
+        (question) => !answeredQuestionIds.has(question.id),
+      );
+
+      setPrecision(targetPrecision);
+      setAnswers(nextAnswers);
+      setIsPrecisionEditorOpen(false);
+
+      if (firstUnansweredIndex === -1) {
+        completeFlow(targetPrecision, nextAnswers);
+        return;
+      }
+
+      if (firstUnansweredIndex < coreQuestions.length) {
+        setPhase("core");
+        setCurrentIndex(firstUnansweredIndex);
+        return;
+      }
+
+      setPhase("extended");
+      setCurrentIndex(firstUnansweredIndex - coreQuestions.length);
+    },
+    [
+      answers,
+      buildQuestionSequence,
+      completeFlow,
+      coreQuestions.length,
+      emitEvent,
+      precision,
+    ],
+  );
 
   const handleAnswer = useCallback(
-    (questionId: number, value: boolean | number | string) => {
-      setAnswers((prev) => ({ ...prev, [questionId]: value }));
+    (
+      questionId: number,
+      value: boolean | RubricAnswerValue | string,
+    ) => {
+      if (!precision || !currentQuestion) {
+        return;
+      }
 
-      const nextIndex = currentIndex + 1;
-
-      if (nextIndex >= activeQuestions.length) {
-        if (phase === "core") {
-          const coreAnswers = { ...answers, [questionId]: value };
-          onCoreComplete(coreAnswers);
-          setPhase("decide");
-        } else if (phase === "extended") {
-          onExtendedComplete({ ...answers, [questionId]: value });
+      const nextAnswers = { ...answers, [questionId]: value };
+      if (currentQuestion.type === "OX") {
+        emitEvent("question_answer_ox");
+      } else if (currentQuestion.type === "RUBRIC") {
+        emitEvent("question_answer_rubric");
+        if (value === "DONT_KNOW") {
+          emitEvent("question_dontknow");
         }
       } else {
-        setCurrentIndex(nextIndex);
+        emitEvent("question_answer_open_ended");
       }
+      setAnswers(nextAnswers);
+
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < currentPhaseQuestions.length) {
+        setCurrentIndex(nextIndex);
+        return;
+      }
+
+      if (phase === "core") {
+        if (precision === "quick") {
+          completeFlow(precision, nextAnswers);
+          return;
+        }
+
+        const extendedQuestions = selectedQuestionSequence.slice(coreQuestions.length);
+        if (extendedQuestions.length === 0) {
+          completeFlow(precision, nextAnswers);
+          return;
+        }
+
+        setPhase("extended");
+        setCurrentIndex(0);
+        return;
+      }
+
+      completeFlow(precision, nextAnswers);
     },
-    [currentIndex, activeQuestions, phase, answers, onCoreComplete, onExtendedComplete],
+    [
+      answers,
+      completeFlow,
+      coreQuestions.length,
+      currentIndex,
+      currentQuestion,
+      currentPhaseQuestions.length,
+      emitEvent,
+      phase,
+      precision,
+      selectedQuestionSequence,
+    ],
   );
 
-  const handleStartExtended = () => {
-    setPhase("extended");
-    setCurrentIndex(0);
-  };
+  if (!precision) {
+    return <PrecisionSelector onSelect={handlePrecisionSelect} />;
+  }
 
-  if (phase === "decide") {
+  const precisionConfig = QUESTION_PRECISION_CONFIG[precision];
+  const phaseTotal =
+    phase === "core"
+      ? coreQuestions.length
+      : selectedQuestionSequence.length - coreQuestions.length;
+
+  if (isPrecisionEditorOpen) {
     return (
-      <div className="flex flex-col items-center gap-6 py-8">
-        <h2 className="text-2xl font-bold">
-          Thought Map이 생성되었습니다!
-        </h2>
-        <p className="text-center text-gray-600">
-          5개 추가 질문에 답하면 더 정확한 프로필을 만들 수 있어요.
-        </p>
-        <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={handleStartExtended}
-            className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
-          >
-            확장 질문 시작
-          </button>
-          <button
-            type="button"
-            onClick={onSkipExtended}
-            className="rounded-lg border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50"
-          >
-            지금은 건너뛸게요
-          </button>
-        </div>
-      </div>
+      <PrecisionSelector
+        selectedPrecision={precision}
+        onSelect={handlePrecisionSelect}
+        onClose={() => setIsPrecisionEditorOpen(false)}
+      />
     );
   }
 
-  if (!question) return null;
+  if (!currentQuestion) {
+    if (phase === "extended") {
+      return (
+        <div className="flex flex-col items-center gap-4 py-8">
+          <p className="text-sm text-gray-600">
+            확장 질문이 없습니다. 현재 결과로 진행할 수 있어요.
+          </p>
+          <button
+            type="button"
+            onClick={onSkipExtended}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700"
+          >
+            결과 보기
+          </button>
+        </div>
+      );
+    }
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-8 py-4">
+      <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
+        <p className="text-sm text-gray-600">
+          정밀도: <span className="font-semibold">{precisionConfig.label}</span> (
+          {precisionConfig.totalQuestions}문항)
+        </p>
+        <button
+          type="button"
+          onClick={() => setIsPrecisionEditorOpen(true)}
+          className="text-sm text-blue-700 underline underline-offset-2"
+        >
+          [변경]
+        </button>
+      </div>
+
       <ProgressBar
-        current={currentIndex + 1}
-        total={activeQuestions.length}
-        phase={phase === "extended" ? "extended" : "core"}
+        current={Math.min(currentIndex + 1, Math.max(phaseTotal, 1))}
+        total={Math.max(phaseTotal, 1)}
+        phase={phase}
       />
 
-      <div className="min-h-[200px]">
-        {question.type === "OX" && (
-          <OxQuestion
-            questionId={question.id}
-            text={question.text}
-            onAnswer={handleAnswer}
-            selected={
-              answers[question.id] as boolean | undefined ?? null
-            }
-          />
-        )}
-        {question.type === "RUBRIC" && (
-          <RubricQuestion
-            questionId={question.id}
-            text={question.text}
-            onAnswer={handleAnswer}
-            selected={
-              answers[question.id] as number | undefined ?? null
-            }
-          />
-        )}
-        {question.type === "OPEN_ENDED" && (
-          <OpenEndedQuestion
-            questionId={question.id}
-            text={question.text}
-            onAnswer={handleAnswer}
-            initialValue={
-              (answers[question.id] as string) ?? ""
-            }
-          />
-        )}
+      <div className="min-h-[240px]">
+        <OnboardingQuestionRenderer
+          question={currentQuestion}
+          answers={answers}
+          onAnswer={handleAnswer}
+          onCoachClick={() => emitEvent("coach_click")}
+          onExampleSwipe={() => emitEvent("example_swipe")}
+        />
       </div>
     </div>
   );

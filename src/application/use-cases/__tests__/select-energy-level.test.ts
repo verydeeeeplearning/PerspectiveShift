@@ -8,6 +8,7 @@ describe("SelectEnergyLevelUseCase", () => {
     const result = uc.execute("NORMAL");
     expect(result.key).toBe("NORMAL");
     expect(result.adjustment.distanceDelta).toBe(0);
+    expect(result.matchingParams.timeBudgetMinutes).toBe(10);
   });
 
   it("returns LOW level with distance adjustment", () => {
@@ -15,18 +16,21 @@ describe("SelectEnergyLevelUseCase", () => {
     expect(result.key).toBe("LOW");
     expect(result.adjustment.distanceDelta).toBe(-0.1);
     expect(result.adjustment.levelDelta).toBe(-1);
+    expect(result.matchingParams.difficultyRange).toEqual([0, 1]);
   });
 
   it("returns HIGH level details", () => {
     const result = uc.execute("HIGH");
     expect(result.key).toBe("HIGH");
     expect(result.adjustment.distanceDelta).toBe(0);
+    expect(result.matchingParams.distanceBand).toEqual([0.4, 0.7]);
   });
 
   it("includes emoji and label", () => {
     const result = uc.execute("LOW");
     expect(result.emoji).toBeDefined();
     expect(result.label).toBeDefined();
+    expect(result.matchingParams.scaffoldingLevel).toBe("high");
   });
 
   it("throws for invalid level", () => {

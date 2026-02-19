@@ -27,7 +27,7 @@ describe("DI Container", () => {
     expect(container.llmExtractor).toBeDefined();
     expect(container.baselineProvider).toBeDefined();
     expect(container.stanceRepository).toBeDefined();
-    expect(container.questions).toHaveLength(10);
+    expect(container.questions).toHaveLength(20);
     expect(container.submitAnswerUseCase).toBeDefined();
     expect(container.extractStanceUseCase).toBeDefined();
     expect(container.generateThoughtMapUseCase).toBeDefined();
@@ -46,12 +46,12 @@ describe("DI Container", () => {
     expect(result.readiness).toBe(0.5);
   });
 
-  it("loads all 10 questions from JSON", async () => {
+  it("loads all 20 questions from JSON", async () => {
     const { getContainer } = await import("../di-container");
     const container = getContainer();
 
-    expect(container.questions).toHaveLength(10);
+    expect(container.questions).toHaveLength(20);
     expect(container.questions[0].id).toBe(1);
-    expect(container.questions[9].id).toBe(10);
+    expect(container.questions[19].id).toBe(20);
   });
 });

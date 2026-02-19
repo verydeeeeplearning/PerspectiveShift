@@ -8,19 +8,21 @@ interface EnergySelectorProps {
 }
 
 const OPTIONS: { key: EnergyLevelKey; emoji: string; label: string }[] = [
-  { key: "HIGH", emoji: "🔋🔋🔋", label: "충만" },
-  { key: "NORMAL", emoji: "🔋", label: "보통" },
-  { key: "LOW", emoji: "🪫", label: "낮음" },
+  { key: "HIGH", emoji: "🔋🔋🔋", label: "높음" },
+  { key: "NORMAL", emoji: "🔋🔋", label: "보통" },
+  { key: "LOW", emoji: "🔋", label: "낮음" },
 ];
 
 export function EnergySelector({ selected, onSelect }: EnergySelectorProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" role="radiogroup" aria-label="에너지 선택">
       {OPTIONS.map((opt) => (
         <button
           key={opt.key}
           type="button"
           onClick={() => onSelect(opt.key)}
+          role="radio"
+          aria-checked={selected === opt.key}
           className={`flex flex-1 flex-col items-center gap-1 rounded-lg border-2 px-3 py-2.5 text-sm transition-colors ${
             selected === opt.key
               ? "border-blue-500 bg-blue-50 text-blue-700"

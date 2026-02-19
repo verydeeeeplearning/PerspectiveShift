@@ -16,7 +16,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   loginWithGoogle: () => Promise<void>;
-  loginWithKakao: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -56,13 +55,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const loginWithKakao = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "kakao",
-      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
-    });
-  };
-
   const logout = async () => {
     await supabase.auth.signOut();
   };
@@ -75,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!session,
         loading,
         loginWithGoogle,
-        loginWithKakao,
         logout,
       }}
     >

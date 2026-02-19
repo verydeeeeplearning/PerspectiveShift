@@ -1,10 +1,16 @@
-import { EnergyLevel, type EnergyLevelKey, type MatchAdjustment } from "@/domain/value-objects/energy-level";
+import {
+  EnergyLevel,
+  type EnergyLevelKey,
+  type MatchAdjustment,
+  type MatchingParams,
+} from "@/domain/value-objects/energy-level";
 
 export interface EnergyLevelResult {
   key: EnergyLevelKey;
   emoji: string;
   label: string;
   adjustment: MatchAdjustment;
+  matchingParams: MatchingParams;
 }
 
 export class SelectEnergyLevelUseCase {
@@ -16,6 +22,7 @@ export class SelectEnergyLevelUseCase {
       emoji: level.emoji,
       label: level.label,
       adjustment: level.matchAdjustment,
+      matchingParams: level.getMatchingParams(),
     };
   }
 }

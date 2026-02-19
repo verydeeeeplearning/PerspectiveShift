@@ -9,6 +9,25 @@ import {
   DistanceSafetyPackage,
   type SafetyPackageInput,
 } from "@/domain/services/distance-safety-package";
+import type { EnergyLevelKey } from "@/domain/value-objects/energy-level";
+
+const DECLINE_PENALTY = 0.15;
+
+const ENERGY_ORDER: EnergyLevelKey[] = ["LOW", "NORMAL", "HIGH"];
+
+function energyIndex(level: EnergyLevelKey): number {
+  return ENERGY_ORDER.indexOf(level);
+}
+
+export function computeEnergyCompat(
+  a: EnergyLevelKey,
+  b: EnergyLevelKey,
+): number {
+  const diff = Math.abs(energyIndex(a) - energyIndex(b));
+  if (diff === 0) return 1.0;
+  if (diff === 1) return 0.7;
+  return 0.3;
+}
 
 export interface FindMatchCandidatesDeps {
   stanceRepository: StanceRepository;
@@ -20,6 +39,8 @@ export interface AdaptiveMatchOptions {
   fatigue?: number;
   isFirstDialogue?: boolean;
   recentSatisfaction?: number;
+  energyLevel?: EnergyLevelKey;
+  recentlyDeclinedSessionIds?: string[];
 }
 
 export class FindMatchCandidatesUseCase {
@@ -69,6 +90,9 @@ export class FindMatchCandidatesUseCase {
     const bandMin = safetyPackage?.band.min ?? 0.4;
     const bandMax = safetyPackage?.band.max ?? 0.7;
 
+    const declinedSet = new Set(options?.recentlyDeclinedSessionIds ?? []);
+    const myEnergy = options?.energyLevel;
+
     const otherProfiles =
       await this.deps.matchRepository.findCandidateProfiles(sessionId);
 
@@ -92,7 +116,21 @@ export class FindMatchCandidatesUseCase {
       const readiness = ReadinessScore.create(
         Math.min(1, Math.max(0, profile.readiness)),
       );
-      const score = MatchScore.calculate(distance, readiness);
+
+      // Compute energy compatibility
+      const energyCompat = myEnergy
+        ? computeEnergyCompat(myEnergy, "NORMAL") // Default candidate energy to NORMAL
+        : 0.5;
+
+      // Compute decline penalty
+      const declinePenalty = declinedSet.has(profile.sessionId)
+        ? DECLINE_PENALTY
+        : 0;
+
+      const score = MatchScore.calculate(distance, readiness, {
+        energyCompat,
+        declinePenalty,
+      });
 
       candidates.push(
         MatchCandidate.create({
@@ -100,6 +138,8 @@ export class FindMatchCandidatesUseCase {
           distance,
           readiness,
           score,
+          energyCompat,
+          recentDeclinePenalty: declinePenalty,
         }),
       );
     }

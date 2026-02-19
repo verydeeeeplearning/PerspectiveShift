@@ -15,7 +15,7 @@ export class InvalidStanceAxisError extends DomainError {
 
 export class InvalidQuestionIdError extends DomainError {
   constructor(id: number) {
-    super(`Question ID must be between 1 and 10, got ${id}`);
+    super(`Question ID must be between 1 and 999, got ${id}`);
   }
 }
 
@@ -127,8 +127,6 @@ export class DuplicateFeedbackError extends DomainError {
   }
 }
 
-// Phase 3: Relationship errors
-
 export class UserNotFoundError extends DomainError {
   constructor(userId: string) {
     super(`User ${userId} not found`);
@@ -150,15 +148,11 @@ export class FriendRequestAlreadyExistsError extends DomainError {
 }
 
 export class CannotFriendSelfError extends DomainError {
-  constructor() {
-    super("Cannot send a friend request to yourself");
-  }
+  constructor() { super("Cannot send a friend request to yourself"); }
 }
 
 export class UserBlockedError extends DomainError {
-  constructor() {
-    super("Cannot perform this action on a blocked user");
-  }
+  constructor() { super("Cannot perform this action on a blocked user"); }
 }
 
 export class InsufficientDialogueHistoryError extends DomainError {
@@ -202,9 +196,7 @@ export class FriendshipNotActiveError extends DomainError {
 }
 
 export class RateLimitExceededError extends DomainError {
-  constructor() {
-    super("Rate limit exceeded. Please try again later");
-  }
+  constructor() { super("Rate limit exceeded. Please try again later"); }
 }
 
 export class InsufficientDisclosureLevelError extends DomainError {
@@ -216,9 +208,7 @@ export class InsufficientDisclosureLevelError extends DomainError {
 }
 
 export class DuplicateBlockError extends DomainError {
-  constructor() {
-    super("User is already blocked");
-  }
+  constructor() { super("User is already blocked"); }
 }
 
 export class MeetingConditionsNotMetError extends DomainError {
@@ -240,9 +230,7 @@ export class MeetingAlreadyResolvedError extends DomainError {
 }
 
 export class AuthRequiredError extends DomainError {
-  constructor() {
-    super("Authentication is required for this action");
-  }
+  constructor() { super("Authentication is required for this action"); }
 }
 
 export class FeatureDisabledError extends DomainError {
@@ -251,8 +239,6 @@ export class FeatureDisabledError extends DomainError {
   }
 }
 
-// V2 Phase 1: Self-Affirmation errors
-
 export class InvalidCoreValueError extends DomainError {
   constructor(value: string) {
     super(
@@ -260,8 +246,6 @@ export class InvalidCoreValueError extends DomainError {
     );
   }
 }
-
-// V3 Phase 1: Onboarding Mode errors
 
 export class InvalidOnboardingModeError extends DomainError {
   constructor(value: string) {
@@ -278,11 +262,7 @@ export class InvalidPrecisionInputError extends DomainError {
 }
 
 export class RetakeLimitExceededError extends DomainError {
-  constructor() {
-    super(
-      "오늘은 이미 다시 풀어보셨어요. 내일 다시 해볼까요?",
-    );
-  }
+  constructor() { super("오늘은 이미 다시 풀어보셨어요. 내일 다시 해볼까요?"); }
 }
 
 export class InvalidConfidenceLevelError extends DomainError {
@@ -290,5 +270,17 @@ export class InvalidConfidenceLevelError extends DomainError {
     super(
       `Invalid confidence level: "${value}". Must be one of: LOW, MEDIUM, HIGH`,
     );
+  }
+}
+
+export class InvalidUnderstandingScoreError extends DomainError {
+  constructor(value: number) {
+    super(`Understanding score must be between 0 and 1, got ${value}`);
+  }
+}
+
+export class InvalidFeelHeardScoreError extends DomainError {
+  constructor(value: number) {
+    super(`Feel heard score must be between 1 and 5, got ${value}`);
   }
 }

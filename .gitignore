@@ -44,6 +44,11 @@ test-results/
 *.junit.xml
 vitest.timestamp-*
 
+# playwright
+playwright-report/
+blob-report/
+test/e2e/.auth/
+
 # vercel
 .vercel
 
@@ -56,3 +61,4 @@ vitest.timestamp-*
 # screenshots & temp files
 screenshot-*.png
 respond_result.txt
+.next-dev-*.log
