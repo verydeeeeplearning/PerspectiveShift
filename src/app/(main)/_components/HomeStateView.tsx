@@ -1,0 +1,53 @@
+"use client";
+
+import type { HomeStateType } from "@/domain/value-objects/home-state";
+
+interface HomeStateViewProps {
+  state: HomeStateType;
+}
+
+const STATE_CONFIG: Record<HomeStateType, { title: string; description: string; cta: string }> = {
+  FIRST_VISIT: {
+    title: "생각 지도 만들기",
+    description: "내 입장을 탐색해보세요",
+    cta: "시작하기",
+  },
+  MAP_COMPLETED: {
+    title: "매칭 추천",
+    description: "비슷하면서도 다른 상대를 찾아드릴게요",
+    cta: "대화 상대 찾기",
+  },
+  WAITING_MATCH: {
+    title: "대화 상대를 찾고 있어요",
+    description: "잠시만 기다려 주세요",
+    cta: "기다리는 중...",
+  },
+  POST_DIALOGUE_D1: {
+    title: "어제 대화 돌아보기",
+    description: "상대의 핵심 발언을 다시 살펴보세요",
+    cta: "복기하기",
+  },
+  HAS_FRIENDS: {
+    title: "친구와 가볍게 이야기해요",
+    description: "라이트 프로토콜로 짧은 대화를 나눠보세요",
+    cta: "대화 시작",
+  },
+  RETURNING_AFTER_14D: {
+    title: "오랜만이에요!",
+    description: "그동안 많은 것이 바뀌었을 수도 있어요",
+    cta: "다시 시작하기",
+  },
+};
+
+export default function HomeStateView({ state }: HomeStateViewProps) {
+  const config = STATE_CONFIG[state];
+  return (
+    <div className="rounded-xl border p-6 text-center">
+      <h2 className="text-xl font-bold">{config.title}</h2>
+      <p className="mt-2 text-sm text-gray-500">{config.description}</p>
+      <button className="mt-4 rounded bg-indigo-500 px-6 py-2 text-white">
+        {config.cta}
+      </button>
+    </div>
+  );
+}

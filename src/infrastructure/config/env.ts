@@ -16,6 +16,14 @@ const EnvSchema = z.object({
     .url()
     .optional()
     .default("http://localhost:3000"),
+  FEATURE_MATCHING: z
+    .enum(["true", "false"])
+    .optional()
+    .default("true"),
+  FEATURE_RELATIONSHIP: z
+    .enum(["true", "false"])
+    .optional()
+    .default("false"),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

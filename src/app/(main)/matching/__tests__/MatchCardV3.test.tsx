@@ -1,0 +1,75 @@
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { MatchCardV3 } from "../components/MatchCardV3";
+
+const defaultProps = {
+  topic: "AI 기술 규제",
+  distanceLabel: {
+    level: "MODERATE",
+    emoji: "🌊",
+    shortText: "적당한 차이",
+    description: "한두 축에서 뚜렷이 다름",
+    isDisabled: false,
+  },
+  estimatedMinutes: 15,
+  socialProof: "어제 이 주제로 24쌍이 대화했어요",
+  onStart: vi.fn(),
+  onDecline: vi.fn(),
+};
+
+describe("MatchCardV3", () => {
+  it("renders topic text", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByText("AI 기술 규제")).toBeInTheDocument();
+  });
+
+  it("renders distance label with emoji", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByText(/적당한 차이/)).toBeInTheDocument();
+    expect(screen.getByText("🌊")).toBeInTheDocument();
+  });
+
+  it("renders estimated time", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByText(/15분/)).toBeInTheDocument();
+  });
+
+  it("renders social proof", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByText(/24쌍/)).toBeInTheDocument();
+  });
+
+  it("renders conversation trailer when provided", () => {
+    render(
+      <MatchCardV3
+        {...defaultProps}
+        trailer="기술에 열린 자세를 가진 분이에요."
+      />,
+    );
+    expect(screen.getByText(/열린 자세/)).toBeInTheDocument();
+  });
+
+  it("renders start CTA button", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByRole("button", { name: /대화 시작/ })).toBeInTheDocument();
+  });
+
+  it("calls onStart when CTA clicked", () => {
+    const onStart = vi.fn();
+    render(<MatchCardV3 {...defaultProps} onStart={onStart} />);
+    fireEvent.click(screen.getByRole("button", { name: /대화 시작/ }));
+    expect(onStart).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls onDecline when decline button clicked", () => {
+    const onDecline = vi.fn();
+    render(<MatchCardV3 {...defaultProps} onDecline={onDecline} />);
+    fireEvent.click(screen.getByRole("button", { name: /다음에/ }));
+    expect(onDecline).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows anonymous badge", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByText(/익명/)).toBeInTheDocument();
+  });
+});

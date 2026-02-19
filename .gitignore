@@ -49,3 +49,10 @@ vitest.timestamp-*
 
 # turbo
 .turbo
+
+# playwright MCP
+.playwright-mcp/
+
+# screenshots & temp files
+screenshot-*.png
+respond_result.txt

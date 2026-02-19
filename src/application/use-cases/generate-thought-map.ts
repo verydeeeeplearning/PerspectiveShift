@@ -59,6 +59,12 @@ export class GenerateThoughtMapUseCase {
         emoji: thoughtMap.mapType.emoji,
         description: thoughtMap.mapType.description,
       },
+      alias: {
+        key: thoughtMap.alias.key,
+        label: thoughtMap.alias.label,
+        emoji: thoughtMap.alias.emoji,
+        description: thoughtMap.alias.description,
+      },
       percentiles: percentiles.map((p) => ({
         dimension: p.dimension,
         label: DIMENSION_LABELS[p.dimension],

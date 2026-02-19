@@ -1,4 +1,7 @@
 import type { StanceVector } from "../entities/stance-vector";
+import type { CoreValueKey } from "../value-objects/core-value";
+import type { ConfidenceLevelKey } from "../value-objects/confidence-level";
+import type { StanceDimension } from "../value-objects/stance-dimension";
 
 export interface StanceProfile {
   id: string;
@@ -8,6 +11,9 @@ export interface StanceProfile {
   reasoning: string | null;
   readiness: number;
   precision: "initial" | "refined";
+  coreValue?: CoreValueKey | null;
+  selfAffirmationExperience?: string | null;
+  confidenceMap?: Record<StanceDimension, ConfidenceLevelKey> | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,7 +24,10 @@ export interface StanceRepository {
   update(
     sessionId: string,
     updates: Partial<
-      Pick<StanceProfile, "vector" | "mapType" | "reasoning" | "readiness" | "precision">
+      Pick<
+        StanceProfile,
+        "vector" | "mapType" | "reasoning" | "readiness" | "precision" | "coreValue" | "selfAffirmationExperience" | "confidenceMap"
+      >
     >,
   ): Promise<void>;
 }

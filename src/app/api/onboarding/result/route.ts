@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { calculateStance } from "@/app/onboarding/actions";
+import { calculateStance } from "@/app/(funnel)/onboarding/actions";
 
 const ResultRequestSchema = z.object({
   sessionId: z.string().min(1),
