@@ -21,6 +21,12 @@
     - 스캐폴딩 + 수용성 전염 + Decline 배지 + D+1 복기 + Passport + 앵커 매칭
   - **P2 (Persistence & Scale)**: 10개 피처, 10-16주
     - JITAI 엔진 + 복구 고도화 + 튜링 게임 + 페르소나 메모리 + PWA + 알림
+- `docs/plans/active/005-v4-p1-loop-quality-plan.md`: **V4-P1 Loop Quality 구현 계획** — 10개 피처 Gap 분석 + 상세 구현 사항
+  - 수용성 전염, Decline 배지, 선물 UI, Blind Spot UI, 다음 질문, D+1 복기, Passport, Trailer 품질, 앵커 필터
+  - 추정 공수: 29-43h
+- `docs/plans/active/006-v4-p2-persistence-scale-plan.md`: **V4-P2 Persistence & Scale 구현 계획** — 10개 피처 Gap 분석 + 상세 구현 사항
+  - JITAI Rule Engine, 복구 고도화, 튜링 게임, 페르소나 메모리, PWA, 역할극 노출, 정밀도 확장, 요약 애니메이션
+  - 추정 공수: 50-73h
 
 ### v3.0 Enhancement Plans
 - `docs/plans/active/003-v3-enhancement-blueprint.md`: **v3 전체 청사진** — 11 Phases, Gap 분석, ADRs

@@ -1,44 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { getContainer } from "@/infrastructure/config/di-container";
+import { handleError } from "../../../../_shared/error-handler";
 
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const sessionId = request.headers.get("x-session-id");
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: "Missing X-Session-Id header" },
+        { status: 401 },
+      );
+    }
+
     const { id } = await params;
+    const container = getContainer();
+    const result = await container.generateJointSummaryUseCase.execute(id);
 
-    // TODO: Wire to DI container when Supabase is connected
-    return NextResponse.json({
-      sessionId: id,
-      agreedPoints: [],
-      disagreedPoints: [],
-      sharedQuestions: [],
-      llmGenerated: false,
-    });
-  } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-  }
-}
-
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id } = await params;
-
-    // TODO: Wire to DI container when Supabase is connected
-    return NextResponse.json({
-      success: true,
-      sessionId: id,
-    });
-  } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json(result);
+  } catch (error) {
+    return handleError(error);
   }
 }

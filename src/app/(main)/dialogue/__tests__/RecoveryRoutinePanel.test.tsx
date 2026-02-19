@@ -15,19 +15,24 @@ describe("RecoveryRoutinePanel", () => {
     expect(screen.getByText(/기록에서 치울게요/)).toBeDefined();
   });
 
-  it("has two equally weighted CTA buttons", () => {
+  it("has primary '나중에 할게요' and secondary '바로 찾아봐요' buttons", () => {
     render(<RecoveryRoutinePanel messages={messages} onLater={vi.fn()} onFindNew={vi.fn()} />);
-    expect(screen.getByText("나중에 다시 보기")).toBeDefined();
+    expect(screen.getByText("나중에 할게요")).toBeDefined();
     expect(screen.getByText("바로 찾아봐요")).toBeDefined();
   });
 
-  it("calls onLater and onFindNew correctly", () => {
+  it("calls onLater directly, onFindNew after confirmation", () => {
     const onLater = vi.fn();
     const onFindNew = vi.fn();
     render(<RecoveryRoutinePanel messages={messages} onLater={onLater} onFindNew={onFindNew} />);
-    fireEvent.click(screen.getByText("나중에 다시 보기"));
-    fireEvent.click(screen.getByText("바로 찾아봐요"));
+
+    fireEvent.click(screen.getByText("나중에 할게요"));
     expect(onLater).toHaveBeenCalledTimes(1);
+
+    // 바로 찾아봐요 → 확인 다이얼로그 → 확인 버튼
+    fireEvent.click(screen.getByText("바로 찾아봐요"));
+    expect(onFindNew).not.toHaveBeenCalled(); // confirmation step
+    fireEvent.click(screen.getByText("확인"));
     expect(onFindNew).toHaveBeenCalledTimes(1);
   });
 });

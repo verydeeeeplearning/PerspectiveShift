@@ -1,4 +1,5 @@
 import { ReflectionQuiz } from "@/domain/entities/reflection-quiz";
+import type { SummaryGenerator } from "@/domain/interfaces/summary-generator";
 
 interface GenerateQuizInput {
   dialogueId: string;
@@ -11,20 +12,36 @@ interface GenerateQuizResult {
   correctIndex: number;
 }
 
+interface GenerateReflectionQuizDeps {
+  summaryGenerator?: SummaryGenerator;
+}
+
 export class GenerateReflectionQuizUseCase {
-  execute(input: GenerateQuizInput): GenerateQuizResult {
-    // In production, LLM generates distractors. Here we create deterministic distractors.
+  private readonly summaryGenerator?: SummaryGenerator;
+
+  constructor(deps?: GenerateReflectionQuizDeps) {
+    this.summaryGenerator = deps?.summaryGenerator;
+  }
+
+  async execute(input: GenerateQuizInput): Promise<GenerateQuizResult> {
     const correct = input.opponentKeyPoint;
     const distractors = [
       "경제적 효율성이 가장 중요하다",
       "개인의 자유가 우선이다",
       "사회적 합의가 필요하다",
     ];
-    const correctIndex = 0;
-    const options = [correct, ...distractors];
+
+    const allOptions = [correct, ...distractors];
+    // Shuffle to randomize correct answer position
+    const shuffled = [...allOptions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const correctIndex = shuffled.indexOf(correct);
 
     const quiz = ReflectionQuiz.create({
-      options,
+      options: shuffled,
       correctIndex,
       dialogueId: input.dialogueId,
     });

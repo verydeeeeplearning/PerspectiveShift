@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface MutualVerificationSliderProps {
   summary: string;
@@ -11,6 +11,12 @@ export function MutualVerificationSlider({ summary, onSubmit }: MutualVerificati
   const [value, setValue] = useState(50);
   const [showCorrection, setShowCorrection] = useState(false);
   const [correction, setCorrection] = useState("");
+
+  useEffect(() => {
+    if (value < 40) {
+      setShowCorrection(true);
+    }
+  }, [value]);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5">

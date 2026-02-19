@@ -81,12 +81,17 @@ import {
 import { stubReceptivenessRepo, stubLightProtocolRepo, stubFollowUpRepo } from "./stub-repositories";
 import { InMemoryPersonaRepository } from "../persistence/in-memory-persona-repository";
 import { PersonaLlmAdapter } from "../external/persona-llm-adapter";
+import { OpenAiPersonaGenerator } from "../external/openai-persona-generator";
 import { KoreanTextSegmenter } from "../external/korean-text-segmenter";
 import { FallbackTrailerGenerator } from "../external/fallback-trailer-generator";
+import { OpenAiTrailerGenerator } from "../external/openai-trailer-generator";
 import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
 import type { PersonaDialogueGenerator } from "@/domain/interfaces/persona-dialogue-generator";
 import type { TextSegmenter } from "@/domain/interfaces/text-segmenter";
 import type { TrailerGenerator } from "@/domain/interfaces/trailer-generator";
+import type { DialogueAgent } from "@/domain/interfaces/dialogue-agent";
+import { LangGraphDialogueAgent, FallbackDialogueAgent } from "../agent/dialogue-agent-graph";
+import { initLangSmithTracing } from "../external/langsmith-tracer";
 import { OpenAIValueExtractor } from "../external/openai-value-extractor";
 import { FallbackValueExtractor } from "../external/fallback-value-extractor";
 import { InMemoryEventEmitter } from "../external/in-memory-event-emitter";
@@ -229,8 +234,8 @@ function createContainer() {
     buildMatchCardUseCase: new BuildMatchCardUseCase(), selectEnergyLevelUseCase: new SelectEnergyLevelUseCase(),
     recordDeclineReasonUseCase: new RecordDeclineReasonUseCase(), getScaffoldForStepUseCase: new GetScaffoldForStepUseCase(),
     getCoachSuggestionsUseCase: new GetCoachSuggestionsUseCase(), createHighlightUseCase: new CreateHighlightUseCase(),
-    checkToneUseCase: new CheckToneUseCase(), suggestReceptivenessTemplateUseCase: new SuggestReceptivenessTemplateUseCase(),
-    generateReflectionQuizUseCase: new GenerateReflectionQuizUseCase(), submitQuizAnswerUseCase: new SubmitQuizAnswerAndTextUseCase(),
+    checkToneUseCase: new CheckToneUseCase(), suggestReceptivenessTemplateUseCase: new SuggestReceptivenessTemplateUseCase({ facilitator }),
+    generateReflectionQuizUseCase: new GenerateReflectionQuizUseCase({ summaryGenerator }), submitQuizAnswerUseCase: new SubmitQuizAnswerAndTextUseCase(),
     submitMutualVerificationUseCase: new SubmitMutualVerificationUseCase(), submitRoleplaySteelmanUseCase: new SubmitRoleplaySteelmanUseCase(),
     saveCommonGroundUseCase: new SaveCommonGroundUseCase(), determineReflectionPolicyUseCase: new DetermineReflectionPolicyUseCase(),
     buildJointSummaryCardUseCase: new BuildJointSummaryCardUseCase(), writeGiftMessageUseCase: new WriteGiftMessageUseCase(),
@@ -246,14 +251,16 @@ function createContainer() {
     getExperimentVariantUseCase: new GetExperimentVariantUseCase(), calculateStanceDriftUseCase: new CalculateStanceDriftUseCase(), manageDriftPreferenceUseCase: new ManageDriftPreferenceUseCase(), sendDriftNotificationUseCase: new SendDriftNotificationUseCase(),
     checkMatchingPoolUseCase: new CheckMatchingPoolUseCase(),
     personaRepository: new InMemoryPersonaRepository() as PersonaRepository,
-    personaDialogueGenerator: new PersonaLlmAdapter() as PersonaDialogueGenerator,
+    personaDialogueGenerator: (hasValidKey ? new OpenAiPersonaGenerator(openaiKey) : new PersonaLlmAdapter()) as PersonaDialogueGenerator,
     selectPersonaUseCase: new SelectPersonaUseCase(new InMemoryPersonaRepository()),
-    generatePersonaResponseUseCase: new GeneratePersonaResponseUseCase({ personaRepository: new InMemoryPersonaRepository(), personaDialogueGenerator: new PersonaLlmAdapter() }),
+    generatePersonaResponseUseCase: new GeneratePersonaResponseUseCase({ personaRepository: new InMemoryPersonaRepository(), personaDialogueGenerator: hasValidKey ? new OpenAiPersonaGenerator(openaiKey) : new PersonaLlmAdapter() }),
     textSegmenter: new KoreanTextSegmenter() as TextSegmenter,
     segmentTextUseCase: new SegmentTextUseCase(new KoreanTextSegmenter()),
     createHighlightByTapUseCase: new CreateHighlightByTapUseCase(),
-    trailerGenerator: new FallbackTrailerGenerator() as TrailerGenerator,
-    generateConversationTrailerUseCase: new GenerateConversationTrailerUseCase({ trailerGenerator: new FallbackTrailerGenerator() }),
+    trailerGenerator: (hasValidKey ? new OpenAiTrailerGenerator(openaiKey) : new FallbackTrailerGenerator()) as TrailerGenerator,
+    generateConversationTrailerUseCase: new GenerateConversationTrailerUseCase({ trailerGenerator: hasValidKey ? new OpenAiTrailerGenerator(openaiKey) : new FallbackTrailerGenerator() }),
+    dialogueAgent: (hasValidKey ? new LangGraphDialogueAgent(openaiKey) : new FallbackDialogueAgent()) as DialogueAgent,
+    langSmithStatus: initLangSmithTracing(),
   };
 }
 

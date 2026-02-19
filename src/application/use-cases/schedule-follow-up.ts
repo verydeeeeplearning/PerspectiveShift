@@ -12,7 +12,7 @@ export interface FollowUpScheduleResult {
   scheduledAt: string;
 }
 
-const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 export class ScheduleFollowUpUseCase {
   constructor(private readonly deps: ScheduleFollowUpDeps) {}
@@ -31,7 +31,7 @@ export class ScheduleFollowUpUseCase {
       id: crypto.randomUUID(),
       dialogueSessionId: sessionId,
       participantId,
-      scheduledAt: new Date(now.getTime() + ONE_WEEK_MS),
+      scheduledAt: new Date(now.getTime() + ONE_DAY_MS),
       avoidanceReduction: null,
       completedAt: null,
       createdAt: now,

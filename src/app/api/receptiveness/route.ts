@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getContainer } from "@/infrastructure/config/di-container";
+import { handleError } from "../_shared/error-handler";
 
 export async function GET(request: Request) {
   try {
@@ -12,18 +14,12 @@ export async function GET(request: Request) {
       );
     }
 
-    // TODO: Wire to DI container when Supabase is connected
-    return NextResponse.json({
-      userId,
-      totalPoints: 0,
-      templateAdoptions: 0,
-      feelHeardReceived: 0,
-      percentile: null,
-    });
-  } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    const container = getContainer();
+    const result =
+      await container.updateReceptivenessUseCase.getWithPercentile(userId);
+
+    return NextResponse.json(result);
+  } catch (error) {
+    return handleError(error);
   }
 }

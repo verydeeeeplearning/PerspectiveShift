@@ -3,12 +3,15 @@ import type {
   Facilitator,
   ToneCheckResult,
   DriftCheckResult,
+  DetectedReceptiveExpression,
 } from "@/domain/interfaces/facilitator";
 import {
   TONE_CHECK_SYSTEM_PROMPT,
   toneCheckUserPrompt,
   DRIFT_CHECK_SYSTEM_PROMPT,
   driftCheckUserPrompt,
+  RECEPTIVENESS_DETECTION_SYSTEM_PROMPT,
+  receptivenessDetectionUserPrompt,
 } from "./facilitator-prompts";
 
 export class OpenAiFacilitator implements Facilitator {
@@ -31,12 +34,13 @@ export class OpenAiFacilitator implements Facilitator {
     });
 
     const raw = response.choices[0]?.message?.content;
-    if (!raw) return { passed: true, suggestion: null };
+    if (!raw) return { passed: true, suggestion: null, alternatives: [] };
 
     const parsed = JSON.parse(raw);
     return {
       passed: parsed.passed ?? true,
       suggestion: parsed.suggestion ?? null,
+      alternatives: Array.isArray(parsed.alternatives) ? parsed.alternatives : [],
     };
   }
 
@@ -66,6 +70,29 @@ export class OpenAiFacilitator implements Facilitator {
       drifted: parsed.drifted ?? false,
       suggestion: parsed.suggestion ?? null,
     };
+  }
+
+  async detectReceptiveExpressions(opponentText: string): Promise<DetectedReceptiveExpression[]> {
+    try {
+      const response = await this.client.chat.completions.create({
+        model: "gpt-5-mini",
+        temperature: 0.3,
+        max_tokens: 300,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: RECEPTIVENESS_DETECTION_SYSTEM_PROMPT },
+          { role: "user", content: receptivenessDetectionUserPrompt(opponentText) },
+        ],
+      });
+
+      const raw = response.choices[0]?.message?.content;
+      if (!raw) return [];
+
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed.expressions) ? parsed.expressions : [];
+    } catch {
+      return [];
+    }
   }
 
   async suggestReceptivenessTemplate(text: string): Promise<string[]> {

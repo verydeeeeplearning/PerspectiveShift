@@ -38,24 +38,41 @@ function mockRepo(checkin: FollowUpCheckin | null): FollowUpCheckinRepository {
 }
 
 describe("SubmitFollowUpCheckinUseCase", () => {
-  it("submits avoidance reduction score", async () => {
+  it("submits with changed choice", async () => {
     const repo = mockRepo(makePendingCheckin());
     const uc = new SubmitFollowUpCheckinUseCase({ followUpRepository: repo });
-    const result = await uc.execute("checkin-1", 4);
-    expect(result.avoidanceReduction).toBe(4);
+    const result = await uc.execute("checkin-1", "changed");
+    expect(result.avoidanceReduction).toBe(5);
+    expect(result.nextAction).toBe("suggest_stance_update");
     expect(result.completedAt).not.toBeNull();
     expect(repo.update).toHaveBeenCalledOnce();
+  });
+
+  it("submits with unsure choice", async () => {
+    const repo = mockRepo(makePendingCheckin());
+    const uc = new SubmitFollowUpCheckinUseCase({ followUpRepository: repo });
+    const result = await uc.execute("checkin-1", "unsure");
+    expect(result.avoidanceReduction).toBe(3);
+    expect(result.nextAction).toBe("recommend_level0");
+  });
+
+  it("submits with same choice", async () => {
+    const repo = mockRepo(makePendingCheckin());
+    const uc = new SubmitFollowUpCheckinUseCase({ followUpRepository: repo });
+    const result = await uc.execute("checkin-1", "same");
+    expect(result.avoidanceReduction).toBe(1);
+    expect(result.nextAction).toBe("recommend_new_topic");
   });
 
   it("throws for expired checkin", async () => {
     const repo = mockRepo(makeExpiredCheckin());
     const uc = new SubmitFollowUpCheckinUseCase({ followUpRepository: repo });
-    await expect(uc.execute("checkin-2", 3)).rejects.toThrow();
+    await expect(uc.execute("checkin-2", "changed")).rejects.toThrow();
   });
 
   it("throws for non-existent checkin", async () => {
     const repo = mockRepo(null);
     const uc = new SubmitFollowUpCheckinUseCase({ followUpRepository: repo });
-    await expect(uc.execute("missing", 3)).rejects.toThrow();
+    await expect(uc.execute("missing", "changed")).rejects.toThrow();
   });
 });

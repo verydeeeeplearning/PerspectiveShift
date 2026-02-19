@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+import { getContainer } from "@/infrastructure/config/di-container";
+import { handleError } from "../../_shared/error-handler";
+import type { ReviewChoice } from "@/domain/value-objects/review-response";
+
+const VALID_CHOICES: ReviewChoice[] = ["changed", "unsure", "same"];
 
 export async function POST(
   request: Request,
@@ -7,29 +12,27 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { avoidanceReduction } = body;
+    const { choice } = body;
 
-    if (
-      typeof avoidanceReduction !== "number" ||
-      avoidanceReduction < 1 ||
-      avoidanceReduction > 5
-    ) {
+    if (!choice || !VALID_CHOICES.includes(choice)) {
       return NextResponse.json(
-        { error: "avoidanceReduction must be between 1 and 5" },
+        { error: "choice must be one of: changed, unsure, same" },
         { status: 400 },
       );
     }
 
-    // TODO: Wire to DI container when Supabase is connected
+    const container = getContainer();
+    const result = await container.submitFollowUpCheckinUseCase.execute(id, choice as ReviewChoice);
+
     return NextResponse.json({
       success: true,
-      checkinId: id,
-      avoidanceReduction,
+      checkinId: result.id,
+      avoidanceReduction: result.avoidanceReduction,
+      nextAction: result.nextAction,
+      actionLabel: result.actionLabel,
+      actionDescription: result.actionDescription,
     });
-  } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+  } catch (error) {
+    return handleError(error);
   }
 }

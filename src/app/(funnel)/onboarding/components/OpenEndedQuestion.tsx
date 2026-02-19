@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useInactivityTimer } from "@/app/_shared/hooks/useInactivityTimer";
 
 interface ResponseExample {
   kind: "주장형" | "경험형" | "불확실형";
@@ -50,6 +51,14 @@ export function OpenEndedQuestion({
   const [value, setValue] = useState(initialValue);
   const [exampleIndex, setExampleIndex] = useState(0);
   const [isCoachOpen, setIsCoachOpen] = useState(false);
+  const inactive = useInactivityTimer(90_000);
+
+  // Auto-open coach after 90s inactivity
+  useEffect(() => {
+    if (inactive && !isCoachOpen) {
+      setIsCoachOpen(true);
+    }
+  }, [inactive, isCoachOpen]);
 
   const handleSubmit = () => {
     if (value.trim().length > 0) {

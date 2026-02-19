@@ -54,6 +54,17 @@ export default function Home() {
             <PrimaryButton fullWidth>생각 발견 시작하기</PrimaryButton>
           </Link>
 
+          <p className="flex items-center justify-center gap-1 text-xs text-text-tertiary">
+            <span aria-hidden="true">&#x1f512;</span>
+            대화는 익명 · 데이터는 내 손 안에{" "}
+            <Link
+              href="/settings/privacy"
+              className="underline hover:text-text-secondary"
+            >
+              내 데이터 관리
+            </Link>
+          </p>
+
           <p className="text-sm text-text-tertiary">
             이미 계정이 있나요?{" "}
             <Link
