@@ -42,30 +42,13 @@ function ResultContent() {
   }
 
   return (
-    <>
-      <ThoughtMapResult data={data} />
-
-      <div className="mt-8 flex justify-center gap-4">
-        <Link
-          href="/onboarding"
-          className="rounded-lg border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50"
-        >
-          다시 측정하기
-        </Link>
-        <Link
-          href="/"
-          className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
-        >
-          홈으로
-        </Link>
-      </div>
-    </>
+    <ThoughtMapResult data={data} />
   );
 }
 
 export default function ResultPage() {
   return (
-    <main className="mx-auto flexmax-w-2xl flex-col px-4 py-8">
+    <main className="mx-auto flex max-w-2xl flex-col px-4 py-8">
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold">나의 Thought Map</h1>
         <p className="mt-2 text-gray-600">

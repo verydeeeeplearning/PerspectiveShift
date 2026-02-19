@@ -29,7 +29,7 @@ export class Question {
   }
 
   static create(props: QuestionProps): Question {
-    if (props.id < 1 || props.id > 10 || !Number.isInteger(props.id)) {
+    if (props.id < 1 || props.id > 999 || !Number.isInteger(props.id)) {
       throw new InvalidQuestionIdError(props.id);
     }
     return new Question(props);

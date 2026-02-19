@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { MatchCardV3 } from "../components/MatchCardV3";
 
 const defaultProps = {
@@ -18,6 +18,10 @@ const defaultProps = {
 };
 
 describe("MatchCardV3", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("renders topic text", () => {
     render(<MatchCardV3 {...defaultProps} />);
     expect(screen.getByText("AI 기술 규제")).toBeInTheDocument();
@@ -31,7 +35,31 @@ describe("MatchCardV3", () => {
 
   it("renders estimated time", () => {
     render(<MatchCardV3 {...defaultProps} />);
-    expect(screen.getByText(/15분/)).toBeInTheDocument();
+    expect(screen.getByTestId("match-card-time")).toHaveTextContent("약 15분");
+  });
+
+  it("renders default difficulty range", () => {
+    render(<MatchCardV3 {...defaultProps} />);
+    expect(screen.getByTestId("match-card-difficulty")).toHaveTextContent(
+      "난이도 Level 1-2",
+    );
+  });
+
+  it("renders custom difficulty range and CTA label", () => {
+    render(
+      <MatchCardV3
+        {...defaultProps}
+        difficultyRange={[0, 1]}
+        ctaLabel="가볍게 5분 시작"
+      />,
+    );
+
+    expect(screen.getByTestId("match-card-difficulty")).toHaveTextContent(
+      "난이도 Level 0-1",
+    );
+    expect(
+      screen.getByRole("button", { name: "가볍게 5분 시작" }),
+    ).toBeInTheDocument();
   });
 
   it("renders social proof", () => {
@@ -71,5 +99,26 @@ describe("MatchCardV3", () => {
   it("shows anonymous badge", () => {
     render(<MatchCardV3 {...defaultProps} />);
     expect(screen.getByText(/익명/)).toBeInTheDocument();
+  });
+
+  it("toggles transition flag within 0.3s when card metrics change", () => {
+    vi.useFakeTimers();
+    const { rerender } = render(<MatchCardV3 {...defaultProps} />);
+
+    const card = screen.getByTestId("match-card-root");
+    expect(card).toHaveAttribute("data-transitioning", "true");
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(card).toHaveAttribute("data-transitioning", "false");
+
+    rerender(<MatchCardV3 {...defaultProps} estimatedMinutes={10} />);
+    expect(card).toHaveAttribute("data-transitioning", "true");
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(card).toHaveAttribute("data-transitioning", "false");
   });
 });

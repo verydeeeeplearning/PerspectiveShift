@@ -15,6 +15,8 @@ export interface QuestionItemProps {
   axis: StanceDimension;
   isAnchor: boolean;
   variant?: string;
+  allowUncertain?: boolean;
+  tooltipText?: string;
 }
 
 export class QuestionItem {
@@ -24,6 +26,8 @@ export class QuestionItem {
   readonly axis: StanceDimension;
   readonly isAnchor: boolean;
   readonly variant?: string;
+  readonly allowUncertain: boolean;
+  readonly tooltipText?: string;
 
   private constructor(props: QuestionItemProps) {
     this.id = props.id;
@@ -32,6 +36,8 @@ export class QuestionItem {
     this.axis = props.axis;
     this.isAnchor = props.isAnchor;
     this.variant = props.variant;
+    this.allowUncertain = props.allowUncertain ?? false;
+    this.tooltipText = props.tooltipText;
   }
 
   static create(props: QuestionItemProps): QuestionItem {

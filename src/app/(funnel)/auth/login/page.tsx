@@ -3,7 +3,7 @@
 import { useAuth } from "@/app/_shared/hooks/useAuth";
 
 export default function LoginPage() {
-  const { loading, loginWithGoogle, loginWithKakao } = useAuth();
+  const { loading, loginWithGoogle } = useAuth();
 
   if (loading) return <div className="p-6">로딩 중...</div>;
 
@@ -18,12 +18,6 @@ export default function LoginPage() {
             className="w-full py-3 px-4 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
           >
             Google로 계속하기
-          </button>
-          <button
-            onClick={() => loginWithKakao()}
-            className="w-full py-3 px-4 bg-[#FEE500] text-[#000000D9] rounded-lg hover:bg-[#FDD800] font-medium"
-          >
-            카카오로 계속하기
           </button>
         </div>
       </div>

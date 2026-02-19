@@ -3,22 +3,27 @@ import questionsData from "../data/questions.json";
 import { ALL_DIMENSIONS } from "@/domain/value-objects/stance-dimension";
 
 describe("questions.json data", () => {
-  it("has exactly 10 questions", () => {
-    expect(questionsData).toHaveLength(10);
+  it("has exactly 20 questions", () => {
+    expect(questionsData).toHaveLength(20);
   });
 
-  it("has unique IDs from 1 to 10", () => {
+  it("has unique IDs from 1 to 20", () => {
     const ids = questionsData.map((q) => q.id);
-    expect(ids).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(ids).toEqual([
+      1, 2, 3, 4, 5,
+      6, 7, 8, 9, 10,
+      11, 12, 13, 14, 15,
+      16, 17, 18, 19, 20,
+    ]);
   });
 
-  it("has 5 core and 5 extended questions", () => {
+  it("has 5 core and 15 extended questions", () => {
     const core = questionsData.filter((q) => q.phase === "core");
     const extended = questionsData.filter(
       (q) => q.phase === "extended",
     );
     expect(core).toHaveLength(5);
-    expect(extended).toHaveLength(5);
+    expect(extended).toHaveLength(15);
   });
 
   it("core questions are Q1-Q5", () => {
@@ -35,15 +40,15 @@ describe("questions.json data", () => {
     }
   });
 
-  it("has 3 OX, 4 RUBRIC, 2 OPEN_ENDED per architecture", () => {
+  it("has sufficient OX/RUBRIC/OPEN_ENDED mix", () => {
     const ox = questionsData.filter((q) => q.type === "OX");
     const rubric = questionsData.filter((q) => q.type === "RUBRIC");
     const openEnded = questionsData.filter(
       (q) => q.type === "OPEN_ENDED",
     );
-    expect(ox.length).toBeGreaterThanOrEqual(3);
-    expect(rubric.length).toBeGreaterThanOrEqual(2);
-    expect(openEnded).toHaveLength(2);
+    expect(ox.length).toBeGreaterThanOrEqual(7);
+    expect(rubric.length).toBeGreaterThanOrEqual(6);
+    expect(openEnded.length).toBeGreaterThanOrEqual(4);
   });
 
   it("maps to valid stance dimensions", () => {
@@ -65,10 +70,12 @@ describe("questions.json data", () => {
     }
   });
 
-  it("open-ended questions are Q9 and Q10", () => {
+  it("open-ended questions include Q9/Q10 and additional depth prompts", () => {
     const openEnded = questionsData.filter(
       (q) => q.type === "OPEN_ENDED",
     );
-    expect(openEnded.map((q) => q.id).sort((a, b) => a - b)).toEqual([9, 10]);
+    expect(openEnded.map((q) => q.id).sort((a, b) => a - b)).toEqual([
+      9, 10, 16, 20,
+    ]);
   });
 });

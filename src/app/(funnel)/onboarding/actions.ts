@@ -50,8 +50,14 @@ function answerMapToDomainAnswers(
     switch (question.type) {
       case "OX":
         return Answer.ox(questionId, value as boolean);
-      case "RUBRIC":
-        return Answer.rubric(questionId, value as number);
+      case "RUBRIC": {
+        const rubricValue = value as number | "DONT_KNOW" | "DEPENDS";
+        if (rubricValue === "DONT_KNOW" || rubricValue === "DEPENDS") {
+          // Treat uncertain answers as neutral stance for scoring.
+          return Answer.rubric(questionId, 3);
+        }
+        return Answer.rubric(questionId, rubricValue);
+      }
       case "OPEN_ENDED":
         return Answer.openEnded(questionId, value as string);
       default:

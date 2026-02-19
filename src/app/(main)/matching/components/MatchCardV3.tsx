@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
 interface DistanceLabelInfo {
   level: string;
   emoji: string;
@@ -12,6 +15,8 @@ interface MatchCardV3Props {
   topic: string;
   distanceLabel: DistanceLabelInfo;
   estimatedMinutes: number;
+  difficultyRange?: [number, number];
+  ctaLabel?: string;
   socialProof?: string;
   trailer?: string;
   onStart: () => void;
@@ -22,13 +27,51 @@ export function MatchCardV3({
   topic,
   distanceLabel,
   estimatedMinutes,
+  difficultyRange = [1, 2],
+  ctaLabel = "대화 시작",
   socialProof,
   trailer,
   onStart,
   onDecline,
 }: MatchCardV3Props) {
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionSignature = useMemo(
+    () =>
+      [
+        estimatedMinutes,
+        difficultyRange[0],
+        difficultyRange[1],
+        distanceLabel.level,
+        ctaLabel,
+      ].join("|"),
+    [
+      ctaLabel,
+      difficultyRange[0],
+      difficultyRange[1],
+      distanceLabel.level,
+      estimatedMinutes,
+    ],
+  );
+
+  useEffect(() => {
+    setIsTransitioning(true);
+    const timer = window.setTimeout(() => setIsTransitioning(false), 300);
+    return () => window.clearTimeout(timer);
+  }, [transitionSignature]);
+
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
+    <motion.div
+      className={`rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 ${
+        isTransitioning ? "scale-[0.99] opacity-80" : "scale-100 opacity-100"
+      }`}
+      data-testid="match-card-root"
+      data-transitioning={isTransitioning ? "true" : "false"}
+      animate={{
+        scale: isTransitioning ? 0.99 : 1,
+        opacity: isTransitioning ? 0.8 : 1,
+      }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
       <div className="mb-4 flex items-center justify-between">
         <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">
           TODAY&apos;S MATCH
@@ -53,9 +96,32 @@ export function MatchCardV3({
           </div>
         </div>
         <div className="ml-auto text-right">
-          <p className="text-sm font-medium text-gray-900">
-            약 {estimatedMinutes}분
-          </p>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.p
+              key={`time-${estimatedMinutes}`}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="text-sm font-medium text-gray-900 transition-opacity duration-300"
+              data-testid="match-card-time"
+            >
+              약 {estimatedMinutes}분
+            </motion.p>
+          </AnimatePresence>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.p
+              key={`difficulty-${difficultyRange[0]}-${difficultyRange[1]}`}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="text-xs text-gray-500 transition-opacity duration-300"
+              data-testid="match-card-difficulty"
+            >
+              난이도 Level {difficultyRange[0]}-{difficultyRange[1]}
+            </motion.p>
+          </AnimatePresence>
         </div>
       </div>
 
@@ -77,10 +143,22 @@ export function MatchCardV3({
         <button
           type="button"
           onClick={onStart}
-          aria-label="대화 시작하기"
+          aria-label={ctaLabel}
           className="flex-1 rounded-xl bg-blue-600 px-6 py-3 text-center font-bold text-white transition-colors hover:bg-blue-700"
         >
-          대화 시작하기 →
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={ctaLabel}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="transition-opacity duration-300"
+            >
+              {ctaLabel}
+            </motion.span>
+          </AnimatePresence>{" "}
+          →
         </button>
         <button
           type="button"
@@ -91,6 +169,6 @@ export function MatchCardV3({
           다음에
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }

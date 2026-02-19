@@ -51,4 +51,46 @@ describe("RubricQuestion", () => {
     );
     expect(selectedButton?.className).toContain("bg-blue-600");
   });
+
+  it("renders uncertain options when enabled", () => {
+    render(
+      <RubricQuestion
+        questionId={4}
+        text="질문"
+        onAnswer={vi.fn()}
+        allowUncertain
+      />,
+    );
+
+    expect(screen.getByText("모르겠어요")).toBeInTheDocument();
+    expect(screen.getByText("상황따라")).toBeInTheDocument();
+  });
+
+  it("calls onAnswer with uncertain value", () => {
+    const onAnswer = vi.fn();
+    render(
+      <RubricQuestion
+        questionId={4}
+        text="질문"
+        onAnswer={onAnswer}
+        allowUncertain
+      />,
+    );
+
+    fireEvent.click(screen.getByText("모르겠어요"));
+    expect(onAnswer).toHaveBeenCalledWith(4, "DONT_KNOW");
+  });
+
+  it("shows tooltip text when provided", () => {
+    render(
+      <RubricQuestion
+        questionId={4}
+        text="질문"
+        onAnswer={vi.fn()}
+        tooltipText="왜 묻는지 설명입니다"
+      />,
+    );
+
+    expect(screen.getByText(/왜 묻는지 설명입니다/)).toBeInTheDocument();
+  });
 });

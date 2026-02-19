@@ -73,8 +73,20 @@ import {
   DetermineHomeStateUseCase, GenerateReplayCardUseCase, UpdatePerspectivePassportUseCase,
   HandleThoughtChangeUseCase, BuildNotificationUseCase, ManageNotificationPreferenceUseCase,
   TrackEventUseCase, GetMicrocopyForContextUseCase, CheckFeatureFlagUseCase, GetExperimentVariantUseCase, CalculateStanceDriftUseCase, ManageDriftPreferenceUseCase, SendDriftNotificationUseCase,
+  CheckMatchingPoolUseCase,
+  SelectPersonaUseCase, GeneratePersonaResponseUseCase,
+  SegmentTextUseCase, CreateHighlightByTapUseCase,
+  GenerateConversationTrailerUseCase,
 } from "@/application/use-cases";
 import { stubReceptivenessRepo, stubLightProtocolRepo, stubFollowUpRepo } from "./stub-repositories";
+import { InMemoryPersonaRepository } from "../persistence/in-memory-persona-repository";
+import { PersonaLlmAdapter } from "../external/persona-llm-adapter";
+import { KoreanTextSegmenter } from "../external/korean-text-segmenter";
+import { FallbackTrailerGenerator } from "../external/fallback-trailer-generator";
+import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
+import type { PersonaDialogueGenerator } from "@/domain/interfaces/persona-dialogue-generator";
+import type { TextSegmenter } from "@/domain/interfaces/text-segmenter";
+import type { TrailerGenerator } from "@/domain/interfaces/trailer-generator";
 import { OpenAIValueExtractor } from "../external/openai-value-extractor";
 import { FallbackValueExtractor } from "../external/fallback-value-extractor";
 import { InMemoryEventEmitter } from "../external/in-memory-event-emitter";
@@ -97,70 +109,17 @@ function loadQuestionBank(): QuestionBank {
       type: q.type as QuestionType,
       axis: q.dimension as StanceDimension,
       isAnchor: q.phase === "core",
+      allowUncertain: q.type === "RUBRIC",
+      tooltipText:
+        q.id === 4 || q.id === 9
+          ? "왜 묻는지: 매칭 시 대화 난이도를 조절하는 데 사용됩니다."
+          : undefined,
     }),
   );
   return QuestionBank.create(items);
 }
 
-export interface Container {
-  piiScrubber: PiiScrubber; llmExtractor: LlmStanceExtractor;
-  baselineProvider: BaselineProvider; stanceRepository: StanceRepository; questions: Question[];
-  submitAnswerUseCase: SubmitAnswerUseCase; extractStanceUseCase: ExtractStanceUseCase;
-  generateThoughtMapUseCase: GenerateThoughtMapUseCase; matchRepository: MatchRepository;
-  dialogueRepository: DialogueRepository; feedbackRepository: FeedbackRepository;
-  facilitator: Facilitator; summaryGenerator: SummaryGenerator;
-  findMatchCandidatesUseCase: FindMatchCandidatesUseCase; createMatchProposalUseCase: CreateMatchProposalUseCase;
-  respondToProposalUseCase: RespondToProposalUseCase; submitDialogueTurnUseCase: SubmitDialogueTurnUseCase;
-  getDialogueSessionUseCase: GetDialogueSessionUseCase; checkExpiredSessionsUseCase: CheckExpiredSessionsUseCase;
-  submitFeedbackUseCase: SubmitFeedbackUseCase; evaluateUnderstandingUseCase: EvaluateUnderstandingUseCase;
-  generateSummaryCardUseCase: GenerateSummaryCardUseCase; userRepository: UserRepository;
-  friendRepository: FriendRepository; friendshipRepository: FriendshipRepository;
-  disclosureRepository: DisclosureRepository; blockRepository: BlockRepository;
-  claimSessionUseCase: ClaimSessionUseCase; requestFriendshipUseCase: RequestFriendshipUseCase;
-  respondToFriendRequestUseCase: RespondToFriendRequestUseCase; listFriendsUseCase: ListFriendsUseCase;
-  unfriendUseCase: UnfriendUseCase; updateDisclosureLevelUseCase: UpdateDisclosureLevelUseCase;
-  getDisclosureLevelsUseCase: GetDisclosureLevelsUseCase; messageRepository: MessageRepository;
-  receiptRepository: ReceiptRepository; realtimeBroadcaster: RealtimeBroadcaster; rateLimiter: RateLimiter;
-  sendChatMessageUseCase: SendChatMessageUseCase; getChatHistoryUseCase: GetChatHistoryUseCase;
-  markMessagesReadUseCase: MarkMessagesReadUseCase; safetyRepository: SafetyRepository;
-  submitSafetyReportUseCase: SubmitSafetyReportUseCase; blockUserUseCase: BlockUserUseCase;
-  unblockUserUseCase: UnblockUserUseCase; meetingRepository: MeetingRepository; eventTracker: EventTracker;
-  createOfflineProposalUseCase: CreateOfflineProposalUseCase; respondToOfflineProposalUseCase: RespondToOfflineProposalUseCase;
-  submitSafetyCheckinUseCase: SubmitSafetyCheckinUseCase; valueExtractor: ValueExtractor;
-  submitSelfAffirmationUseCase: SubmitSelfAffirmationUseCase; submitConfidenceUseCase: SubmitConfidenceUseCase;
-  calculateMisperceptionUseCase: CalculateMisperceptionUseCase; submitReflectionUseCase: SubmitReflectionUseCase;
-  generateJointSummaryUseCase: GenerateJointSummaryUseCase; receptivenessRepository: ReceptivenessRepository;
-  followUpRepository: FollowUpCheckinRepository; updateReceptivenessUseCase: UpdateReceptivenessUseCase;
-  scheduleFollowUpUseCase: ScheduleFollowUpUseCase; submitFollowUpCheckinUseCase: SubmitFollowUpCheckinUseCase;
-  lightProtocolRepository: LightProtocolRepository; startLightProtocolUseCase: StartLightProtocolUseCase;
-  submitLightProtocolUseCase: SubmitLightProtocolUseCase; checkRealtimeEligibilityUseCase: CheckRealtimeEligibilityUseCase;
-  selectOnboardingModeUseCase: SelectOnboardingModeUseCase;
-  calculatePrecisionUseCase: CalculatePrecisionUseCase; checkRetakeLimitUseCase: CheckRetakeLimitUseCase;
-  generateShareCardUseCase: GenerateShareCardUseCase; determineNextStepUseCase: DetermineNextStepUseCase;
-  buildMatchCardUseCase: BuildMatchCardUseCase;
-  selectEnergyLevelUseCase: SelectEnergyLevelUseCase; recordDeclineReasonUseCase: RecordDeclineReasonUseCase;
-  getScaffoldForStepUseCase: GetScaffoldForStepUseCase; getCoachSuggestionsUseCase: GetCoachSuggestionsUseCase;
-  createHighlightUseCase: CreateHighlightUseCase; checkToneUseCase: CheckToneUseCase; suggestReceptivenessTemplateUseCase: SuggestReceptivenessTemplateUseCase;
-  generateReflectionQuizUseCase: GenerateReflectionQuizUseCase; submitQuizAnswerUseCase: SubmitQuizAnswerAndTextUseCase;
-  submitMutualVerificationUseCase: SubmitMutualVerificationUseCase; submitRoleplaySteelmanUseCase: SubmitRoleplaySteelmanUseCase;
-  saveCommonGroundUseCase: SaveCommonGroundUseCase; determineReflectionPolicyUseCase: DetermineReflectionPolicyUseCase;
-  buildJointSummaryCardUseCase: BuildJointSummaryCardUseCase; writeGiftMessageUseCase: WriteGiftMessageUseCase;
-  revealGiftMessageUseCase: RevealGiftMessageUseCase; extractBlindSpotUseCase: ExtractBlindSpotUseCase;
-  collectPeakEndKPIUseCase: CollectPeakEndKPIUseCase; saveNextQuestionUseCase: SaveNextQuestionUseCase;
-  detectBadExperienceUseCase: DetectBadExperienceUseCase; applyRecoveryRoutineUseCase: ApplyRecoveryRoutineUseCase;
-  excludeDialogueFromRecordUseCase: ExcludeDialogueFromRecordUseCase;
-  determineHomeStateUseCase: DetermineHomeStateUseCase; generateReplayCardUseCase: GenerateReplayCardUseCase;
-  updatePerspectivePassportUseCase: UpdatePerspectivePassportUseCase; handleThoughtChangeUseCase: HandleThoughtChangeUseCase;
-  buildNotificationUseCase: BuildNotificationUseCase; manageNotificationPreferenceUseCase: ManageNotificationPreferenceUseCase;
-  trackEventUseCase: TrackEventUseCase;
-  getMicrocopyForContextUseCase: GetMicrocopyForContextUseCase; checkFeatureFlagUseCase: CheckFeatureFlagUseCase;
-  getExperimentVariantUseCase: GetExperimentVariantUseCase; calculateStanceDriftUseCase: CalculateStanceDriftUseCase; manageDriftPreferenceUseCase: ManageDriftPreferenceUseCase; sendDriftNotificationUseCase: SendDriftNotificationUseCase;
-}
-
-let container: Container | null = null;
-
-export function getContainer(): Container {
-  if (container) return container;
+function createContainer() {
 
   const piiScrubber = new RegexPiiScrubber();
   const openaiKey = process.env.OPENAI_API_KEY;
@@ -191,7 +150,7 @@ export function getContainer(): Container {
     ? new OpenAIValueExtractor(openaiKey)
     : new FallbackValueExtractor();
 
-  container = {
+  return {
     piiScrubber, llmExtractor, baselineProvider, stanceRepository, questions,
     submitAnswerUseCase: new SubmitAnswerUseCase(),
     extractStanceUseCase: new ExtractStanceUseCase({ piiScrubber, llmExtractor, questions }),
@@ -285,7 +244,27 @@ export function getContainer(): Container {
     trackEventUseCase: new TrackEventUseCase({ eventEmitter: new InMemoryEventEmitter() }),
     getMicrocopyForContextUseCase: new GetMicrocopyForContextUseCase(), checkFeatureFlagUseCase: new CheckFeatureFlagUseCase(),
     getExperimentVariantUseCase: new GetExperimentVariantUseCase(), calculateStanceDriftUseCase: new CalculateStanceDriftUseCase(), manageDriftPreferenceUseCase: new ManageDriftPreferenceUseCase(), sendDriftNotificationUseCase: new SendDriftNotificationUseCase(),
+    checkMatchingPoolUseCase: new CheckMatchingPoolUseCase(),
+    personaRepository: new InMemoryPersonaRepository() as PersonaRepository,
+    personaDialogueGenerator: new PersonaLlmAdapter() as PersonaDialogueGenerator,
+    selectPersonaUseCase: new SelectPersonaUseCase(new InMemoryPersonaRepository()),
+    generatePersonaResponseUseCase: new GeneratePersonaResponseUseCase({ personaRepository: new InMemoryPersonaRepository(), personaDialogueGenerator: new PersonaLlmAdapter() }),
+    textSegmenter: new KoreanTextSegmenter() as TextSegmenter,
+    segmentTextUseCase: new SegmentTextUseCase(new KoreanTextSegmenter()),
+    createHighlightByTapUseCase: new CreateHighlightByTapUseCase(),
+    trailerGenerator: new FallbackTrailerGenerator() as TrailerGenerator,
+    generateConversationTrailerUseCase: new GenerateConversationTrailerUseCase({ trailerGenerator: new FallbackTrailerGenerator() }),
   };
+}
+
+export type Container = ReturnType<typeof createContainer>;
+
+let container: Container | null = null;
+
+export function getContainer(): Container {
+  if (!container) {
+    container = createContainer();
+  }
   return container;
 }
 

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { ThoughtMapResult } from "../components/ThoughtMapResult";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
@@ -74,5 +74,30 @@ describe("ThoughtMapResult", () => {
     expect(
       screen.getByText("확장 질문 포함 정밀 프로필"),
     ).toBeInTheDocument();
+  });
+
+  it("renders primary CTA and recommendation fold", () => {
+    render(<ThoughtMapResult data={SAMPLE_OUTPUT} />);
+
+    expect(
+      screen.getByRole("link", { name: "대화 상대 찾기" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("상황 기반 추천 보기"),
+    ).toBeInTheDocument();
+  });
+
+  it("emits view and match click events", async () => {
+    const onEvent = vi.fn();
+    render(<ThoughtMapResult data={SAMPLE_OUTPUT} onEvent={onEvent} />);
+
+    await waitFor(() =>
+      expect(onEvent).toHaveBeenCalledWith("thought_map_view"),
+    );
+
+    const ctaLink = screen.getByRole("link", { name: "대화 상대 찾기" });
+    ctaLink.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(ctaLink);
+    expect(onEvent).toHaveBeenCalledWith("thought_map_cta_match_click");
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { SelectOnboardingModeUseCase } from "../select-onboarding-mode";
 import { QuestionItem } from "@/domain/value-objects/question-item";
 import { QuestionBank } from "@/domain/entities/question-bank";
@@ -23,6 +23,8 @@ function makeBank(): QuestionBank {
         type: "OX",
         axis: axes[i % axes.length],
         isAnchor: true,
+        allowUncertain: i % 2 === 0,
+        tooltipText: i === 0 ? "핵심 문항" : undefined,
       }),
     );
   }
@@ -37,6 +39,7 @@ function makeBank(): QuestionBank {
         axis: axes[i % axes.length],
         isAnchor: false,
         variant: `V${i % 3}`,
+        allowUncertain: false,
       }),
     );
   }
@@ -50,6 +53,7 @@ describe("SelectOnboardingModeUseCase", () => {
     const result = await uc.execute("QUICK");
 
     expect(result.mode).toBe("QUICK");
+    expect(result.precisionLevel).toBe("quick");
     expect(result.questions).toHaveLength(5);
     expect(result.estimatedMinutes).toBe(2);
     expect(result.precision.displayText).toBeDefined();
@@ -60,6 +64,7 @@ describe("SelectOnboardingModeUseCase", () => {
     const result = await uc.execute("STANDARD");
 
     expect(result.mode).toBe("STANDARD");
+    expect(result.precisionLevel).toBe("standard");
     expect(result.questions).toHaveLength(10);
     expect(result.estimatedMinutes).toBe(4);
   });
@@ -69,6 +74,7 @@ describe("SelectOnboardingModeUseCase", () => {
     const result = await uc.execute("PRECISE");
 
     expect(result.mode).toBe("PRECISE");
+    expect(result.precisionLevel).toBe("detailed");
     expect(result.questions).toHaveLength(20);
   });
 
@@ -81,6 +87,16 @@ describe("SelectOnboardingModeUseCase", () => {
     expect(q.text).toBeDefined();
     expect(q.type).toBeDefined();
     expect(q.axis).toBeDefined();
+    expect(typeof q.allowUncertain).toBe("boolean");
+  });
+
+  it("supports selecting by precision level", async () => {
+    const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
+    const result = await uc.executeByPrecision("detailed");
+
+    expect(result.mode).toBe("PRECISE");
+    expect(result.precisionLevel).toBe("detailed");
+    expect(result.questions).toHaveLength(20);
   });
 
   it("throws for invalid mode", async () => {

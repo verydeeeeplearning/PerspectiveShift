@@ -5,12 +5,15 @@ import { useAnonymousSession } from "@/app/_shared/hooks/useAnonymousSession";
 import { apiGet, apiPost } from "@/app/_shared/api-client";
 import type { MatchCandidateOutput } from "@/application/dtos/match-output";
 import { CandidateList } from "./components/CandidateList";
+import { EnergyReactiveMatchCard } from "./components/EnergyReactiveMatchCard";
 
 export default function MatchingPage() {
   const { isReady } = useAnonymousSession();
   const [candidates, setCandidates] = useState<MatchCandidateOutput[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const featuredCandidate = candidates[0] ?? null;
+  const secondaryCandidates = featuredCandidate ? candidates.slice(1) : [];
 
   useEffect(() => {
     if (!isReady) return;
@@ -30,6 +33,10 @@ export default function MatchingPage() {
     } catch (e) {
       setError(e instanceof Error ? e.message : "제안 실패");
     }
+  };
+
+  const handleDeclineFeatured = () => {
+    setCandidates((prev) => prev.slice(1));
   };
 
   if (!isReady) return <div className="p-6">세션 초기화 중...</div>;
@@ -56,11 +63,27 @@ export default function MatchingPage() {
         </div>
       )}
 
-      {!loading && candidates.length > 0 && (
-        <CandidateList
-          candidates={candidates}
-          onPropose={handlePropose}
-        />
+      {!loading && candidates.length > 0 && featuredCandidate && (
+        <section className="space-y-4">
+          <EnergyReactiveMatchCard
+            candidate={featuredCandidate}
+            candidateCount={candidates.length}
+            onStart={() => {
+              void handlePropose(featuredCandidate.sessionId);
+            }}
+            onDecline={handleDeclineFeatured}
+          />
+
+          {secondaryCandidates.length > 0 && (
+            <section className="space-y-2">
+              <h2 className="text-sm font-semibold text-gray-700">다른 후보</h2>
+              <CandidateList
+                candidates={secondaryCandidates}
+                onPropose={handlePropose}
+              />
+            </section>
+          )}
+        </section>
       )}
     </main>
   );

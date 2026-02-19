@@ -26,8 +26,8 @@ describe("Question", () => {
       expect(Question.create({ ...validProps, id: 1 }).id).toBe(1);
     });
 
-    it("accepts ID 10", () => {
-      expect(Question.create({ ...validProps, id: 10 }).id).toBe(10);
+    it("accepts ID 20", () => {
+      expect(Question.create({ ...validProps, id: 20 }).id).toBe(20);
     });
 
     it("throws for ID 0", () => {
@@ -36,9 +36,9 @@ describe("Question", () => {
       ).toThrow(InvalidQuestionIdError);
     });
 
-    it("throws for ID 11", () => {
+    it("throws for ID 1000", () => {
       expect(() =>
-        Question.create({ ...validProps, id: 11 }),
+        Question.create({ ...validProps, id: 1000 }),
       ).toThrow(InvalidQuestionIdError);
     });
 
