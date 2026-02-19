@@ -14,7 +14,7 @@ describe("PrecisionSelector", () => {
   it("shows question counts and estimated time", () => {
     render(<PrecisionSelector onSelect={vi.fn()} />);
 
-    expect(screen.getByText(/5문항 · 약 2분/)).toBeInTheDocument();
+    expect(screen.getByText(/5문항 · 약 1분/)).toBeInTheDocument();
     expect(screen.getByText(/10문항 · 약 4분/)).toBeInTheDocument();
     expect(screen.getByText(/20문항 · 약 9분/)).toBeInTheDocument();
   });
@@ -33,5 +33,24 @@ describe("PrecisionSelector", () => {
 
     fireEvent.click(screen.getByText("취소"));
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("renders quick upsell panel when enabled", () => {
+    const onUpgrade = vi.fn();
+    const onKeep = vi.fn();
+    render(
+      <PrecisionSelector
+        onSelect={vi.fn()}
+        showQuickUpsell
+        onQuickUpsellUpgrade={onUpgrade}
+        onQuickUpsellKeepQuick={onKeep}
+      />,
+    );
+
+    expect(screen.getByText("더 정확한 결과를 원하시면?")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("5문항 더 할래요"));
+    expect(onUpgrade).toHaveBeenCalledOnce();
+    fireEvent.click(screen.getByText("지금 결과 보기"));
+    expect(onKeep).toHaveBeenCalledOnce();
   });
 });

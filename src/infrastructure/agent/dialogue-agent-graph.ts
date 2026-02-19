@@ -53,7 +53,13 @@ function evaluateNode(state: DialogueAgentStateType) {
     energy: state.energy,
     turnCount: state.turnCount,
     currentStep: state.currentStep,
-    secondsSinceLastTurn: state.secondsSinceLastTurn,
+    idleSeconds: state.secondsSinceLastTurn,
+    deleteCount: state.deleteCount,
+    consecutiveToneChecks: state.consecutiveToneChecks,
+    feelHeardScore: state.feelHeardScore,
+    highlightCount: state.highlightCount,
+    quoteCount: state.quoteCount,
+    hasReport: state.hasReport,
   });
 
   return {
@@ -207,6 +213,12 @@ export class LangGraphDialogueAgent implements DialogueAgent {
       energy: input.energy,
       turnCount: input.turnCount,
       secondsSinceLastTurn: input.secondsSinceLastTurn,
+      deleteCount: input.deleteCount ?? 0,
+      consecutiveToneChecks: input.consecutiveToneChecks ?? 0,
+      feelHeardScore: input.feelHeardScore ?? 3,
+      highlightCount: input.highlightCount ?? 0,
+      quoteCount: input.quoteCount ?? 0,
+      hasReport: input.hasReport ?? false,
     });
 
     return {
@@ -231,7 +243,13 @@ export class FallbackDialogueAgent implements DialogueAgent {
       energy: input.energy,
       turnCount: input.turnCount,
       currentStep: input.currentStep,
-      secondsSinceLastTurn: input.secondsSinceLastTurn,
+      idleSeconds: input.secondsSinceLastTurn,
+      deleteCount: input.deleteCount ?? 0,
+      consecutiveToneChecks: input.consecutiveToneChecks ?? 0,
+      feelHeardScore: input.feelHeardScore ?? 3,
+      highlightCount: input.highlightCount ?? 0,
+      quoteCount: input.quoteCount ?? 0,
+      hasReport: input.hasReport ?? false,
     });
 
     return {

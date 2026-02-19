@@ -4,6 +4,8 @@ import { useCallback, useMemo, useState } from "react";
 import { type RubricAnswerValue } from "./RubricQuestion";
 import { ProgressBar } from "./ProgressBar";
 import { PrecisionSelector } from "./PrecisionSelector";
+import { OnboardingQuickUpsell } from "./OnboardingQuickUpsell";
+import { OnboardingEmptyExtended } from "./OnboardingEmptyExtended";
 import { OnboardingQuestionRenderer } from "./OnboardingQuestionRenderer";
 import {
   emitOnboardingEvent,
@@ -40,6 +42,7 @@ export function OnboardingFlow({
   const [phase, setPhase] = useState<"core" | "extended">("core");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerMap>({});
+  const [quickUpsellAnswers, setQuickUpsellAnswers] = useState<AnswerMap | null>(null);
 
   const coreQuestions = useMemo(
     () => questions.filter((question) => question.phase === "core"),
@@ -110,6 +113,7 @@ export function OnboardingFlow({
         setPhase("core");
         setCurrentIndex(0);
         setAnswers({});
+        setQuickUpsellAnswers(null);
         return;
       }
 
@@ -131,6 +135,7 @@ export function OnboardingFlow({
       setPrecision(targetPrecision);
       setAnswers(nextAnswers);
       setIsPrecisionEditorOpen(false);
+      setQuickUpsellAnswers(null);
 
       if (firstUnansweredIndex === -1) {
         completeFlow(targetPrecision, nextAnswers);
@@ -186,7 +191,7 @@ export function OnboardingFlow({
 
       if (phase === "core") {
         if (precision === "quick") {
-          completeFlow(precision, nextAnswers);
+          setQuickUpsellAnswers(nextAnswers);
           return;
         }
 
@@ -221,6 +226,18 @@ export function OnboardingFlow({
     return <PrecisionSelector onSelect={handlePrecisionSelect} />;
   }
 
+  if (quickUpsellAnswers) {
+    return (
+      <OnboardingQuickUpsell
+        precision={precision}
+        quickUpsellAnswers={quickUpsellAnswers}
+        onSelectPrecision={handlePrecisionSelect}
+        onCompleteQuick={(finalAnswers) => completeFlow("quick", finalAnswers)}
+        onClose={() => setQuickUpsellAnswers(null)}
+      />
+    );
+  }
+
   const precisionConfig = QUESTION_PRECISION_CONFIG[precision];
   const phaseTotal =
     phase === "core"
@@ -239,20 +256,7 @@ export function OnboardingFlow({
 
   if (!currentQuestion) {
     if (phase === "extended") {
-      return (
-        <div className="flex flex-col items-center gap-4 py-8">
-          <p className="text-sm text-gray-600">
-            확장 질문이 없습니다. 현재 결과로 진행할 수 있어요.
-          </p>
-          <button
-            type="button"
-            onClick={onSkipExtended}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700"
-          >
-            결과 보기
-          </button>
-        </div>
-      );
+      return <OnboardingEmptyExtended onSkipExtended={onSkipExtended} />;
     }
     return null;
   }

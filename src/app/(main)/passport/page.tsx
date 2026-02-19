@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { PassportBadge } from "@/domain/value-objects/passport-badge";
 import { BadgeGrid } from "./_components/BadgeGrid";
 import { DiscoveryCardList } from "./_components/DiscoveryCardList";
+import {
+  SavedPersonaList,
+  type SavedPersonaItem,
+} from "./_components/SavedPersonaList";
 
 // TODO: 실제 API 연동 시 fetch로 교체
 const MOCK_PASSPORT = {
@@ -16,12 +21,33 @@ const MOCK_PASSPORT = {
   ],
 };
 
-type Tab = "badges" | "discoveries";
+const MOCK_SAVED_PERSONAS: SavedPersonaItem[] = [
+  {
+    personaId: "persona-realist",
+    name: "현실주의 직장인",
+    conversationCount: 4,
+    lastConversationAt: "2026-02-19",
+  },
+  {
+    personaId: "persona-educator",
+    name: "공감하는 교육자",
+    conversationCount: 2,
+    lastConversationAt: "2026-02-17",
+  },
+];
+
+type Tab = "badges" | "discoveries" | "saved-persona";
 
 export default function PassportPage() {
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>("badges");
   const passport = MOCK_PASSPORT;
   const badges = PassportBadge.evaluateAll(passport.totalExploredCount);
+  const savedPersonas = MOCK_SAVED_PERSONAS;
+
+  const handleResumePersona = (personaId: string) => {
+    router.push(`/matching?mode=ai-practice&personaId=${personaId}`);
+  };
 
   return (
     <div className="mx-auto max-w-md px-4 py-6">
@@ -63,12 +89,24 @@ export default function PassportPage() {
         >
           발견 목록
         </button>
+        <button
+          type="button"
+          onClick={() => setTab("saved-persona")}
+          className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
+            tab === "saved-persona" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"
+          }`}
+        >
+          저장 페르소나
+        </button>
       </div>
 
       {/* Content */}
       <div className="mt-4">
         {tab === "badges" && <BadgeGrid badges={badges} />}
         {tab === "discoveries" && <DiscoveryCardList concepts={passport.discoveredConcepts} />}
+        {tab === "saved-persona" && (
+          <SavedPersonaList personas={savedPersonas} onResume={handleResumePersona} />
+        )}
       </div>
     </div>
   );

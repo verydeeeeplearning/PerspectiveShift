@@ -76,6 +76,15 @@ describe("ThoughtMapResult", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows direct precision upsell CTA for initial precision", () => {
+    render(<ThoughtMapResult data={SAMPLE_OUTPUT} />);
+    expect(
+      screen.getByRole("link", {
+        name: "정밀도 높이기: 추가 질문으로 결과를 더 정확하게 만들기",
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("renders primary CTA and recommendation fold", () => {
     render(<ThoughtMapResult data={SAMPLE_OUTPUT} />);
 

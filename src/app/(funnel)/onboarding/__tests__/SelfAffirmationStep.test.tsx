@@ -78,9 +78,16 @@ describe("SelfAffirmationStep", () => {
 
     expect(
       screen.getByText(
-        "당신을 바꾸려는 게 아니에요. 당신이 어떤 사람인지 먼저 확인하는 과정이에요.",
+        "불편한 주제를 다루기 전에, 내가 중요하게 생각하는 걸 먼저 확인하면 대화가 훨씬 편해진대요(20초).",
       ),
     ).toBeDefined();
+  });
+
+  it("renders 20-second warmup timer", () => {
+    render(
+      <SelfAffirmationStep onComplete={vi.fn()} onSkip={vi.fn()} />,
+    );
+    expect(screen.getByText(/20초 워밍업/)).toBeDefined();
   });
 
   it("renders PII masking notice in experience step", () => {

@@ -9,6 +9,9 @@ interface PrecisionSelectorProps {
   selectedPrecision?: QuestionPrecision | null;
   onSelect: (precision: QuestionPrecision) => void;
   onClose?: () => void;
+  showQuickUpsell?: boolean;
+  onQuickUpsellUpgrade?: () => void;
+  onQuickUpsellKeepQuick?: () => void;
 }
 
 const PRECISION_ORDER: QuestionPrecision[] = ["quick", "standard", "detailed"];
@@ -17,6 +20,9 @@ export function PrecisionSelector({
   selectedPrecision = null,
   onSelect,
   onClose,
+  showQuickUpsell = false,
+  onQuickUpsellUpgrade,
+  onQuickUpsellKeepQuick,
 }: PrecisionSelectorProps) {
   return (
     <section
@@ -57,10 +63,42 @@ export function PrecisionSelector({
               <p className="mt-1 text-sm text-gray-600">
                 {config.totalQuestions}문항 · 약 {config.estimatedMinutes}분
               </p>
+              {precision === "quick" && (
+                <p className="mt-1 text-xs font-medium text-blue-700">
+                  1분이면 충분해요
+                </p>
+              )}
             </button>
           );
         })}
       </div>
+
+      {showQuickUpsell && onQuickUpsellUpgrade && onQuickUpsellKeepQuick && (
+        <div className="space-y-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
+          <p className="text-sm font-semibold text-blue-900">
+            더 정확한 결과를 원하시면?
+          </p>
+          <p className="text-xs text-blue-800">
+            추가 5문항만 더 답하면 정밀도가 크게 올라가요.
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onQuickUpsellUpgrade}
+              className="flex-1 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700"
+            >
+              5문항 더 할래요
+            </button>
+            <button
+              type="button"
+              onClick={onQuickUpsellKeepQuick}
+              className="flex-1 rounded-lg border border-blue-200 bg-white px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-100"
+            >
+              지금 결과 보기
+            </button>
+          </div>
+        </div>
+      )}
 
       {onClose && (
         <button

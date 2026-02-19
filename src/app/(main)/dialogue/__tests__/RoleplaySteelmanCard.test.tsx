@@ -46,4 +46,39 @@ describe("RoleplaySteelmanCard", () => {
     expect(screen.getByRole("textbox")).toBeInTheDocument();
     expect(screen.getByText(/작성 완료/)).toBeInTheDocument();
   });
+
+  it("shows progressive exposure copy by dialogue count", () => {
+    const { rerender } = render(
+      <RoleplaySteelmanCard
+        prompt="prompt"
+        canSkip={true}
+        onComplete={onComplete}
+        onSkip={onSkip}
+        dialogueCount={2}
+      />,
+    );
+    expect(screen.getByText(/선택 단계/)).toBeInTheDocument();
+
+    rerender(
+      <RoleplaySteelmanCard
+        prompt="prompt"
+        canSkip={true}
+        onComplete={onComplete}
+        onSkip={onSkip}
+        dialogueCount={5}
+      />,
+    );
+    expect(screen.getByText(/이해 점수/)).toBeInTheDocument();
+
+    rerender(
+      <RoleplaySteelmanCard
+        prompt="prompt"
+        canSkip={true}
+        onComplete={onComplete}
+        onSkip={onSkip}
+        dialogueCount={8}
+      />,
+    );
+    expect(screen.getByText(/기본 노출/)).toBeInTheDocument();
+  });
 });

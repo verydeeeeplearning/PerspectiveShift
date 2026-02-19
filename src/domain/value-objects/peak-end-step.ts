@@ -3,6 +3,7 @@ export const PEAK_END_STEPS = [
   "GIFT_MESSAGE",
   "BLIND_SPOT",
   "KPI_COLLECTION",
+  "TURING_TEST",
   "NEXT_QUESTION",
   "FINAL_CTA",
 ] as const;

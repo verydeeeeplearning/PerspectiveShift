@@ -76,6 +76,8 @@ describe("OnboardingFlow", () => {
     fireEvent.click(screen.getByText("O"));
     fireEvent.click(screen.getByText("동의"));
     fireEvent.click(screen.getByText("보통"));
+    expect(screen.getByText("더 정확한 결과를 원하시면?")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("지금 결과 보기"));
 
     expect(onCoreComplete).toHaveBeenCalledTimes(1);
     expect(onCoreComplete).toHaveBeenCalledWith(
@@ -87,6 +89,27 @@ describe("OnboardingFlow", () => {
         5: 3,
       }),
     );
+  });
+
+  it("upgrades quick flow to standard via upsell", () => {
+    render(
+      <OnboardingFlow
+        questions={MOCK_QUESTIONS}
+        onCoreComplete={vi.fn()}
+        onExtendedComplete={vi.fn()}
+        onSkipExtended={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("빠르게 시작"));
+    fireEvent.click(screen.getByText("O"));
+    fireEvent.click(screen.getByText("X"));
+    fireEvent.click(screen.getByText("O"));
+    fireEvent.click(screen.getByText("동의"));
+    fireEvent.click(screen.getByText("보통"));
+    fireEvent.click(screen.getByText("5문항 더 할래요"));
+
+    expect(screen.getByText("Q6 OX 확장")).toBeInTheDocument();
   });
 
   it("moves to extended questions in standard precision", () => {

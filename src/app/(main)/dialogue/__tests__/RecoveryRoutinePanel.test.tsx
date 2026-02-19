@@ -13,6 +13,7 @@ describe("RecoveryRoutinePanel", () => {
     render(<RecoveryRoutinePanel messages={messages} onLater={vi.fn()} onFindNew={vi.fn()} />);
     expect(screen.getByText(/불편했다니/)).toBeDefined();
     expect(screen.getByText(/기록에서 치울게요/)).toBeDefined();
+    expect(screen.getByText("복구 모드")).toBeDefined();
   });
 
   it("has primary '나중에 할게요' and secondary '바로 찾아봐요' buttons", () => {
@@ -33,6 +34,10 @@ describe("RecoveryRoutinePanel", () => {
     fireEvent.click(screen.getByText("바로 찾아봐요"));
     expect(onFindNew).not.toHaveBeenCalled(); // confirmation step
     fireEvent.click(screen.getByText("확인"));
-    expect(onFindNew).toHaveBeenCalledTimes(1);
+    expect(onFindNew).toHaveBeenCalledWith([
+      "topic_change",
+      "difficulty_down",
+      "time_reduce",
+    ]);
   });
 });

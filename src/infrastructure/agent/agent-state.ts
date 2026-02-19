@@ -59,6 +59,42 @@ export const DialogueAgentState = Annotation.Root({
     default: () => 0,
   }),
 
+  /** Delete count during current turn draft */
+  deleteCount: Annotation<number>({
+    reducer: (_a, b) => b,
+    default: () => 0,
+  }),
+
+  /** Consecutive tone check count */
+  consecutiveToneChecks: Annotation<number>({
+    reducer: (_a, b) => b,
+    default: () => 0,
+  }),
+
+  /** User's feel-heard score (1-5) */
+  feelHeardScore: Annotation<number>({
+    reducer: (_a, b) => b,
+    default: () => 3,
+  }),
+
+  /** Number of highlights used in the session */
+  highlightCount: Annotation<number>({
+    reducer: (_a, b) => b,
+    default: () => 0,
+  }),
+
+  /** Number of explicit quotes used in the session */
+  quoteCount: Annotation<number>({
+    reducer: (_a, b) => b,
+    default: () => 0,
+  }),
+
+  /** User has filed report in current session */
+  hasReport: Annotation<boolean>({
+    reducer: (_a, b) => b,
+    default: () => false,
+  }),
+
   /** The agent's chosen action after evaluation */
   chosenAction: Annotation<string>({
     reducer: (_a, b) => b,

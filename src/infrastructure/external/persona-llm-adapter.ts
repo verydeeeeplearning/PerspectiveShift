@@ -1,4 +1,7 @@
-import type { PersonaDialogueGenerator } from "@/domain/interfaces/persona-dialogue-generator";
+import type {
+  PersonaDialogueGenerator,
+  PersonaMemoryContext,
+} from "@/domain/interfaces/persona-dialogue-generator";
 import type { PersonaProfile } from "@/domain/entities/persona-profile";
 
 const STYLE_TEMPLATES: Record<string, (persona: PersonaProfile, topic: string) => string> = {
@@ -24,6 +27,7 @@ export class PersonaLlmAdapter implements PersonaDialogueGenerator {
     _conversationHistory: Array<{ role: "user" | "persona"; content: string }>,
     _userMessage: string,
     topic: string,
+    _memoryContext?: PersonaMemoryContext,
   ): Promise<string> {
     const template = STYLE_TEMPLATES[persona.conversationStyle];
     if (!template) {

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/app/_shared/providers/AuthProvider";
 import { AppBackground } from "@/app/_shared/components/AppBackground";
+import { ServiceWorkerRegister } from "@/app/_shared/components/ServiceWorkerRegister";
+import { InstallPrompt } from "@/app/_shared/components/InstallPrompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,12 +43,18 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1a1a2e" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-body`}
       >
         <AuthProvider>
-          <AppBackground>{children}</AppBackground>
+          <ServiceWorkerRegister />
+          <AppBackground>
+            {children}
+            <InstallPrompt />
+          </AppBackground>
         </AuthProvider>
       </body>
     </html>

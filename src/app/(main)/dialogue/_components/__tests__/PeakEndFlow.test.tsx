@@ -260,4 +260,17 @@ describe("PeakEndFlow", () => {
     const progressBar = region.querySelector(".bg-blue-500");
     expect(progressBar).toBeInTheDocument();
   });
+
+  it("shows turing step for agent dialogue", () => {
+    renderFlow({
+      ctaContext: { ...defaultCtaContext, isAgentDialogue: true },
+    });
+    fireEvent.click(screen.getByText("다음"));
+    fireEvent.click(screen.getByText("다음"));
+    fireEvent.click(screen.getByText("다음"));
+    fireEvent.click(screen.getByText("다음"));
+
+    expect(screen.getByTestId("step-turing")).toBeInTheDocument();
+    expect(screen.getByText(/이 대화 상대는 사람이었을까요/)).toBeInTheDocument();
+  });
 });

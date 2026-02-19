@@ -1,5 +1,8 @@
 import OpenAI from "openai";
-import type { PersonaDialogueGenerator } from "@/domain/interfaces/persona-dialogue-generator";
+import type {
+  PersonaDialogueGenerator,
+  PersonaMemoryContext,
+} from "@/domain/interfaces/persona-dialogue-generator";
 import type { PersonaProfile } from "@/domain/entities/persona-profile";
 import { personaSystemPrompt, personaUserPrompt } from "./persona-prompts";
 
@@ -15,13 +18,14 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     conversationHistory: Array<{ role: "user" | "persona"; content: string }>,
     userMessage: string,
     topic: string,
+    memoryContext?: PersonaMemoryContext,
   ): Promise<string> {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
       temperature: 0.7,
       max_tokens: 300,
       messages: [
-        { role: "system", content: personaSystemPrompt(persona, topic) },
+        { role: "system", content: personaSystemPrompt(persona, topic, memoryContext) },
         { role: "user", content: personaUserPrompt(conversationHistory, userMessage) },
       ],
     });

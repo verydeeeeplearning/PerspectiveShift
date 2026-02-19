@@ -13,6 +13,12 @@ interface FriendItem {
   createdAt: string;
 }
 
+function getStageLabel(dialogueCount: number): string {
+  if (dialogueCount >= 3) return "오프라인 준비";
+  if (dialogueCount >= 1) return "실시간 대화 단계";
+  return "친구 단계";
+}
+
 export default function FriendsPage() {
   const [friends, setFriends] = useState<FriendItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,6 +83,9 @@ export default function FriendsPage() {
                       </p>
                       <p className="text-xs text-text-tertiary">
                         대화 <span className="num">{f.dialogueCount}</span>회
+                      </p>
+                      <p className="text-[11px] text-indigo-depth">
+                        {getStageLabel(f.dialogueCount)}
                       </p>
                     </div>
                     <span className="text-text-tertiary">→</span>

@@ -1,4 +1,5 @@
 import type { PersonaProfile } from "@/domain/entities/persona-profile";
+import type { PersonaMemoryContext } from "@/domain/interfaces/persona-dialogue-generator";
 
 const STYLE_INSTRUCTIONS: Record<string, string> = {
   logical:
@@ -11,10 +12,21 @@ const STYLE_INSTRUCTIONS: Record<string, string> = {
     "신중하고 조심스러운 말투를 사용하세요. '~일 수도 있지만', '좀 더 생각해봐야겠지만' 같은 완충 표현을 사용하세요.",
 };
 
-export function personaSystemPrompt(persona: PersonaProfile, topic: string): string {
+export function personaSystemPrompt(
+  persona: PersonaProfile,
+  topic: string,
+  memoryContext?: PersonaMemoryContext,
+): string {
   const styleInstruction = STYLE_INSTRUCTIONS[persona.conversationStyle] ?? STYLE_INSTRUCTIONS.careful;
   const experiences = persona.experienceBank.length > 0
     ? `\n참고할 경험:\n${persona.experienceBank.map((e) => `- ${e}`).join("\n")}`
+    : "";
+  const memory = memoryContext
+    ? `\n## 이전 대화 메모리
+- 누적 대화 요약: ${memoryContext.conversationSummaries.slice(-3).join(" | ") || "없음"}
+- 공유 맥락: ${memoryContext.sharedContext.join(" | ") || "없음"}
+- 사용자 입장 메모리: ${memoryContext.userStanceMemory.join(" | ") || "없음"}
+- 저장된 질문: ${memoryContext.savedQuestions.join(" | ") || "없음"}`
     : "";
 
   return `당신은 구조화된 대화 플랫폼에서 사용자와 대화하는 AI 페르소나입니다.
@@ -26,6 +38,7 @@ export function personaSystemPrompt(persona: PersonaProfile, topic: string): str
 - 입장 요약: ${persona.stanceLabel}
 - 설명: ${persona.description}
 ${experiences}
+${memory}
 
 ## 대화 주제
 ${topic}

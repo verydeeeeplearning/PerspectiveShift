@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   type PeakEndStepType,
   PEAK_END_STEPS,
@@ -10,6 +10,16 @@ import {
   getCTALabel,
   type FinalCTAContext,
 } from "@/domain/value-objects/final-cta-type";
+import { TuringTestPanel } from "./TuringTestPanel";
+import { PeakEndJointSummaryStep } from "./PeakEndJointSummaryStep";
+
+type TuringSide = "human" | "ai";
+
+interface TuringGuessResult {
+  actual: TuringSide;
+  isCorrect: boolean;
+  rewards: Array<{ type: string; message: string }>;
+}
 
 interface PeakEndFlowProps {
   // Joint Summary data
@@ -35,6 +45,7 @@ interface PeakEndFlowProps {
   onKPISubmit: (feelHeard: number, rematchIntent: number) => void;
   onNextQuestionSave: (question: string) => void;
   onCTAClick: (ctaType: string) => void;
+  onTuringGuess?: (guess: TuringSide) => Promise<TuringGuessResult> | TuringGuessResult;
 }
 
 export function PeakEndFlow({
@@ -45,15 +56,24 @@ export function PeakEndFlow({
   onKPISubmit,
   onNextQuestionSave,
   onCTAClick,
+  onTuringGuess,
 }: PeakEndFlowProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [feelHeard, setFeelHeard] = useState(50);
   const [rematchIntent, setRematchIntent] = useState(50);
   const [nextQuestion, setNextQuestion] = useState("");
 
+  const activeSteps = useMemo(
+    () =>
+      ctaContext.isAgentDialogue
+        ? PEAK_END_STEPS
+        : PEAK_END_STEPS.filter((step) => step !== "TURING_TEST"),
+    [ctaContext.isAgentDialogue],
+  );
+
   const currentStep: PeakEndStepType | "COMPLETE" =
-    stepIndex < PEAK_END_STEPS.length
-      ? PEAK_END_STEPS[stepIndex]
+    stepIndex < activeSteps.length
+      ? activeSteps[stepIndex]
       : "COMPLETE";
 
   const handleNext = useCallback(() => {
@@ -83,48 +103,19 @@ export function PeakEndFlow({
         <div
           className="h-1 rounded-full bg-blue-500 transition-all"
           style={{
-            width: `${(stepIndex / PEAK_END_STEPS.length) * 100}%`,
+            width: `${(stepIndex / activeSteps.length) * 100}%`,
           }}
         />
       </div>
 
       {/* Step Content */}
       {currentStep === "JOINT_SUMMARY" && (
-        <div data-testid="step-joint-summary">
-          <h3 className="mb-3 text-lg font-semibold">대화 요약</h3>
-          <div className="space-y-3 rounded-xl border bg-white p-4">
-            <div className="flex justify-between text-sm text-gray-500">
-              <span>{summary.topic}</span>
-              <span>{summary.date}</span>
-            </div>
-            <div className="space-y-2 text-sm">
-              <p>
-                나의 핵심 주장: &quot;{summary.myKeyPoint}&quot;
-              </p>
-              <p>
-                상대의 핵심 주장: &quot;{summary.opponentKeyPoint}
-                &quot;
-              </p>
-              {summary.commonGround && (
-                <p>
-                  공통점: &quot;{summary.commonGround}&quot;
-                </p>
-              )}
-              {summary.newDiscovery && (
-                <p>
-                  새로운 발견: &quot;{summary.newDiscovery}&quot;
-                </p>
-              )}
-            </div>
-            <div className="flex gap-4 border-t pt-2 text-xs text-gray-500">
-              <span>
-                Understanding: {summary.understandingScore}
-              </span>
-              <span>
-                Feel Heard: {summary.feelHeardScore}/5
-              </span>
-            </div>
-          </div>
+        <PeakEndJointSummaryStep summary={summary} onNext={handleNext} />
+      )}
+
+      {currentStep === "TURING_TEST" && (
+        <div data-testid="step-turing">
+          <TuringTestPanel onSubmitGuess={onTuringGuess} />
           <button
             className="mt-4 w-full rounded-xl bg-blue-600 py-3 text-white"
             onClick={handleNext}

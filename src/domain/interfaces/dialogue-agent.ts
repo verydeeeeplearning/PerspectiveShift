@@ -24,6 +24,12 @@ export interface DialogueAgentInput {
   energy: number;          // 0-100, from user self-report
   turnCount: number;
   secondsSinceLastTurn: number;
+  deleteCount?: number;
+  consecutiveToneChecks?: number;
+  feelHeardScore?: number;
+  highlightCount?: number;
+  quoteCount?: number;
+  hasReport?: boolean;
 }
 
 export interface DialogueAgent {

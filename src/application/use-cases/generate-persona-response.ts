@@ -1,5 +1,8 @@
 import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
-import type { PersonaDialogueGenerator } from "@/domain/interfaces/persona-dialogue-generator";
+import type {
+  PersonaDialogueGenerator,
+  PersonaMemoryContext,
+} from "@/domain/interfaces/persona-dialogue-generator";
 import { PersonaResponseDelay } from "@/domain/value-objects/persona-response-delay";
 
 export interface GeneratePersonaResponseInput {
@@ -7,6 +10,7 @@ export interface GeneratePersonaResponseInput {
   userMessage: string;
   topic: string;
   conversationHistory: Array<{ role: "user" | "persona"; content: string }>;
+  memoryContext?: PersonaMemoryContext;
 }
 
 export interface GeneratePersonaResponseOutput {
@@ -33,6 +37,7 @@ export class GeneratePersonaResponseUseCase {
       input.conversationHistory,
       input.userMessage,
       input.topic,
+      input.memoryContext,
     );
 
     const delay = PersonaResponseDelay.calculate(response.length);

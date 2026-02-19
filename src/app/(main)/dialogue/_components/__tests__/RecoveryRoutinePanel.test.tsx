@@ -24,7 +24,11 @@ describe("RecoveryRoutinePanel", () => {
     fireEvent.click(screen.getByText("바로 찾아봐요"));
     fireEvent.click(screen.getByText("확인"));
 
-    expect(onFindNew).toHaveBeenCalledOnce();
+    expect(onFindNew).toHaveBeenCalledWith([
+      "topic_change",
+      "difficulty_down",
+      "time_reduce",
+    ]);
   });
 
   it("renders 나중에 할게요 as primary button", () => {
@@ -34,5 +38,10 @@ describe("RecoveryRoutinePanel", () => {
 
     const laterBtn = screen.getByText("나중에 할게요");
     expect(laterBtn.className).toContain("bg-indigo");
+  });
+
+  it("shows recovery badge by default", () => {
+    render(<RecoveryRoutinePanel messages={messages} onLater={vi.fn()} onFindNew={vi.fn()} />);
+    expect(screen.getByText("복구 모드")).toBeInTheDocument();
   });
 });

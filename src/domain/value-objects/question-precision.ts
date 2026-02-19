@@ -12,7 +12,7 @@ export const QUESTION_PRECISION_CONFIG: Record<
 > = {
   quick: {
     totalQuestions: 5,
-    estimatedMinutes: 2,
+    estimatedMinutes: 1,
     label: "빠르게 시작",
   },
   standard: {

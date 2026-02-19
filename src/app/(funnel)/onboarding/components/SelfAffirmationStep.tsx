@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CORE_VALUES, type CoreValueKey } from "@/domain/value-objects/core-value";
 
 interface SelfAffirmationStepProps {
@@ -17,6 +17,17 @@ export function SelfAffirmationStep({
   const [selectedValue, setSelectedValue] = useState<CoreValueKey | null>(null);
   const [step, setStep] = useState<"select" | "experience">("select");
   const [experience, setExperience] = useState("");
+  const [secondsLeft, setSecondsLeft] = useState(20);
+
+  useEffect(() => {
+    if (step !== "select") {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setSecondsLeft((prev) => (prev <= 0 ? 0 : prev - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [step]);
 
   const handleValueSelect = (value: CoreValueKey) => {
     setSelectedValue(value);
@@ -75,8 +86,11 @@ export function SelfAffirmationStep({
   return (
     <div className="flex flex-col items-center gap-6 py-8">
       <h2 className="text-xl font-bold">대화 준비 운동</h2>
+      <p className="rounded-full bg-blue-50 px-3 py-1 text-xs text-blue-700">
+        천천히 {secondsLeft}초 워밍업
+      </p>
       <p className="text-center text-sm text-gray-500">
-        당신을 바꾸려는 게 아니에요. 당신이 어떤 사람인지 먼저 확인하는 과정이에요.
+        불편한 주제를 다루기 전에, 내가 중요하게 생각하는 걸 먼저 확인하면 대화가 훨씬 편해진대요(20초).
       </p>
       <p className="text-center text-gray-600">
         나에게 가장 중요한 가치를 하나 골라주세요

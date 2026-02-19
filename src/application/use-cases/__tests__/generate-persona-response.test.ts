@@ -105,6 +105,7 @@ describe("GeneratePersonaResponseUseCase", () => {
       history,
       "경제에 대해 어떻게 생각하세요?",
       "경제",
+      undefined,
     );
   });
 

@@ -102,6 +102,16 @@ export function ThoughtMapResult({ data, onEvent }: ThoughtMapResultProps) {
         <p className="mt-1">{data.baselineLabel}</p>
       </div>
 
+      {data.precision === "initial" && (
+        <Link
+          href="/onboarding"
+          onClick={() => emitEvent("thought_map_precision_upsell")}
+          className="block rounded-xl border border-blue-200 bg-blue-50 px-5 py-4 text-center text-sm font-semibold text-blue-700 hover:bg-blue-100"
+        >
+          정밀도 높이기: 추가 질문으로 결과를 더 정확하게 만들기
+        </Link>
+      )}
+
       <Link
         href="/matching"
         onClick={() => emitEvent("thought_map_cta_match_click")}

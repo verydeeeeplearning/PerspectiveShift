@@ -28,6 +28,22 @@ interface DisclosureInfo {
 
 const DISCLOSURE_LABELS = ["익명 별칭", "성향 타입", "전체 스탠스", "표시 이름"];
 
+type RelationshipStage = "friend" | "realtime" | "offline";
+
+function getRelationshipStage(input: {
+  dialogueCount: number;
+  disclosureLevel: number;
+  realtimeEligible: boolean;
+}): RelationshipStage {
+  if (input.dialogueCount >= 3 && input.disclosureLevel >= 2) {
+    return "offline";
+  }
+  if (input.realtimeEligible) {
+    return "realtime";
+  }
+  return "friend";
+}
+
 export default function FriendDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -81,12 +97,47 @@ export default function FriendDetailPage() {
   if (error) return <div className="p-6 text-red-600">{error}</div>;
   if (!friend) return <div className="p-6">친구를 찾을 수 없습니다.</div>;
 
+  const stage = getRelationshipStage({
+    dialogueCount: friend.dialogueCount,
+    disclosureLevel: disclosure?.myLevel ?? 0,
+    realtimeEligible: eligibility?.eligible ?? false,
+  });
+
   return (
     <main className="p-6 max-w-2xl mx-auto">
       <Link href="/friends" className="text-blue-600 hover:underline text-sm">&larr; 목록</Link>
       <h1 className="text-2xl font-bold mt-4 mb-6">
         참여자_{friend.friendUserId.slice(0, 4).toUpperCase()}
       </h1>
+
+      <section className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+        <h2 className="mb-2 font-semibold">관계 단계</h2>
+        <p className="mb-3 text-sm text-gray-600">
+          현재 단계:{" "}
+          <span className="font-medium">
+            {stage === "friend" && "친구"}
+            {stage === "realtime" && "실시간 채팅"}
+            {stage === "offline" && "오프라인 만남 제안"}
+          </span>
+        </p>
+        <ul className="space-y-2 text-sm">
+          <li className={friend.dialogueCount >= 1 ? "text-gray-800" : "text-gray-400"}>
+            1. 구조화 대화 완료 후 친구 유지
+          </li>
+          <li className={eligibility?.eligible ? "text-gray-800" : "text-gray-400"}>
+            2. 친구 관계에서 실시간 채팅 열기
+          </li>
+          <li
+            className={
+              friend.dialogueCount >= 3 && (disclosure?.myLevel ?? 0) >= 2
+                ? "text-gray-800"
+                : "text-gray-400"
+            }
+          >
+            3. 3회 이상 대화 + 공개 레벨 2 이상이면 오프라인 만남 제안
+          </li>
+        </ul>
+      </section>
 
       <section className="mb-6 p-4 border rounded-lg">
         <h2 className="font-semibold mb-2">공개 레벨</h2>

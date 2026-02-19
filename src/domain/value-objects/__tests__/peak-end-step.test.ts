@@ -2,12 +2,13 @@ import { describe, it, expect } from "vitest";
 import { PeakEndStep, PEAK_END_STEPS } from "../peak-end-step";
 
 describe("PeakEndStep", () => {
-  it("has 6 steps in correct order", () => {
+  it("has 7 steps in correct order", () => {
     expect(PEAK_END_STEPS).toEqual([
       "JOINT_SUMMARY",
       "GIFT_MESSAGE",
       "BLIND_SPOT",
       "KPI_COLLECTION",
+      "TURING_TEST",
       "NEXT_QUESTION",
       "FINAL_CTA",
     ]);
@@ -36,12 +37,16 @@ describe("PeakEndStep", () => {
     expect(step.index).toBe(3);
 
     step = step.advance();
-    expect(step.current).toBe("NEXT_QUESTION");
+    expect(step.current).toBe("TURING_TEST");
     expect(step.index).toBe(4);
 
     step = step.advance();
-    expect(step.current).toBe("FINAL_CTA");
+    expect(step.current).toBe("NEXT_QUESTION");
     expect(step.index).toBe(5);
+
+    step = step.advance();
+    expect(step.current).toBe("FINAL_CTA");
+    expect(step.index).toBe(6);
   });
 
   it("isComplete is false during flow", () => {
@@ -54,9 +59,9 @@ describe("PeakEndStep", () => {
     }
   });
 
-  it("isComplete is true after all 6 steps are advanced past", () => {
+  it("isComplete is true after all 7 steps are advanced past", () => {
     let step = PeakEndStep.first();
-    // Advance through all 6 steps (index 0..5) then one more to index 6
+    // Advance through all 7 steps (index 0..6) then one more to index 7
     for (let i = 0; i < PEAK_END_STEPS.length; i++) {
       step = step.advance();
     }
