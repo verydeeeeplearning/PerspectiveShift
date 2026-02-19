@@ -7,8 +7,8 @@ export interface JitaiSignal {
   highlightCount: number;
   quoteCount: number;
   hasReport: boolean;
-  turnCount?: number;
-  currentStep?: string;
+  turnCount: number;
+  currentStep: string;
 }
 
 export function normalizeJitaiSignal(
