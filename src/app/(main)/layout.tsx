@@ -1,6 +1,6 @@
 "use client";
 
-import { AppHeader } from "@/app/_shared/components/AppHeader";
+import { TopAppBar } from "@/app/_shared/components/TopAppBar";
 import { BottomTabBar } from "@/app/_shared/components/BottomTabBar";
 
 export default function MainLayout({
@@ -10,7 +10,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="min-h-screen">
-      <AppHeader />
+      <TopAppBar variant="wordmark" />
       <main className="pt-14 pb-20 px-4">{children}</main>
       <BottomTabBar />
     </div>

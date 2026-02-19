@@ -11,14 +11,14 @@ interface Tab {
   icon: React.ReactNode;
 }
 
-const CompassIcon = ({ active }: { active: boolean }) => (
+const CompassIcon = () => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? "currentColor" : "#9CA3AF"}
-    strokeWidth="2"
+    stroke="currentColor"
+    strokeWidth="1.75"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -27,14 +27,14 @@ const CompassIcon = ({ active }: { active: boolean }) => (
   </svg>
 );
 
-const ChatIcon = ({ active }: { active: boolean }) => (
+const ChatIcon = () => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? "currentColor" : "#9CA3AF"}
-    strokeWidth="2"
+    stroke="currentColor"
+    strokeWidth="1.75"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -42,14 +42,14 @@ const ChatIcon = ({ active }: { active: boolean }) => (
   </svg>
 );
 
-const UsersIcon = ({ active }: { active: boolean }) => (
+const UsersIcon = () => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? "currentColor" : "#9CA3AF"}
-    strokeWidth="2"
+    stroke="currentColor"
+    strokeWidth="1.75"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -60,14 +60,14 @@ const UsersIcon = ({ active }: { active: boolean }) => (
   </svg>
 );
 
-const UserIcon = ({ active }: { active: boolean }) => (
+const UserIcon = () => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={active ? "currentColor" : "#9CA3AF"}
-    strokeWidth="2"
+    stroke="currentColor"
+    strokeWidth="1.75"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -86,19 +86,19 @@ const ANONYMOUS_TABS: Tab[] = [
     label: "매칭",
     href: "/matching",
     activePattern: "/matching",
-    icon: <CompassIcon active={false} />,
+    icon: <CompassIcon />,
   },
   {
     label: "대화",
     href: "/dialogue",
     activePattern: "/dialogue",
-    icon: <ChatIcon active={false} />,
+    icon: <ChatIcon />,
   },
   {
     label: "로그인",
     href: "/auth/login",
     activePattern: "/auth/login",
-    icon: <UserIcon active={false} />,
+    icon: <UserIcon />,
   },
 ];
 
@@ -107,29 +107,37 @@ const AUTHENTICATED_TABS: Tab[] = [
     label: "매칭",
     href: "/matching",
     activePattern: "/matching",
-    icon: <CompassIcon active={false} />,
+    icon: <CompassIcon />,
   },
   {
     label: "대화",
     href: "/dialogue",
     activePattern: "/dialogue",
-    icon: <ChatIcon active={false} />,
+    icon: <ChatIcon />,
   },
   {
     label: "친구",
     href: "/friends",
     activePattern: "/friends",
-    icon: <UsersIcon active={false} />,
+    icon: <UsersIcon />,
   },
   {
     label: "더보기",
     href: "/profile",
     activePattern: "/profile",
-    icon: <UserIcon active={false} />,
+    icon: <UserIcon />,
   },
 ];
 
 const MORE_PATTERNS = ["/profile", "/safety", "/offline"];
+
+const ICON_MAP: Record<string, React.ReactNode> = {
+  매칭: <CompassIcon />,
+  대화: <ChatIcon />,
+  친구: <UsersIcon />,
+  로그인: <UserIcon />,
+  더보기: <UserIcon />,
+};
 
 export function BottomTabBar() {
   const pathname = usePathname();
@@ -139,7 +147,7 @@ export function BottomTabBar() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 h-16 bg-white border-t border-gray-200 z-50 pb-[env(safe-area-inset-bottom)]"
+      className="fixed bottom-0 inset-x-0 h-14 bg-paper border-t border-border-divider z-50 pb-[env(safe-area-inset-bottom)]"
       role="tablist"
       aria-label="메인 네비게이션"
     >
@@ -157,17 +165,15 @@ export function BottomTabBar() {
               role="tab"
               aria-selected={active}
               aria-label={tab.label}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${
-                active ? "text-gray-900" : "text-gray-400"
+              className={`relative flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${
+                active ? "text-indigo-depth" : "text-text-tertiary"
               }`}
             >
-              {tab.label === "매칭" && <CompassIcon active={active} />}
-              {tab.label === "대화" && <ChatIcon active={active} />}
-              {tab.label === "친구" && <UsersIcon active={active} />}
-              {(tab.label === "로그인" || tab.label === "더보기") && (
-                <UserIcon active={active} />
+              {active && (
+                <span className="absolute top-0 inset-x-3 h-0.5 bg-indigo-depth rounded-b-full" />
               )}
-              <span className="text-xs font-medium">{tab.label}</span>
+              {ICON_MAP[tab.label]}
+              <span className="text-[11px] font-medium">{tab.label}</span>
             </Link>
           );
         })}

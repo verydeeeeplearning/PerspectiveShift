@@ -1,1 +1,99 @@
 @import "tailwindcss";
+
+@theme {
+  /* ── Base ── */
+  --color-indigo-depth: #2C3E50;
+  --color-slate-soft: #64748B;
+  --color-paper: #FAFAF9;
+  --color-paper-warm: #F5F3EF;
+
+  /* ── Surface ── */
+  --color-surface-card: rgba(255, 255, 252, 1);
+  --color-surface-jewel: rgba(255, 255, 255, 0.72);
+  --color-surface-elevated: rgba(255, 255, 252, 0.95);
+
+  /* ── Border ── */
+  --color-border-soft: rgba(44, 62, 80, 0.10);
+  --color-border-divider: rgba(44, 62, 80, 0.08);
+  --color-border-focus: rgba(44, 62, 80, 0.18);
+
+  /* ── Text ── */
+  --color-text-primary: #2C3E50;
+  --color-text-secondary: #64748B;
+  --color-text-tertiary: rgba(44, 62, 80, 0.55);
+  --color-text-inverse: #FFFFFF;
+
+  /* ── Energy States ── */
+  --color-energy-rest-base: #E2E8F0;
+  --color-energy-rest-accent: #94A3B8;
+  --color-energy-steady-base: #DBEAFE;
+  --color-energy-steady-accent: #60A5FA;
+  --color-energy-active-base: #E0F2FE;
+  --color-energy-active-accent: #0EA5E9;
+
+  /* ── Semantic (similarity/difference) ── */
+  --color-semantic-similarity: #14B8A6;
+  --color-semantic-difference: #F97316;
+  --color-semantic-similarity-soft: rgba(20, 184, 166, 0.12);
+  --color-semantic-difference-soft: rgba(249, 115, 22, 0.12);
+
+  /* ── Marker (action state) ── */
+  --color-marker-paper: rgba(246, 240, 171, 0.75);
+  --color-marker-paper-soft: rgba(246, 240, 171, 0.45);
+
+  /* ── Status ── */
+  --color-status-safety: #22C55E;
+  --color-status-autonomy: #3B82F6;
+  --color-status-curiosity: #A855F7;
+  --color-status-competence: #F59E0B;
+
+  /* ── CTA ── */
+  --color-cta-primary: #2C3E50;
+  --color-cta-primary-hover: #1A2A3A;
+  --color-cta-disabled: #CBD5E1;
+
+  /* ── Typography ── */
+  --font-heading: "Playfair Display", "Noto Serif KR", serif;
+  --font-body: "Pretendard", var(--font-geist-sans), system-ui, sans-serif;
+  --font-num: var(--font-geist-sans), "Pretendard", system-ui, sans-serif;
+
+  /* ── Radius ── */
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+  --radius-pill: 9999px;
+  --radius-input: 12px;
+  --radius-chip: 8px;
+
+  /* ── Shadows ── */
+  --shadow-paper: 0 1px 2px rgba(44, 62, 80, 0.06);
+  --shadow-card: 0 2px 8px rgba(44, 62, 80, 0.06);
+  --shadow-elevated: 0 4px 16px rgba(44, 62, 80, 0.08);
+  --shadow-jewel: 0 12px 30px rgba(44, 62, 80, 0.10), 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+  --shadow-cta: 0 2px 8px rgba(44, 62, 80, 0.12), 0 1px 2px rgba(44, 62, 80, 0.06);
+}
+
+:root {
+  /* ── Spacing (4pt grid) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ── Layout ── */
+  --container-x: 16px;
+  --container-x-wide: 24px;
+  --cta-bar-h: 64px;
+  --tab-bar-h: 56px;
+  --app-bar-h: 56px;
+}
+
+/* ── Utility: tabular-nums for numeric display ── */
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
