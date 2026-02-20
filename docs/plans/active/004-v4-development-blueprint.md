@@ -2,7 +2,7 @@
 
 **Status**: In Progress (P0 실행 중)
 **Created**: 2026-02-19
-**Last Updated**: 2026-02-19
+**Last Updated**: 2026-02-20
 **Source**: `PerspectiveShift_v4.md`
 
 ---
@@ -34,17 +34,17 @@
 |---------|--------|--------------|-------|
 | P0-A1 Trust Moment UI 리팩토링 | PARTIAL | 2026-02-19 | 3줄 요약/Disclosure/CTA/이벤트/테스트 완료. 데이터 관리 즉시 진입 deep-link는 보완 예정 |
 | P0-A2 온보딩 문항 UX 개선 | DONE | 2026-02-19 | 정밀도(5/10/20), 진행 중 변경, 불확실 옵션, 예시 스와이프/Coach, 툴팁, 이벤트, 테스트 반영 |
-| P0-A3 AI Agent 페르소나 시스템 | DONE | 2026-02-19 | PersonaProfile 엔티티, PersonaResponseDelay VO, PersonaRepository/PersonaDialogueGenerator 인터페이스, SelectPersona/GeneratePersonaResponse UC, InMemoryPersonaRepository(시드 3종), PersonaLlmAdapter(스텁), PersonaSelector UI, 32 테스트 |
+| P0-A3 AI Agent 페르소나 시스템 | DONE | 2026-02-20 | AI/사람 통합 매칭 풀 전환, MatchCandidate(candidateType/personaId) 반영, PersonaResponseDelay 분포 기반 확장, PersonaSelector 폐기, CreateAgentDialogueSession/GeneratePersonaResponse 연동 |
 | P0-B1 Thought Map 결과 + 유형 카드 공유 | PARTIAL | 2026-02-19 | 단일 CTA/접힘 추천/공유 카드/이벤트/추천 UC 반영. OG 이미지 생성은 보완 예정 |
 | P0-B2 에너지 체크 + 즉시 반응 UI | DONE | 2026-02-19 | 에너지 매핑 VO/UC, 라디오 셀렉터, framer-motion 카드 전환, 즉시 반응 통합 카드/페이지 연결, 테스트 반영 |
-| P0-B3 매칭 엔진 고도화 | DONE | 2026-02-19 | 4가중치 스코어링(distance/readiness/topic/energy), decline 패널티, energyCompat/computeEnergyCompat, CheckMatchingPool UC, 30 테스트 |
+| P0-B3 매칭 엔진 고도화 | DONE | 2026-02-20 | 사람+Agent 통합 스코어링, pool_scarcity_bonus, decline 패널티, 앵커/에너지 연동, CheckMatchingPool의 suggestPersona 분기 제거 |
 | P0-B4 Conversation Trailer 생성 | DONE | 2026-02-19 | TrailerGenerator 인터페이스, GenerateConversationTrailer UC, FallbackTrailerGenerator(규칙 기반 스텁), 차원별 stance 차이 기반 2-3줄 생성, 13 테스트 |
-| P0-B5 매칭 카드 통합 UI | DONE | 2026-02-19 | IntegratedMatchCard(주제/거리/난이도/시간/Trailer/CTA 통합), DeclineBadge 컴포넌트, 19 테스트 |
+| P0-B5 매칭 카드 통합 UI | DONE | 2026-02-20 | IntegratedMatchCard AI/사람 비구분 렌더링, AiDisclaimerBanner(사전 고지), AnchorFilterPanel 연동, PersonaSelector 제거 |
 | P0-C1 모바일 탭 하이라이트 | DONE | 2026-02-19 | TextSegment VO, TextSegmenter 인터페이스, SegmentText/CreateHighlightByTap UC, KoreanTextSegmenter(정규식 기반 한국어 문장 분할), TapHighlight UI, 40 테스트 |
 | P0-C2 톤 체크 UX 전환 | DONE | 2026-02-19 | ToneSuggestion 다중 대안 모델(A/B/C), ToneAlternative 타입, CheckTone UC 확장, ToneCheckPanel UI(경고→제안 전환), 42 테스트 |
 | P0-D1 리플렉션 경량화 | DONE | 2026-02-19 | ReflectionFlow lightweight 모드(QUIZ+VERIFICATION 2단계), maxQuizQuestions/feelHeardThreshold/shouldShowEditUI 추가, 26 테스트 |
 | P0-D2 공동 요약 카드 강화 | DONE | 2026-02-19 | JointSummaryCard 확장(topic/date/myKeyPoint/opponentKeyPoint/commonGround/newDiscovery/understandingScore/feelHeardScore/autoSaved), 검증 로직, 강화된 UI, 39 테스트 |
-| P0-D3 피크-엔드 플로우 구조화 | DONE | 2026-02-19 | PeakEndStep VO(6단계 wizard), FinalCTAType(5종 조건별 CTA), PeakEndFlow 컴포넌트(요약→선물→발견→KPI→질문→CTA), 44 테스트 |
+| P0-D3 피크-엔드 플로우 구조화 | DONE | 2026-02-20 | PeakEndFlow(요약→선물→발견→KPI→튜링→질문→CTA), Agent 전용 CTA 제거, 통합 CTA/튜링 리워드 분기 반영 |
 
 ---
 
@@ -55,7 +55,7 @@
 v4.0은 v3.0의 "구조화된 대화" 위에 **3가지 핵심 레이어**를 추가한다:
 
 1. **JITAI (Just-In-Time Adaptive Intervention)**: 사용자 상태(에너지/피로/불안)에 따라 난이도·시간·거리를 동적 조정
-2. **AI Agent 페르소나 시스템**: Cold Start 해결 + 상시 연습/탐색 모드
+2. **AI/사람 통합 매칭 풀**: 동일 매칭 카드 + 사전 고지 + 튜링 게임으로 Cold Start를 자연스럽게 흡수
 3. **Peak-End 경험 설계**: 선물 한 문장, Blind Spot Discovery, 튜링 테스트 게임
 
 ### OEC (목적 함수)
@@ -113,11 +113,11 @@ OEC = 대화 완료율 × Feel Heard × 재매칭 클릭/7일 재방문
 | **변경** | 에너지 체크 UI | 에너지 선택만 | 선택 시 매칭 카드 **즉시 반응** + 마이크로 애니메이션 | P0 | DONE |
 | **변경** | 톤 체크 UX | 경고형 | 3안 제안형 + "원래대로 보내기" 상시 노출 | P0 | TODO |
 | **변경** | 리플렉션 UX | 서술형 중심 | 퀴즈 1문항 + 슬라이더 경량화 | P0 | TODO |
-| **변경** | 피크-엔드 UX | 기본 KPI만 | 선물→발견→KPI→튜링→다음질문→CTA 구조화 | P0 | TODO |
+| **변경** | 피크-엔드 UX | 기본 KPI만 | 선물→발견→KPI→튜링→다음질문→CTA 구조화 | P0 | DONE |
 | **신규** | 모바일 탭 하이라이트 | 드래그 방식 | 문장 단위 탭→하이라이트/해제 + 인용 삽입 | P0 | TODO |
-| **신규** | Conversation Trailer 생성 | VO만 존재 | stance 기반 2줄+1줄 미리보기 LLM 생성 | P0 | TODO |
-| **신규** | AI Agent 페르소나 | 미구현 | 3개 기본 페르소나 + 자연 딜레이 + stance-grounded generation | P0 | TODO |
-| **신규** | 매칭 카드 통합 UI | 부분 구현 | 에너지+Trailer+거리/난이도+Decline 배지 통합 | P0 | TODO |
+| **신규** | Conversation Trailer 생성 | VO만 존재 | stance 기반 2줄+1줄 미리보기 LLM 생성 | P0 | DONE |
+| **신규** | AI Agent 페르소나 | 미구현 | 사람/Agent 통합 매칭 풀 + candidateType 내부 처리 + 자연 딜레이/프롬프트 강화 | P0 | DONE |
+| **신규** | 매칭 카드 통합 UI | 부분 구현 | AI/사람 비구분 카드 + 사전 고지 배너 + 단일 프레이밍("대화 상대") | P0 | DONE |
 | **신규** | 수용성 전염 | 미구현 | 상대 수용적 문장 감지 + 포함 유도 | P1 | TODO |
 | **신규** | Decline 배지 연동 | Decline 사유만 | 사유→파라미터 매핑→배지 시각화 | P1 | TODO |
 | **신규** | Trailer 일치도 품질 루프 | 미구현 | 일치도 수집→플래깅→프롬프트 튜닝 | P1 | TODO |
@@ -171,12 +171,12 @@ src/
 
 | v4 기능 | Domain | Application | Infrastructure | Presentation |
 |---------|--------|-------------|----------------|-------------|
-| AI 페르소나 | `PersonaProfile` entity, `PersonaStance` VO | `SelectPersona`, `GeneratePersonaResponse` | LLM 프롬프트 + 딜레이 어댑터 | 페르소나 선택 UI |
+| AI 페르소나 | `PersonaProfile`, `MatchCandidate(candidateType)`, `PersonaResponseDelay` | `FindMatchCandidates`, `CreateAgentDialogueSession`, `GeneratePersonaResponse` | 통합 후보 쿼리 + LLM 프롬프트/딜레이 어댑터 | 비구분 매칭 카드 + `AiDisclaimerBanner` |
 | JITAI 엔진 | `JitaiRule` VO, `InterventionAction` VO | `EvaluateJitaiRules`, `ApplyDownshift` | 신호 수집 어댑터 | 코치/휴식 UI |
-| 튜링 게임 | `TuringGuess` entity | `SubmitTuringGuess`, `RevealTuringResult` | - | 게임 UI |
+| 튜링 게임 | `TuringGuess` entity | `SubmitTuringGuess`, `GetTuringStats` | 리워드 메시지 매핑 | 피크-엔드 Step 5 UI |
 | 탭 하이라이트 | `TextSegment` VO | `SegmentText`, `CreateHighlightByTap` | NLP 문장 분할 | 탭 하이라이트 UI |
 | Trailer 생성 | (기존 `ConversationTrailer` VO) | `GenerateConversationTrailer` | LLM Trailer 생성 | Trailer 카드 |
-| 앵커 매칭 | `AnchorAttribute` VO, `AnchorType` VO | `ApplyAnchorFilter` | - | 앵커 필터 UI |
+| 앵커 매칭 | `AnchorAttribute` VO, `AnchorType` VO, `DifferenceLevel` VO | `ApplyAnchorFilter` | 통합 후보 필터링 | 앵커 필터 + 다름 슬라이더 UI |
 | 복기 D+1 | `DailyReview` entity | `CreateDailyReview`, `SubmitDailyReviewResponse` | 알림 스케줄러 | 복기 카드 |
 | PWA | - | - | Service Worker, Manifest | Install Prompt |
 
@@ -361,146 +361,106 @@ Sub-Phase D (리플렉션→피크엔드): P0-9, P0-10, P0-11
 
 ---
 
-### P0-A3: AI Agent 페르소나 시스템 (Cold Start)
+### P0-A3: AI Agent 페르소나 시스템 (통합 매칭 풀)
 
-**기획 참조**: v4 §2.2.9
+**기획 참조**: v4 §2.2.9 + `AI_Agent_new_function.md`
 **예상 공수**: L (1-2주)
 **변경 유형**: 신규
 **의존성**: 없음 (독립)
+**구현 상태 (2026-02-20)**: `DONE`
+
+**구현 반영 파일**
+- `src/domain/entities/persona-profile.ts`
+- `src/domain/entities/match-candidate.ts`
+- `src/domain/value-objects/persona-response-delay.ts`
+- `src/application/use-cases/find-match-candidates.ts`
+- `src/application/use-cases/create-agent-dialogue-session.ts`
+- `src/application/use-cases/generate-persona-response.ts`
+- `src/application/use-cases/check-matching-pool.ts` (`suggestPersona` 제거)
+- `src/app/(main)/matching/page.tsx`
+- `src/app/(main)/matching/components/IntegratedMatchCard.tsx`
+- `src/app/(main)/matching/components/AiDisclaimerBanner.tsx`
+- `src/app/(main)/dialogue/_components/TypingIndicator.tsx`
 
 #### 목표
-1. 3개 기본 페르소나 정의 및 선택 UI
-2. Stance-grounded 대화 생성 (LLM)
-3. 자연 딜레이 (2~15초)
-4. 구어체 + 불완전 표현 + 경험 언급 + 감정 표현
+1. 사람/Agent 후보를 하나의 매칭 풀에서 통합 스코어링
+2. 매칭 카드 UI에서 AI/사람 비구분 (동일 프레이밍: "대화 상대")
+3. 매칭 카드 하단 사전 고지: "상대가 AI일 수 있어요. 대화 후 맞추면 리워드!"
+4. 대화 중 UX를 사람/Agent 동일 흐름으로 유지 (타이핑 인디케이터 + 자연 딜레이)
 
 #### Domain Layer
 
-**신규 엔티티**: `src/domain/entities/persona-profile.ts`
+**변경 엔티티**: `src/domain/entities/match-candidate.ts`
 ```typescript
-export class PersonaProfile {
+export class MatchCandidate {
   constructor(
     public readonly id: string,
-    public readonly name: string,           // "현실주의 직장인"
-    public readonly ageGroup: string,        // "30대"
-    public readonly jobCategory: string,     // "IT 직군"
-    public readonly stanceLabel: string,     // "경제 보수"
-    public readonly description: string,     // "효율성과 현실 가능성을 중시"
-    public readonly conversationStyle: ConversationStyle,
     public readonly stanceVector: StanceVector,
-    public readonly experienceBank: string[], // 배경 스토리 목록
+    public readonly energyLevel: EnergyLevel,
+    public readonly candidateType: 'human' | 'agent',
+    public readonly personaId?: string,
   ) {}
 }
-
-export type ConversationStyle = 'logical' | 'emotional' | 'humorous' | 'careful';
 ```
 
-**신규 VO**: `src/domain/value-objects/persona-response-delay.ts`
-```typescript
-export class PersonaResponseDelay {
-  static calculate(responseLength: number): number {
-    const baseDelay = 3;
-    const perCharDelay = 0.05;
-    const jitter = Math.random() * 3 - 1; // uniform(-1, +2)
-    return baseDelay + (responseLength * perCharDelay) + jitter;
-  }
-}
-```
+**변경 엔티티**: `src/domain/entities/persona-profile.ts`
+- `toAnchorAttributes()` 추가 (ageGroup/jobCategory를 앵커 속성으로 매핑)
 
-**신규 인터페이스**: `src/domain/interfaces/persona-repository.ts`
-```typescript
-export interface PersonaRepository {
-  findAll(): Promise<PersonaProfile[]>;
-  findById(id: string): Promise<PersonaProfile | null>;
-}
-```
-
-**신규 인터페이스**: `src/domain/interfaces/persona-dialogue-generator.ts`
-```typescript
-export interface PersonaDialogueGenerator {
-  generateResponse(
-    persona: PersonaProfile,
-    conversationHistory: DialogueTurn[],
-    userMessage: string,
-    topic: string,
-  ): Promise<string>;
-}
-```
+**변경 VO**: `src/domain/value-objects/persona-response-delay.ts`
+- Phase 1: 규칙 기반 지연 (`calculateRule`)
+- Phase 2: 실제 응답 분포 기반 지연 (`calculateFromDistribution`)
 
 #### Application Layer
 
-**신규 use case**: `src/application/use-cases/select-persona.ts`
-- 입력: `userId`, `personaId`
-- 출력: `PersonaProfile` + 대화 세션 생성
-- 로직: 매칭 풀 부족 시 / 사용자 연습 모드 요청 시 호출
+**변경 UC**: `src/application/use-cases/find-match-candidates.ts`
+- 사람 후보 + Agent 후보 통합 로드 후 단일 스코어링
+- `pool_scarcity_bonus`로 AI 비율 자동 조정
 
-**신규 use case**: `src/application/use-cases/generate-persona-response.ts`
-- 입력: `sessionId`, `personaId`, `userMessage`
-- 출력: `{ response: string, delayMs: number }`
-- 로직:
-  1. 페르소나 프로필 로드
-  2. 대화 이력 로드
-  3. LLM에 persona-grounded prompt 전달
-  4. PersonaResponseDelay로 딜레이 계산
-  5. 응답 반환
+**신규 UC**: `src/application/use-cases/create-agent-dialogue-session.ts`
+- Agent 매칭 선택 시 대화 세션 생성 + 초기 상태 설정
 
-**신규 use case**: `src/application/use-cases/check-matching-pool.ts`
-- 입력: `userId`, `stanceVector`, `energyLevel`
-- 출력: `{ hasHumanMatch: boolean, suggestPersona: boolean }`
-- 로직: 매칭 풀 확인 → 부족 시 AI 페르소나 제안
+**변경 UC**: `src/application/use-cases/check-matching-pool.ts`
+- `suggestPersona` 반환 제거 (통합 매칭 풀에서 자동 처리)
+
+**변경 UC**: `src/application/use-cases/generate-persona-response.ts`
+- 자연 딜레이 + 구어체/불완전 표현 강화 프롬프트 적용
 
 #### Infrastructure Layer
 
-**신규**: `src/infrastructure/external/persona-llm-adapter.ts`
-- `PersonaDialogueGenerator` 구현
-- OpenAI GPT-5-mini 호출
-- System prompt 구조:
-  ```
-  너는 [페르소나명]이다. 아래 프로필에 충실하게 대화하라.
-  - 배경: [직업, 연령대, 지역]
-  - 핵심 가치: [stance vector 기반 자연어]
-  - 대화 스타일: [logical/emotional/humorous/careful]
-  - 경험: [배경 스토리 1~2개]
-  규칙:
-  - 완벽한 문어체 금지. 구어체로 답하라.
-  - 모든 질문에 답할 필요 없다.
-  - 상대의 좋은 포인트에는 솔직하게 인정하라.
-  - stance vector에서 벗어나는 입장은 취하지 마라.
-  - 한 번에 3문장 이상 길게 쓰지 마라.
-  ```
+**변경**: 통합 후보 풀 조회
+- 사람 후보 + 페르소나 후보를 단일 풀로 결합해 스코어링
 
-**신규**: `src/infrastructure/persistence/supabase-persona-repository.ts`
-- 초기 3개 페르소나는 시드 데이터로 관리
+**변경**: `src/infrastructure/external/persona-llm-adapter.ts`
+- OpenAI GPT-5-mini 호출
+- stance-grounded 생성 + 자연스러움 규칙(불완전 표현/길이 변동/경험담)
 
 #### Presentation Layer
 
-**신규**: `src/app/(main)/matching/components/PersonaSelector.tsx`
-- 매칭 풀 부족 시 또는 "연습 모드" 진입 시 표시
-- 3개 페르소나 카드 (이름, 연령대, 직군, 입장 요약)
-- "대화하기" CTA per 카드
-- 하단 "알림 받기" (실제 사람 매칭 가능 시)
+**폐기**: `PersonaSelector.tsx` (별도 AI 선택 UI 삭제)
+
+**변경**: `src/app/(main)/matching/page.tsx`
+- `candidateType` 분기 없이 동일 `IntegratedMatchCard` 렌더링
+- 하단에 `AiDisclaimerBanner` 상시 노출
 
 **변경**: `src/app/(main)/dialogue/[id]/page.tsx`
-- Agent 대화 시: 동기식 응답 + 자연 딜레이 + 타이핑 인디케이터
-- Step 전환: 사용자 완료 즉시 Agent 응답 (딜레이 적용)
+- 사람/Agent 공통 `TypingIndicator` UX
+- "상대가 작성 중..." 상태를 동일하게 거친 뒤 응답 표시
 
-#### 테스트 스펙
-| 테스트 | 파일 | 검증 내용 |
-|--------|------|----------|
-| PersonaProfile 생성 | `persona-profile.test.ts` | 프로필 속성 검증 |
-| PersonaResponseDelay | `persona-response-delay.test.ts` | 딜레이 범위: 2~17초 |
-| SelectPersona UC | `select-persona.test.ts` | 세션 생성 + 이벤트 발화 |
-| GeneratePersonaResponse UC | `generate-persona-response.test.ts` | LLM 호출 + 딜레이 반환 |
-| CheckMatchingPool UC | `check-matching-pool.test.ts` | 풀 충분/부족 분기 |
-| PersonaSelector UI | `PersonaSelector.test.tsx` | 3카드 렌더링 + CTA |
-| Agent 대화 딜레이 | `dialogue-agent.test.tsx` | 타이핑 인디케이터 + 딜레이 후 표시 |
+#### 테스트 스펙 (요약)
+| 테스트 | 검증 내용 |
+|--------|----------|
+| 통합 매칭 정렬 | 사람/Agent 후보를 단일 스코어로 정렬 |
+| Agent 세션 생성 | 매칭 카드 진입 후 Agent 세션 생성 성공 |
+| 사전 고지 배너 | 매칭 카드 하단 고지문 표시/탭 이벤트 |
+| 대화 자연스러움 | 타이핑 인디케이터 + 딜레이 후 응답 표시 |
 
 #### 이벤트 로깅
 | 이벤트명 | 트리거 |
 |---------|--------|
-| `persona_select_{id}` | 페르소나 선택 |
-| `persona_dialogue_start` | Agent 대화 시작 |
-| `persona_response_generated` | Agent 응답 생성 |
+| `ai_disclaimer_view` | 고지 배너 뷰포트 진입 |
+| `ai_disclaimer_tap` | 고지 배너 탭 |
+| `_agent_matched` | 내부 분석용 Agent 매칭 |
+| `_agent_response_generated` | 내부 분석용 Agent 응답 생성 |
 
 #### Agent 품질 KPI
 | 메트릭 | 목표 |
@@ -536,7 +496,7 @@ export interface PersonaDialogueGenerator {
 - 기존 `ThoughtMapAlias` 활용
 - **신규 VO**: `src/domain/value-objects/contextual-recommendation.ts`
   ```typescript
-  export type RecommendationType = 'precision_upsell' | 'ai_practice' | 'misperception' | 'share_card';
+  export type RecommendationType = 'precision_upsell' | 'match_suggestion' | 'misperception' | 'share_card';
   export class ContextualRecommendation {
     constructor(
       public readonly type: RecommendationType,
@@ -548,7 +508,7 @@ export interface PersonaDialogueGenerator {
 
 #### Application Layer
 - **신규 UC**: `src/application/use-cases/get-contextual-recommendations.ts`
-  - 로직: 정밀도 5→"정밀도 높이기", 매칭 풀 부족→"AI 연습 대화", 오해교정 대상→"오해교정", 항상→"유형 카드 공유"
+  - 로직: 정밀도 5→"정밀도 높이기", 매칭 풀 부족→"대화 상대 추천", 오해교정 대상→"오해교정", 항상→"유형 카드 공유"
 
 #### Presentation Layer
 - **변경**: `src/app/(funnel)/onboarding/result/page.tsx`
@@ -565,7 +525,7 @@ export interface PersonaDialogueGenerator {
 | `thought_map_cta_match_click` | "대화 상대 찾기" 클릭 |
 | `thought_map_share_click` | "유형 카드 공유" 클릭 |
 | `thought_map_precision_upsell` | "정밀도 높이기" 클릭 |
-| `thought_map_ai_practice_click` | "AI 연습 대화" 클릭 |
+| `thought_map_match_suggestion_click` | "대화 상대 추천" 클릭 |
 
 ---
 
@@ -642,6 +602,7 @@ export interface PersonaDialogueGenerator {
 **예상 공수**: L (1-2주)
 **변경 유형**: 기존 변경
 **의존성**: P0-B2 (에너지 파라미터)
+**구현 상태 (2026-02-20)**: `DONE` (30 테스트)
 
 #### 목표
 매칭 스코어 공식 구현:
@@ -650,24 +611,28 @@ match_score = w1 × distance_fit
             + w2 × readiness_score
             + w3 × topic_relevance
             + w4 × energy_compat
-            + w5 × anchor_similarity  (P1에서 추가)
+            + w5 × anchor_similarity
             - penalty_recent_decline
+            + pool_scarcity_bonus
 ```
 
 #### Domain Layer
 - **변경**: `src/domain/entities/match-candidate.ts`
+  - `candidateType: 'human' | 'agent'` 필드 추가 (UI 미노출)
+  - `personaId?: string` 필드 추가 (Agent 후보 참조)
   - `energyCompat` 필드 추가
   - `recentDeclinePenalty` 필드 추가
 - **변경**: `src/domain/value-objects/match-score.ts`
-  - 스코어 공식 리팩토링: 가중치 기반 합산
+  - 스코어 공식 리팩토링: 가중치 기반 합산 + `pool_scarcity_bonus`
 - **변경**: `src/domain/value-objects/distance-band.ts`
   - Sweet spot 범위: 에너지별 정의
 
 #### Application Layer
 - **변경**: `src/application/use-cases/find-match-candidates.ts`
+  - 사람 후보 + Agent 후보 통합 로드
   - 에너지 호환성 스코어링 추가
   - 최근 decline 패널티 적용
-  - Cold Start 분기: 매칭 풀 부족 시 `CheckMatchingPool` 호출
+  - 매칭 풀 부족 시 `pool_scarcity_bonus`로 Agent 비율 자동 조정
 
 #### Distance Sweet Spot
 | 에너지 | Cosine Distance 범위 |
@@ -682,7 +647,8 @@ match_score = w1 × distance_fit
 | 스코어 계산 | 가중치 기반 합산 정확성 |
 | Sweet Spot 필터링 | 에너지별 거리 범위 내 후보만 반환 |
 | Decline 패널티 | 최근 decline 매칭과 유사한 후보에 패널티 |
-| Cold Start 분기 | 풀 부족 시 `suggestPersona: true` |
+| 통합 풀 정렬 | 사람/Agent 후보 통합 정렬 결과 검증 |
+| Scarcity bonus | 사람 후보 0/1~2/3+ 구간별 보정값 적용 |
 
 ---
 
@@ -692,6 +658,7 @@ match_score = w1 × distance_fit
 **예상 공수**: M (3-5일)
 **변경 유형**: 신규 (VO 존재, 생성 로직 없음)
 **의존성**: P0-B3 (매칭)
+**구현 상태 (2026-02-19)**: `DONE` (13 테스트)
 
 #### 목표
 stance vector 기반 2줄+1줄 미리보기 LLM 생성
@@ -727,8 +694,9 @@ Line 3 (옵션): "대화에서 이런 포인트가 나올 수 있어요: ___"
   - `TrailerGenerator` 구현
   - stance vector → 자연어 변환 프롬프트
   - Line 3: 두 사용자 간 stance 차이가 가장 큰 하위 차원 1개
+  - FallbackTrailerGenerator (규칙 기반 스텁) — 차원별 stance 차이 기반 2-3줄 생성
 
-#### 테스트 스펙
+#### 테스트 스펙 (13 테스트)
 | 테스트 | 검증 내용 |
 |--------|----------|
 | Trailer 구조 | Line 1-2 필수, Line 3 옵션 |
@@ -743,9 +711,11 @@ Line 3 (옵션): "대화에서 이런 포인트가 나올 수 있어요: ___"
 **예상 공수**: M (3-5일)
 **변경 유형**: 신규 통합
 **의존성**: P0-B2, P0-B4
+**구현 상태 (2026-02-20)**: `DONE` (19 테스트)
 
 #### 목표
-에너지 체크 + Trailer + 거리/난이도 라벨 + Decline 배지가 통합된 매칭 카드
+에너지 체크 + Trailer + 거리/난이도 라벨 + Decline 배지가 통합된 매칭 카드.
+AI/사람은 카드에서 구분되지 않으며, 하단 사전 고지 배너만 공통 노출.
 
 #### 화면 스펙
 ```
@@ -760,16 +730,24 @@ Line 3 (옵션): "대화에서 이런 포인트가 나올 수 있어요: ___"
 │  👤 상대방 미리보기                  │
 │  [Conversation Trailer]            │
 │  ──────────────────────────────    │
-│    [ 대화 시작 ]    [ 다른 상대 ]    │
+│            [ 대화 시작 ]             │
+│                                     │
+│  🎯 상대가 AI일 수 있어요.           │
+│     대화 후 맞추면 리워드!           │
 └─────────────────────────────────────┘
 ```
 
 #### Presentation Layer
 - **신규**: `src/app/(main)/matching/components/IntegratedMatchCard.tsx`
   - Props: `energy`, `trailer`, `distance`, `difficulty`, `timeBudget`, `declineBadge?`
+  - `candidateType`를 UI props로 노출하지 않음 (비구분 UX)
   - 에너지 변경 시 모든 값 동적 반응
+  - AI 페르소나 매칭 시에도 동일한 카드 구조 사용
 - **신규**: `src/app/(main)/matching/components/DeclineBadge.tsx`
   - 배지 텍스트: "조정됨: 오늘은 가볍게(5분)" 등
+- **신규**: `src/app/(main)/matching/components/AiDisclaimerBanner.tsx`
+  - 문구: "상대가 AI일 수 있어요. 대화 후 맞추면 리워드!"
+  - 작은 폰트/저강도 색상으로 과한 주의 환기 방지
 
 ---
 
@@ -943,6 +921,7 @@ Line 3 (옵션): "대화에서 이런 포인트가 나올 수 있어요: ___"
 **예상 공수**: S (1-2일)
 **변경 유형**: 기존 변경
 **의존성**: P0-D2
+**구현 상태 (2026-02-20)**: `DONE` (44 테스트)
 
 #### 목표
 선물→발견→KPI→(튜링)→다음질문→CTA 순서 구조화
@@ -952,17 +931,15 @@ Line 3 (옵션): "대화에서 이런 포인트가 나올 수 있어요: ___"
 2. 선물 한 문장 공개 (기존 `RevealGiftMessage` 활용)
 3. Blind Spot Discovery (기존 `ExtractBlindSpot` 활용)
 4. KPI 수집 2문항 (Feel Heard + Trailer 일치도, 이모지 슬라이더)
-5. (Agent 대화인 경우) 튜링 테스트 결과 — P2에서 구현
+5. 튜링 추측 UI: "방금 대화한 상대는 사람이었을까요?" — P2에서 구현
 6. 다음 질문 저장 (기존 `SaveNextQuestion` 활용)
 7. 최종 CTA 1개 (상황별 분기)
 
 #### 상황별 CTA 규칙
 | 조건 | CTA |
 |------|-----|
-| 일반 대화 완료 | "다음 대화 찾기" |
-| Feel Heard ≥4 + 실제 사람 | "친구 되기" |
-| Agent 대화 완료 + 매칭 풀 있음 | "실제 사람과 대화하기" |
-| Agent 대화 + 매칭 풀 부족 | "알림 받기 + 다른 페르소나" |
+| 대화 완료 (AI/사람 무관) | "다음 대화 찾기" |
+| Feel Heard ≥4 | "친구 되기" (상대가 사람인 경우만 내부 활성화) |
 | 에너지 낮음 | "오늘은 여기까지" |
 
 #### Presentation Layer
@@ -1154,6 +1131,7 @@ Decline 사유 수집 → 다음 매칭 파라미터 조정 → 배지 시각화
 
 **기획 참조**: v4 §2.2.8
 **예상 공수**: L (1-2주)
+**구현 상태**: `TODO`
 
 #### 목표
 "같은 X, 다른 Y" 매칭 + 다름의 정도 슬라이더
@@ -1172,16 +1150,32 @@ Decline 사유 수집 → 다음 매칭 파라미터 조정 → 배지 시각화
     ) {}
   }
   ```
+- **신규 VO**: `src/domain/value-objects/difference-level.ts`
+  ```typescript
+  export class DifferenceLevel {
+    constructor(public readonly value: number) {
+      if (value < 0 || value > 1) throw new Error('DifferenceLevel must be 0-1');
+    }
+  }
+  ```
 
 #### Application Layer
 - **신규 UC**: `src/application/use-cases/apply-anchor-filter.ts`
-  - 앵커 속성 일치 + 주제 stance 차이 필터링
-  - 에너지와 다름 슬라이더 상한 통합
+  - 사람 후보 + Agent 후보 통합 로드 후 앵커/거리 필터링
+  - `differenceLevel`(0~1)을 distance range로 변환해 적용
+  - 에너지와 다름 슬라이더 상한 통합 (low 0.4 / medium 0.7 / high 1.0)
+  - PersonaProfile의 앵커 속성(ageGroup, jobCategory)을 동일 규칙으로 매핑
 
 #### Presentation Layer
 - **신규**: `src/app/(main)/matching/components/AnchorFilterPanel.tsx`
-  - 공통점 선택: 같은 성별/직업군/연령대
-  - 다름의 정도 슬라이더
+  - 공통점 멀티 선택: 같은 성별/직업군/연령대/지역
+  - 다름의 정도 슬라이더 (0~1)
+  - 실시간 미리보기 텍스트: "같은 X인데, Y에 대해 Z 다른 생각"
+
+#### Agent 페르소나 연동
+- `PersonaProfile.ageGroup`, `PersonaProfile.jobCategory`를 앵커 속성으로 직접 매핑
+- 통합 매칭 풀에서 앵커 필터를 만족하는 Agent/사람 후보를 동일 우선순위로 평가
+- 예시: "같은 30대, 다른 경제 관점" 선택 시 `ageGroup='30대'` 페르소나 중 stance distance 범위 내 페르소나를 우선 노출
 
 ---
 
@@ -1241,6 +1235,9 @@ Decline 사유 수집 → 다음 매칭 파라미터 조정 → 배지 시각화
 
 **기획 참조**: v4 §2.2.9 (튜링 테스트)
 **예상 공수**: M (3-5일)
+**구현 상태**: `TODO`
+
+매칭 카드의 사전 고지(`AiDisclaimerBanner`)와 연동되어 동작한다.
 
 #### Domain Layer
 - **신규 엔티티**: `src/domain/entities/turing-guess.ts`
@@ -1263,12 +1260,13 @@ Decline 사유 수집 → 다음 매칭 파라미터 조정 → 배지 시각화
 - **신규 UC**: `src/application/use-cases/get-turing-stats.ts`
 
 #### 리워드 규칙
-| 조건 | 리워드 |
-|------|--------|
-| 정답 | Passport에 "관찰자 뱃지" +1 |
-| 3연속 정답 | "날카로운 관찰자" 칭호 |
-| AI를 사람으로 오인 | "인상적인 관점" 메시지 |
-| 사람을 AI로 오인 | "의외의 시각" 메시지 |
+| 조건 | 리워드 | 메시지 |
+|------|--------|--------|
+| AI를 AI로 맞춤 | 뱃지 +1 | "정확해요! 관찰력이 날카로워요 👀" |
+| 사람을 사람으로 맞춤 | 뱃지 +1 | "맞아요! 좋은 대화였죠 🎉" |
+| 3연속 정답 | 칭호 획득 | "날카로운 관찰자" |
+| AI를 사람으로 오인 | 경험치 +0.5 | "그만큼 자연스러운 관점이었어요 😊" |
+| 사람을 AI로 오인 | 경험치 +0.5 | "그만큼 독특한 시각이었네요 🤔" |
 
 ---
 
@@ -1276,6 +1274,7 @@ Decline 사유 수집 → 다음 매칭 파라미터 조정 → 배지 시각화
 
 **기획 참조**: v4 §2.2.9 (페르소나 저장)
 **예상 공수**: L (1-2주)
+**구현 상태**: `TODO`
 
 #### Domain Layer
 - **신규 엔티티**: `src/domain/entities/saved-persona.ts`
@@ -1420,13 +1419,15 @@ framer-motion: 두 카드가 중앙으로 이동 → 합쳐짐 → 파티클 이
 | `energy_check_select_{high\|medium\|low}` | 에너지 선택 |
 | `energy_check_change` | 에너지 변경 |
 | `matching_card_render_time` | 카드 렌더링 시간 |
-| `match_accept` | 매칭 수락 |
-| `match_decline` | 매칭 거절 |
+| `match_accept` | 매칭 수락 (`candidateType`은 내부 페이로드로만 수집) |
+| `match_decline` | 매칭 거절 (`candidateType`은 내부 페이로드로만 수집) |
 | `match_decline_reason_{time\|topic\|energy\|other}` | 거절 사유 |
 | `adjusted_badge_display` | 조정 배지 표시 |
-| `anchor_filter_select_{type}` | 앵커 필터 선택 |
+| `anchor_filter_set` | 앵커 필터 설정 완료 |
+| `anchor_preview_render` | 앵커 미리보기 텍스트 렌더링 |
 | `distance_slider_set` | 다름 슬라이더 설정 |
-| `persona_select_{id}` | 페르소나 선택 |
+| `ai_disclaimer_view` | AI 가능성 고지 배너 노출 |
+| `ai_disclaimer_tap` | AI 가능성 고지 배너 탭 |
 
 #### 대화
 | 이벤트 | 트리거 |
@@ -1453,6 +1454,8 @@ framer-motion: 두 카드가 중앙으로 이동 → 합쳐짐 → 파티클 이
 | `gift_sentence_save` | 선물 문장 저장 |
 | `blind_spot_save` | Blind Spot 저장 |
 | `next_question_save` | 다음 질문 저장 |
+| `turing_guess_submit` | 튜링 추측 제출 |
+| `turing_reward_shown` | 튜링 리워드 메시지 표시 |
 | `final_cta_click` | 최종 CTA 클릭 |
 
 #### 복구 & 재방문
@@ -1463,8 +1466,14 @@ framer-motion: 두 카드가 중앙으로 이동 → 합쳐짐 → 파티클 이
 | `d1_review_open` | D+1 복기 오픈 |
 | `d1_review_response_{changed\|unsure\|same}` | 복기 응답 |
 | `passport_view` | 패스포트 조회 |
-| `turing_guess_{human\|ai}` | 튜링 게임 응답 |
-| `turing_correct` | 튜링 게임 정답 |
+
+#### 내부 분석 이벤트 (사용자 미노출)
+| 이벤트 | 트리거 |
+|--------|--------|
+| `_agent_matched` | Agent 후보 매칭 확정 |
+| `_agent_response_generated` | Agent 응답 생성 완료 |
+| `_agent_misidentified_as_human` | AI를 사람으로 오인 |
+| `_human_misidentified_as_agent` | 사람을 AI로 오인 |
 
 ---
 
@@ -1502,9 +1511,21 @@ framer-motion: 두 카드가 중앙으로 이동 → 합쳐짐 → 파티클 이
 
 ### ADR-V4-006: 튜링 게임 — 투명성 우선
 
-**결정**: AI를 숨기지 않고, 게임으로 전환
-**근거**: 속이면 신뢰 붕괴. 게임은 "주의 깊게 읽기" 부수효과
-**트레이드오프**: AI임을 아는 순간 대화 태도 변화 가능 vs 윤리적 투명성
+**결정**: 매칭 카드에서 "AI일 수 있음"을 사전 고지하고, 피크-엔드에서 튜링 게임으로 마무리
+**근거**: 완전 비공개는 신뢰 리스크가 크고, 완전 공개는 대화 품질을 해칠 수 있어 균형점이 필요
+**트레이드오프**: 일부 사용자가 상대를 과도하게 의심할 수 있음 vs 투명성과 몰입의 균형
+
+### ADR-V4-007: AI/사람 통합 매칭 풀
+
+**결정**: AI Agent와 실제 사람을 동일한 매칭 풀에서 통합 스코어링
+**근거**: Cold Start를 별도 분기 없이 자연스럽게 흡수하고, 일관된 UX를 제공
+**트레이드오프**: Agent 자연스러움 품질 요구치 상승, AI 비율 가드레일 필요
+
+### ADR-V4-008: PersonaSelector 폐기 및 비구분 카드
+
+**결정**: 사용자 대면 PersonaSelector UI를 제거하고 통합 매칭 카드만 노출
+**근거**: "AI 연습" 프레이밍이 대화 태도를 왜곡하고 이중 트랙 UX 복잡도를 높임
+**트레이드오프**: 내부 분기(친구 되기/후속 기능)의 서버 조건 로직이 복잡해짐
 
 ---
 
@@ -1513,14 +1534,14 @@ framer-motion: 두 카드가 중앙으로 이동 → 합쳐짐 → 파티클 이
 ```
 P0-A1 (Trust Moment)         ─┐
 P0-A2 (온보딩 문항)           ─┤── Sub-Phase A (기반)
-P0-A3 (AI 페르소나)           ─┘
+P0-A3 (AI/사람 통합 매칭 기반) ─┘
          │
          ▼
 P0-B1 (Thought Map) ←── P0-A2
 P0-B2 (에너지 즉시반응)       ─┐
-P0-B3 (매칭 엔진) ←── P0-B2   ├── Sub-Phase B (온보딩→매칭)
+P0-B3 (통합 매칭 엔진) ←── P0-B2   ├── Sub-Phase B (온보딩→매칭)
 P0-B4 (Trailer 생성) ←── P0-B3│
-P0-B5 (매칭 카드 통합) ←── P0-B2, P0-B4
+P0-B5 (비구분 매칭 카드+고지) ←── P0-B2, P0-B4
                                ─┘
          │
          ▼
@@ -1530,7 +1551,7 @@ P0-C2 (톤 체크 제안)          ─┘
          ▼
 P0-D1 (리플렉션 경량화)       ─┐
 P0-D2 (요약 카드) ←── P0-D1   ├── Sub-Phase D (리플렉션→피크엔드)
-P0-D3 (피크엔드 플로우) ←── P0-D2
+P0-D3 (피크엔드+튜링/통합CTA) ←── P0-D2
                                ─┘
          │
          ▼
@@ -1583,6 +1604,12 @@ P2-1 ~ P2-10 (지속성 & 확장)
 | "검열/설교" 민원 | <2% | 톤 체크 임계값 상향 |
 | 부정 피드백 | <5% | A/B 중단 + 원인 분석 |
 | AI "속은 느낌" 불만 | <2% | 투명성 고지 강화 |
+| AI 매칭 비율 | 사람 후보 3명+ 구간에서 AI <30% | `pool_scarcity_bonus` 하향 |
+| AI→사람 오인율 | >40% (목표) | 프롬프트/응답 딜레이 튜닝 |
+| Agent 대화 만족도 | >3.0/5 | 페르소나 프로필/프롬프트 재설계 |
+| Agent 대화 완료율 | >45% | UX/난이도 조정 |
+| 과의심 행동 빈도 | "너 AI지?" 발화 <10% | 고지 문구 톤/위치 조정 |
+| 앵커 필터 사용률 | 추적(하락 시 개선) | 노출 방식/기본값 재설계 |
 | 프라이버시 불안 | <2% | Trust Moment 재설계 |
 | JITAI "왜 이러지?" 혼란 | <3% | Rule 임계값 조정/비활성화 |
 
@@ -1665,5 +1692,5 @@ P2-1 ~ P2-10 (지속성 & 확장)
 | Scaffolding | 빈칸 앞에서 멈추지 않도록 예시/뼈대/코치를 제공하는 구조 |
 | Downshift | 사용자 상태에 따라 난이도/거리/시간을 자동 하향 |
 | Anchor | 매칭 시 공통 속성 (같은 성별, 직업군 등) |
-| Cold Start | 초기 유저 풀 부족으로 매칭 불가 상황 |
+| Cold Start | 초기 사람 매칭 풀이 부족한 상태 (통합 매칭 풀에서 AI 비율 자동 보정 대상) |
 | OEC | Overall Evaluation Criterion — 전체 평가 기준 |
