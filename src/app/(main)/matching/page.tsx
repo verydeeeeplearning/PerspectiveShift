@@ -38,9 +38,8 @@ export default function MatchingPage() {
       apiGet<{ candidates: MatchCandidateOutput[] }>("/api/matching/candidates")
         .then((data) => data.candidates)
         .catch(() => [] as MatchCandidateOutput[]),
-      fetch("/api/matching/personas")
-        .then((res) => res.json())
-        .then((data: { personas: PersonaCard[] }) => data.personas)
+      apiGet<{ personas: PersonaCard[] }>("/api/matching/personas")
+        .then((data) => data.personas)
         .catch(() => [] as PersonaCard[]),
     ])
       .then(([humanCandidates, aiPersonas]) => {
