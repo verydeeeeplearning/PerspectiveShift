@@ -33,15 +33,17 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
       const content = response.choices[0]?.message?.content;
       if (content) return content.trim();
 
-      console.error("[PersonaGenerator] Empty content:", {
+      console.error("[PersonaGenerator] Empty content:", JSON.stringify({
         finishReason: response.choices[0]?.finish_reason,
         model: response.model,
         persona: persona.name,
-      });
+        usage: response.usage,
+      }));
 
       return this.retryWithSimplifiedPrompt(persona, userMessage, topic);
     } catch (error) {
-      console.error("[PersonaGenerator] API error:", error);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      console.error("[PersonaGenerator] API error:", errMsg);
       return this.retryWithSimplifiedPrompt(persona, userMessage, topic);
     }
   }

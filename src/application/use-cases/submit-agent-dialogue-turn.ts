@@ -34,21 +34,18 @@ export class SubmitAgentDialogueTurnUseCase {
     // --- 1. Submit user turn (PII scrub + tone/drift check) ---
     const scrubbed = this.deps.piiScrubber.scrub(content);
 
-    const toneCheck = await this.deps.facilitator.checkTone(
-      scrubbed.scrubbed,
-    );
-
-    let driftCheck = { drifted: false, suggestion: null as string | null };
+    // Parallelize tone check and drift check for faster response
     const positionTurns = session.turnsForStep("POSITION");
     const myPosition = positionTurns.find(
       (t) => t.participantId === participantId,
     );
-    if (myPosition) {
-      driftCheck = await this.deps.facilitator.checkDrift(
-        scrubbed.scrubbed,
-        myPosition.content,
-      );
-    }
+
+    const [toneCheck, driftCheck] = await Promise.all([
+      this.deps.facilitator.checkTone(scrubbed.scrubbed),
+      myPosition
+        ? this.deps.facilitator.checkDrift(scrubbed.scrubbed, myPosition.content)
+        : Promise.resolve({ drifted: false, suggestion: null as string | null }),
+    ]);
 
     const stepBefore = session.currentStep;
     const userTurn = DialogueTurn.create({

@@ -4,6 +4,7 @@ import { SubmitTurnInputSchema } from "@/application/dtos/dialogue-input";
 import { handleError } from "../../../../_shared/error-handler";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 export async function POST(
   request: NextRequest,

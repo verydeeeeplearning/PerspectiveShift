@@ -3,6 +3,7 @@ import { getContainer } from "@/infrastructure/config/di-container";
 import { handleError } from "../../_shared/error-handler";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 export async function GET(request: NextRequest) {
   try {
