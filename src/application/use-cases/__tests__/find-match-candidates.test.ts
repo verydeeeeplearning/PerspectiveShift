@@ -6,6 +6,8 @@ import {
 import { StanceVector } from "@/domain/entities/stance-vector";
 import type { StanceRepository, StanceProfile } from "@/domain/interfaces/stance-repository";
 import type { MatchRepository } from "@/domain/interfaces/match-repository";
+import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
+import { PersonaProfile } from "@/domain/entities/persona-profile";
 
 function makeProfile(
   sessionId: string,
@@ -25,6 +27,27 @@ function makeProfile(
   };
 }
 
+function makePersona(id: string, vectorScale = 0.2): PersonaProfile {
+  return PersonaProfile.create({
+    id,
+    name: `persona-${id}`,
+    ageGroup: "30대",
+    jobCategory: "IT직군",
+    stanceLabel: "중도",
+    description: "테스트 페르소나",
+    conversationStyle: "careful",
+    stanceVector: StanceVector.fromValues({
+      TECH_REGULATION: vectorScale,
+      REDISTRIBUTION: vectorScale,
+      WORK_LIFE: vectorScale,
+      MERITOCRACY: vectorScale,
+      TECH_OPTIMISM: vectorScale,
+      OPPORTUNITY_EQUALITY: vectorScale,
+    }),
+    experienceBank: [],
+  });
+}
+
 const dims = {
   TECH_REGULATION: 0.5,
   REDISTRIBUTION: 0.3,
@@ -34,10 +57,20 @@ const dims = {
   OPPORTUNITY_EQUALITY: -0.1,
 };
 
+const sweetSpotDims = {
+  TECH_REGULATION: 0.493,
+  REDISTRIBUTION: 0.758,
+  WORK_LIFE: 0.493,
+  MERITOCRACY: 0.373,
+  TECH_OPTIMISM: -0.019,
+  OPPORTUNITY_EQUALITY: -0.139,
+};
+
 describe("FindMatchCandidatesUseCase", () => {
   function setup(
     myProfile: StanceProfile | null,
     otherProfiles: StanceProfile[],
+    personas: PersonaProfile[] = [],
   ) {
     const stanceRepo: StanceRepository = {
       findBySessionId: vi.fn().mockResolvedValue(myProfile),
@@ -51,11 +84,18 @@ describe("FindMatchCandidatesUseCase", () => {
       findPendingProposal: vi.fn(),
       updateProposal: vi.fn(),
     };
+    const personaRepo: PersonaRepository = {
+      findAll: vi.fn().mockResolvedValue(personas),
+      findById: vi.fn().mockImplementation(async (id: string) =>
+        personas.find((p) => p.id === id) ?? null,
+      ),
+    };
     const uc = new FindMatchCandidatesUseCase({
       stanceRepository: stanceRepo,
       matchRepository: matchRepo,
+      personaRepository: personaRepo,
     });
-    return { uc, stanceRepo, matchRepo };
+    return { uc, stanceRepo, matchRepo, personaRepo };
   }
 
   // --- Backwards compatibility ---
@@ -117,6 +157,48 @@ describe("FindMatchCandidatesUseCase", () => {
     if (result.length >= 2) {
       expect(result[0].score).toBeGreaterThanOrEqual(result[1].score);
     }
+  });
+
+  it("merges human and agent candidates in one list", async () => {
+    const my = makeProfile("me", dims);
+    const human = makeProfile("human-1", sweetSpotDims, 0.9);
+    const persona = makePersona("persona-1");
+
+    const { uc } = setup(my, [human], [persona]);
+    const result = await uc.execute("me");
+
+    expect(result.some((c) => c.candidateType === "human")).toBe(true);
+    expect(result.some((c) => c.candidateType === "agent")).toBe(true);
+    expect(result.some((c) => c.personaId === "persona-1")).toBe(true);
+  });
+
+  it("applies pool scarcity bonus based on human pool size", async () => {
+    const my = makeProfile("me", dims);
+    const persona = makePersona("persona-1");
+    const human1 = makeProfile("human-1", sweetSpotDims, 0.8);
+    const human2 = makeProfile("human-2", {
+      ...sweetSpotDims,
+      TECH_REGULATION: 0.45,
+    }, 0.8);
+    const human3 = makeProfile("human-3", {
+      ...sweetSpotDims,
+      REDISTRIBUTION: 0.7,
+    }, 0.8);
+
+    const zeroHuman = await setup(my, [], [persona]).uc.execute("me");
+    const twoHumans = await setup(my, [human1, human2], [persona]).uc.execute("me");
+    const threeHumans = await setup(my, [human1, human2, human3], [persona]).uc.execute("me");
+
+    const bonus0 =
+      zeroHuman.find((c) => c.candidateType === "agent")?.poolScarcityBonus;
+    const bonus2 =
+      twoHumans.find((c) => c.candidateType === "agent")?.poolScarcityBonus;
+    const bonus3 =
+      threeHumans.find((c) => c.candidateType === "agent")?.poolScarcityBonus;
+
+    expect(bonus0).toBe(0.3);
+    expect(bonus2).toBe(0.1);
+    expect(bonus3).toBe(0);
   });
 
   // --- Energy-aware matching ---

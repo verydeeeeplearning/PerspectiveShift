@@ -4,13 +4,15 @@ import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingFlow, type AnswerMap } from "./components/OnboardingFlow";
 import { TrustMoment } from "./components/TrustMoment";
+import { DemographicStep, type DemographicInfo } from "./components/DemographicStep";
 import { calculateStance } from "./actions";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import questionsData from "@/infrastructure/external/data/questions.json";
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [hasSeenTrustMoment, setHasSeenTrustMoment] = useState(false);
+  const [step, setStep] = useState<"trust" | "demographic" | "questions">("trust");
+  const [demographic, setDemographic] = useState<DemographicInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ThoughtMapOutput | null>(null);
 
@@ -24,11 +26,24 @@ export default function OnboardingPage() {
         })()
       : "server-render";
 
+  const handleTrustProceed = useCallback(() => {
+    setStep("demographic");
+  }, []);
+
+  const handleDemographicComplete = useCallback((info: DemographicInfo) => {
+    setDemographic(info);
+    setStep("questions");
+  }, []);
+
   const handleCoreComplete = useCallback(
     async (answers: AnswerMap) => {
       setLoading(true);
       try {
-        const output = await calculateStance(sessionId, answers);
+        const output = await calculateStance(
+          sessionId,
+          answers,
+          demographic ?? undefined,
+        );
         setResult(output);
       } catch (error) {
         console.error("Failed to calculate stance:", error);
@@ -36,14 +51,18 @@ export default function OnboardingPage() {
         setLoading(false);
       }
     },
-    [sessionId],
+    [sessionId, demographic],
   );
 
   const handleExtendedComplete = useCallback(
     async (answers: AnswerMap) => {
       setLoading(true);
       try {
-        const output = await calculateStance(sessionId, answers);
+        const output = await calculateStance(
+          sessionId,
+          answers,
+          demographic ?? undefined,
+        );
         setResult(output);
       } catch (error) {
         console.error("Failed to calculate stance:", error);
@@ -51,7 +70,7 @@ export default function OnboardingPage() {
         setLoading(false);
       }
     },
-    [sessionId],
+    [sessionId, demographic],
   );
 
   const handleSkipExtended = useCallback(() => {
@@ -87,10 +106,18 @@ export default function OnboardingPage() {
     return null;
   }
 
-  if (!hasSeenTrustMoment) {
+  if (step === "trust") {
     return (
       <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
-        <TrustMoment onProceed={() => setHasSeenTrustMoment(true)} />
+        <TrustMoment onProceed={handleTrustProceed} />
+      </main>
+    );
+  }
+
+  if (step === "demographic") {
+    return (
+      <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
+        <DemographicStep onComplete={handleDemographicComplete} />
       </main>
     );
   }

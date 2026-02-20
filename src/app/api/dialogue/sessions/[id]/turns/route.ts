@@ -3,6 +3,8 @@ import { getContainer } from "@/infrastructure/config/di-container";
 import { SubmitTurnInputSchema } from "@/application/dtos/dialogue-input";
 import { handleError } from "../../../../_shared/error-handler";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -25,7 +27,10 @@ export async function POST(
     });
 
     const container = getContainer();
-    const result = await container.submitDialogueTurnUseCase.execute(
+
+    // Use agent-aware use case for all sessions
+    // It detects agent sessions internally and generates agent responses
+    const result = await container.submitAgentDialogueTurnUseCase.execute(
       input.sessionId,
       input.participantId,
       input.content,

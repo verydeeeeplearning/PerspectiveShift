@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { apiAuthGet } from "@/app/_shared/api-client";
 import Link from "next/link";
 import { PaperCard } from "@/app/_shared/components/PaperCard";
 import { CardSkeleton } from "@/app/_shared/components/Skeleton";
@@ -36,12 +35,15 @@ function getInitialAvatar(userId: string) {
 export default function FriendsPage() {
   const [friends, setFriends] = useState<FriendItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiAuthGet<{ friends: FriendItem[] }>("/api/relationship/friends")
+    fetch("/api/relationship/friends", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) return { friends: [] as FriendItem[] };
+        return res.json() as Promise<{ friends: FriendItem[] }>;
+      })
       .then((data) => setFriends(data.friends))
-      .catch((e) => setError(e.message))
+      .catch(() => setFriends([]))
       .finally(() => setLoading(false));
   }, []);
 
@@ -54,20 +56,6 @@ export default function FriendsPage() {
         </div>
         <CardSkeleton />
         <CardSkeleton />
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="p-6 max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-semantic-difference-soft border border-semantic-difference/20 text-semantic-difference p-4 rounded-card"
-        >
-          <p className="text-sm font-medium">{error}</p>
-        </motion.div>
       </main>
     );
   }
@@ -116,9 +104,18 @@ export default function FriendsPage() {
           <p className="text-lg text-text-primary font-heading font-semibold">
             아직 친구가 없습니다
           </p>
-          <p className="text-sm text-text-tertiary">
-            대화를 완료한 후 친구 요청을 보내보세요
+          <p className="text-sm text-text-tertiary leading-relaxed">
+            대화를 완료하고 친구를 만들면<br />여기에 표시됩니다
           </p>
+          <Link
+            href="/matching"
+            className="inline-flex items-center gap-1 mt-2 text-sm text-indigo-depth font-medium hover:underline"
+          >
+            대화 시작하러 가기
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Link>
         </motion.div>
       ) : (
         <ul className="space-y-3">
@@ -133,12 +130,9 @@ export default function FriendsPage() {
                   <Link href={`/friends/${f.friendshipId}`}>
                     <PaperCard variant="interactive">
                       <div className="flex items-center gap-3">
-                        {/* Avatar */}
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${avatarColor}`}>
                           {initials}
                         </div>
-
-                        {/* Info */}
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-text-primary truncate">
                             참여자_{f.friendUserId.slice(0, 4).toUpperCase()}
@@ -153,8 +147,6 @@ export default function FriendsPage() {
                             </span>
                           </div>
                         </div>
-
-                        {/* Arrow */}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="9 18 15 12 9 6" />
                         </svg>

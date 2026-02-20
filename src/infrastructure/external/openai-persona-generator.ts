@@ -22,8 +22,8 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
   ): Promise<string> {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
-      temperature: 0.7,
-      max_tokens: 300,
+
+      max_completion_tokens: 1024,
       messages: [
         { role: "system", content: personaSystemPrompt(persona, topic, memoryContext) },
         { role: "user", content: personaUserPrompt(conversationHistory, userMessage) },

@@ -32,8 +32,8 @@ export class OpenAiSummaryGenerator implements SummaryGenerator {
 
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
-      temperature: 0.2,
-      max_tokens: 800,
+
+      max_completion_tokens: 2048,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: SUMMARY_SYSTEM_PROMPT },
@@ -77,8 +77,8 @@ export class OpenAiSummaryGenerator implements SummaryGenerator {
 
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
-      temperature: 0.2,
-      max_tokens: 300,
+
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: UNDERSTANDING_SYSTEM_PROMPT },

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 const mockPush = vi.fn();
@@ -91,9 +91,9 @@ describe("TopAppBar", () => {
     expect(screen.getByLabelText("메뉴")).toBeInTheDocument();
   });
 
-  it("applies paper background for non-immersive variants", () => {
+  it("applies glass background for non-immersive variants", () => {
     const { container } = render(<TopAppBar variant="wordmark" />);
     const header = container.querySelector("header");
-    expect(header?.className).toContain("bg-paper");
+    expect(header?.className).toContain("glass");
   });
 });

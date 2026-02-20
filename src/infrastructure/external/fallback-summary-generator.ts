@@ -29,7 +29,10 @@ export class FallbackSummaryGenerator implements SummaryGenerator {
     };
   }
 
-  async evaluateUnderstanding(): Promise<UnderstandingResult> {
+  async evaluateUnderstanding(
+    _reflectionContent: string,
+    _opponentTurns: DialogueTurn[],
+  ): Promise<UnderstandingResult> {
     return {
       score: 0.5,
       evaluation: "LLM 없이 이해도 평가 불가. 기본값 0.5 적용.",

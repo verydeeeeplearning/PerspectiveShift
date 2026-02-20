@@ -26,7 +26,7 @@ export type ThoughtMapEventName =
 
 const RECOMMENDATION_LABELS: Record<RecommendationType, string> = {
   precision_upsell: "정밀도 높이기",
-  ai_practice: "AI 연습 대화",
+  ai_practice: "AI 대화",
   misperception: "오해 교정 보기",
   share_card: "유형 카드 공유",
 };

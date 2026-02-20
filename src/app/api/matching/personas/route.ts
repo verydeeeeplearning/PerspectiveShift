@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getContainer } from "@/infrastructure/config/di-container";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const container = getContainer();

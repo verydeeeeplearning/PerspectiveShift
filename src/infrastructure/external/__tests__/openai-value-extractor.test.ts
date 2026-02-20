@@ -40,7 +40,6 @@ describe("OpenAIValueExtractor", () => {
     expect(mockClient.chat.completions.create).toHaveBeenCalledWith(
       expect.objectContaining({
         model: "gpt-5-mini",
-        temperature: 0.2,
         response_format: { type: "json_object" },
       }),
     );

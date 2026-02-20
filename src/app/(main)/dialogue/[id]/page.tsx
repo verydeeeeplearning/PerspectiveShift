@@ -5,12 +5,13 @@ import { useParams } from "next/navigation";
 import { useAnonymousSession } from "@/app/_shared/hooks/useAnonymousSession";
 import { apiGet, apiPost } from "@/app/_shared/api-client";
 import type { DialogueSessionOutput } from "@/application/dtos/dialogue-output";
-import type { TurnSubmissionResult } from "@/application/dtos/dialogue-output";
+import type { AgentTurnSubmissionResult } from "@/application/dtos/dialogue-output";
 import { StepIndicator } from "../components/StepIndicator";
 import { TurnSubmissionForm } from "../components/TurnSubmissionForm";
 import { TurnDisplay } from "../components/TurnDisplay";
 import { WaitingForOpponent } from "../components/WaitingForOpponent";
 import { FacilitatorWarning } from "../components/FacilitatorWarning";
+import { TypingIndicator } from "../_components/TypingIndicator";
 import Link from "next/link";
 
 export default function DialogueDetailPage() {
@@ -22,11 +23,15 @@ export default function DialogueDetailPage() {
     type: "tone" | "drift";
     suggestion: string;
   } | null>(null);
+  const [agentTyping, setAgentTyping] = useState(false);
+  const [agentPersonaName, setAgentPersonaName] = useState<string | null>(null);
 
   const loadSession = useCallback(() => {
     if (!isReady || !id) return;
-    apiGet<DialogueSessionOutput>(`/api/dialogue/sessions/${id}`)
-      .then(setSession)
+    apiGet<DialogueSessionOutput>(
+      `/api/dialogue/sessions/${id}?_t=${Date.now()}`,
+    )
+      .then((data) => setSession(data))
       .finally(() => setLoading(false));
   }, [isReady, id]);
 
@@ -35,7 +40,7 @@ export default function DialogueDetailPage() {
   }, [loadSession]);
 
   const handleSubmit = async (content: string) => {
-    const result = await apiPost<TurnSubmissionResult>(
+    const result = await apiPost<AgentTurnSubmissionResult>(
       `/api/dialogue/sessions/${id}/turns`,
       { content },
     );
@@ -48,7 +53,19 @@ export default function DialogueDetailPage() {
       setWarning(null);
     }
 
-    loadSession();
+    // Agent session: show typing indicator, then load updated session
+    if (result.agentResponse) {
+      setAgentTyping(true);
+      setAgentPersonaName(result.agentResponse.personaName);
+
+      setTimeout(() => {
+        setAgentTyping(false);
+        setAgentPersonaName(null);
+        loadSession();
+      }, Math.min(result.agentResponse.delayMs, 3000));
+    } else {
+      loadSession();
+    }
   };
 
   if (!isReady || loading) {
@@ -60,9 +77,9 @@ export default function DialogueDetailPage() {
   }
 
   const showForm =
-    session.status === "ACTIVE" && !session.mySubmitted;
+    session.status === "ACTIVE" && !session.mySubmitted && !agentTyping;
   const showWaiting =
-    session.status === "ACTIVE" && session.mySubmitted;
+    session.status === "ACTIVE" && session.mySubmitted && !agentTyping;
 
   return (
     <main className="p-6 max-w-2xl mx-auto">
@@ -97,6 +114,18 @@ export default function DialogueDetailPage() {
           <TurnDisplay key={turn.id} turn={turn} />
         ))}
       </div>
+
+      {agentTyping && (
+        <div className="mb-6">
+          <TypingIndicator
+            label={
+              agentPersonaName
+                ? `${agentPersonaName}이(가) 입력 중...`
+                : "상대방이 입력 중..."
+            }
+          />
+        </div>
+      )}
 
       {warning && (
         <FacilitatorWarning

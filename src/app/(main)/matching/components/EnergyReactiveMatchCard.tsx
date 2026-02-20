@@ -23,6 +23,7 @@ interface EnergyReactiveMatchCardProps {
   topic?: string;
   onStart: () => void;
   onDecline: () => void;
+  onEnergyChange?: (energy: EnergyLevelKey) => void;
   onEvent?: (
     eventName: EnergyMatchingEventName,
     payload: Record<string, unknown>,
@@ -49,6 +50,7 @@ export function EnergyReactiveMatchCard({
   topic = "관점이 갈리는 오늘의 이슈",
   onStart,
   onDecline,
+  onEnergyChange,
   onEvent,
 }: EnergyReactiveMatchCardProps) {
   const [selectedEnergy, setSelectedEnergy] = useState<EnergyLevelKey>("NORMAL");
@@ -121,7 +123,12 @@ export function EnergyReactiveMatchCard({
       });
     }
     setSelectedEnergy(nextEnergy);
+    onEnergyChange?.(nextEnergy);
   };
+
+  useEffect(() => {
+    onEnergyChange?.(selectedEnergy);
+  }, [onEnergyChange, selectedEnergy]);
 
   useEffect(() => {
     if (!hasTrackedInitialSelectionRef.current) {

@@ -23,6 +23,8 @@ interface StanceRow {
   core_value: string | null;
   self_affirmation_experience: string | null;
   confidence_map: Record<string, string> | null;
+  age_group: string | null;
+  job_category: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -74,7 +76,7 @@ export class SupabaseStanceRepository implements StanceRepository {
     updates: Partial<
       Pick<
         StanceProfile,
-        "vector" | "mapType" | "reasoning" | "readiness" | "precision" | "coreValue" | "selfAffirmationExperience" | "confidenceMap"
+        "vector" | "mapType" | "reasoning" | "readiness" | "precision" | "coreValue" | "selfAffirmationExperience" | "confidenceMap" | "ageGroup" | "jobCategory"
       >
     >,
   ): Promise<void> {
@@ -97,6 +99,9 @@ export class SupabaseStanceRepository implements StanceRepository {
       row.self_affirmation_experience = updates.selfAffirmationExperience;
     if (updates.confidenceMap !== undefined)
       row.confidence_map = updates.confidenceMap;
+    if (updates.ageGroup !== undefined) row.age_group = updates.ageGroup;
+    if (updates.jobCategory !== undefined)
+      row.job_category = updates.jobCategory;
 
     const { error } = await this.client
       .from("stance_profiles")
@@ -130,6 +135,8 @@ export class SupabaseStanceRepository implements StanceRepository {
       core_value: profile.coreValue ?? null,
       self_affirmation_experience: profile.selfAffirmationExperience ?? null,
       confidence_map: profile.confidenceMap ?? null,
+      age_group: profile.ageGroup ?? null,
+      job_category: profile.jobCategory ?? null,
       created_at: profile.createdAt.toISOString(),
       updated_at: profile.updatedAt.toISOString(),
     };
@@ -156,6 +163,8 @@ export class SupabaseStanceRepository implements StanceRepository {
       coreValue: row.core_value as StanceProfile["coreValue"],
       selfAffirmationExperience: row.self_affirmation_experience,
       confidenceMap: row.confidence_map as StanceProfile["confidenceMap"],
+      ageGroup: row.age_group,
+      jobCategory: row.job_category,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
     };

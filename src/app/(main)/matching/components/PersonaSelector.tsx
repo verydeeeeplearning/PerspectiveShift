@@ -39,7 +39,7 @@ export function PersonaSelector({ personas, onSelect, onRequestNotification }: P
     <motion.div
       className="space-y-5"
       role="region"
-      aria-label="AI 대화 상대 선택"
+      aria-label="대화 상대 선택"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -48,17 +48,15 @@ export function PersonaSelector({ personas, onSelect, onRequestNotification }: P
       <div className="text-center space-y-2">
         <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-accent-primary-soft flex items-center justify-center">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
-            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-            <line x1="9" y1="9" x2="9.01" y2="9" />
-            <line x1="15" y1="9" x2="15.01" y2="9" />
+            <circle cx="12" cy="12" r="10" />
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
           </svg>
         </div>
         <h2 className="text-lg font-heading font-semibold text-text-primary">
-          AI 대화 상대와 연습해보세요
+          대화 상대를 선택하세요
         </h2>
         <p className="text-sm text-text-secondary">
-          실제 사람과 비슷한 대화를 미리 경험할 수 있어요
+          다양한 관점을 가진 상대와 구조화된 대화를 시작할 수 있어요
         </p>
       </div>
 
@@ -117,7 +115,7 @@ export function PersonaSelector({ personas, onSelect, onRequestNotification }: P
           onClick={onRequestNotification}
           whileTap={{ scale: 0.98 }}
         >
-          실제 사람과 매칭되면 알림 받기
+          새로운 대화 상대가 오면 알림 받기
         </motion.button>
       )}
     </motion.div>

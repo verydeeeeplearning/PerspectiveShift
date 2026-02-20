@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/infrastructure/config/di-container";
 import { handleError } from "../_shared/error-handler";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   try {
     const participantId = request.headers.get("x-session-id");

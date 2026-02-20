@@ -26,3 +26,13 @@ export interface TurnSubmissionResult {
   newStep: string;
   sessionStatus: string;
 }
+
+export interface AgentResponsePayload {
+  content: string;
+  delayMs: number;
+  personaName: string;
+}
+
+export interface AgentTurnSubmissionResult extends TurnSubmissionResult {
+  agentResponse: AgentResponsePayload | null;
+}

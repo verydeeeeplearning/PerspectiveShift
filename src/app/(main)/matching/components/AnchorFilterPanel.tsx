@@ -1,48 +1,109 @@
 "use client";
 
-import { useState } from "react";
-import { ALL_ANCHOR_TYPES, getAnchorLabel, type AnchorType } from "@/domain/value-objects/anchor-type";
+import { useMemo, useState } from "react";
+import { ApplyAnchorFilterUseCase } from "@/application/use-cases/apply-anchor-filter";
+import type { AnchorType } from "@/domain/value-objects/anchor-type";
+import type { EnergyLevelKey } from "@/domain/value-objects/energy-level";
 
-interface AnchorFilterPanelProps {
-  onApply: (anchorType: AnchorType, anchorValue: string, differenceSlider: number) => void;
+export interface AnchorFilterSelection {
+  anchorType: AnchorType;
+  anchorValue: string;
+  differenceLevel: number;
+  appliedRange: { min: number; max: number };
 }
 
-const ANCHOR_OPTIONS: Record<AnchorType, string[]> = {
-  gender: ["남성", "여성", "기타"],
-  job_category: ["학생", "직장인", "자영업", "전문직", "프리랜서", "기타"],
-  age_group: ["10대", "20대", "30대", "40대", "50대 이상"],
-  region: ["수도권", "충청", "전라", "경상", "강원/제주", "기타"],
+interface AnchorFilterPanelProps {
+  energyLevel: EnergyLevelKey;
+  onApply: (selection: AnchorFilterSelection) => void;
+}
+
+const ANCHOR_TYPE_LABELS: Record<AnchorType, string> = {
+  age_group: "연령대",
+  job_category: "직업",
+  gender: "성별",
+  region: "지역",
 };
 
-export function AnchorFilterPanel({ onApply }: AnchorFilterPanelProps) {
+const ANCHOR_OPTIONS: Record<AnchorType, string[]> = {
+  age_group: ["20대", "30대", "40대", "50대+"],
+  job_category: ["학생", "직장인", "자영업", "연구직"],
+  gender: ["여성", "남성", "논바이너리"],
+  region: ["수도권", "중부", "동남", "서남"],
+};
+
+function describeEnergyCap(energyLevel: EnergyLevelKey): string {
+  if (energyLevel === "LOW") return "0.4 max";
+  if (energyLevel === "NORMAL") return "0.7 max";
+  return "1.0 max";
+}
+
+export function AnchorFilterPanel({
+  energyLevel,
+  onApply,
+}: AnchorFilterPanelProps) {
   const [expanded, setExpanded] = useState(false);
   const [anchorType, setAnchorType] = useState<AnchorType>("age_group");
   const [anchorValue, setAnchorValue] = useState("");
   const [differenceSlider, setDifferenceSlider] = useState(50);
+  const useCase = useMemo(() => new ApplyAnchorFilterUseCase(), []);
+
+  const previewValue = anchorValue || ANCHOR_OPTIONS[anchorType][0];
+  const differenceLevel = Math.round((differenceSlider / 100) * 1000) / 1000;
+  const previewRange = useMemo(() => {
+    const result = useCase.execute({
+      anchorType,
+      anchorValue: previewValue,
+      differenceLevel,
+      energyLevel,
+      candidates: [],
+    });
+    return result.appliedRange;
+  }, [anchorType, differenceLevel, energyLevel, previewValue, useCase]);
 
   const handleApply = () => {
     if (!anchorValue) return;
-    onApply(anchorType, anchorValue, differenceSlider);
+
+    const selection: AnchorFilterSelection = {
+      anchorType,
+      anchorValue,
+      differenceLevel,
+      appliedRange: previewRange,
+    };
+    onApply(selection);
+    window.dispatchEvent(
+      new CustomEvent("perspectiveshift:analytics", {
+        detail: {
+          type: "anchor_filter_set",
+          payload: {
+            timestamp: Date.now(),
+            ...selection,
+            energyLevel,
+          },
+        },
+      }),
+    );
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <section className="rounded-xl border border-border-soft bg-surface-card">
       <button
         type="button"
-        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+        onClick={() => setExpanded((prev) => !prev)}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
-        <span className="text-sm font-medium text-gray-700">공통점 기반 필터</span>
-        <span className="text-gray-400">{expanded ? "▲" : "▼"}</span>
+        <span className="text-sm font-medium text-text-primary">앵커 필터</span>
+        <span className="text-text-tertiary">{expanded ? "▲" : "▼"}</span>
       </button>
 
       {expanded && (
-        <div className="border-t border-gray-100 px-4 py-4 space-y-4">
-          {/* Anchor Type Selection */}
+        <div className="space-y-4 border-t border-border-soft px-4 py-4">
           <div>
-            <p className="mb-2 text-xs font-medium text-gray-500">공통점 선택</p>
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
+              앵커 유형
+            </p>
             <div className="flex flex-wrap gap-2">
-              {ALL_ANCHOR_TYPES.map((type) => (
+              {(Object.keys(ANCHOR_TYPE_LABELS) as AnchorType[]).map((type) => (
                 <button
                   key={type}
                   type="button"
@@ -52,68 +113,75 @@ export function AnchorFilterPanel({ onApply }: AnchorFilterPanelProps) {
                   }}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     anchorType === type
-                      ? "bg-indigo-100 text-indigo-700"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                      ? "bg-accent-primary text-text-inverse"
+                      : "bg-accent-primary-soft text-text-secondary"
                   }`}
                 >
-                  {getAnchorLabel(type)}
+                  {ANCHOR_TYPE_LABELS[type]}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Anchor Value Selection */}
           <div>
-            <p className="mb-2 text-xs font-medium text-gray-500">
-              나의 {getAnchorLabel(anchorType)}
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
+              앵커 값
             </p>
             <div className="flex flex-wrap gap-2">
-              {ANCHOR_OPTIONS[anchorType].map((opt) => (
+              {ANCHOR_OPTIONS[anchorType].map((option) => (
                 <button
-                  key={opt}
+                  key={option}
                   type="button"
-                  onClick={() => setAnchorValue(opt)}
+                  onClick={() => setAnchorValue(option)}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                    anchorValue === opt
-                      ? "bg-indigo-500 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    anchorValue === option
+                      ? "bg-accent-primary text-text-inverse"
+                      : "bg-accent-primary-soft text-text-secondary"
                   }`}
                 >
-                  {opt}
+                  {option}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Difference Slider */}
           <div>
-            <p className="mb-2 text-xs font-medium text-gray-500">다름의 정도</p>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">비슷한 상대</span>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={differenceSlider}
-                onChange={(e) => setDifferenceSlider(Number(e.target.value))}
-                className="flex-1"
-                aria-label="다름의 정도 슬라이더"
-              />
-              <span className="text-xs text-gray-400">다른 상대</span>
-            </div>
+            <label
+              htmlFor="difference-level-slider"
+              className="mb-2 block text-xs font-medium uppercase tracking-wide text-text-tertiary"
+            >
+              다름의 정도
+            </label>
+            <input
+              id="difference-level-slider"
+              type="range"
+              min={0}
+              max={100}
+              value={differenceSlider}
+              onChange={(event) =>
+                setDifferenceSlider(Number(event.target.value))
+              }
+              className="w-full"
+              aria-label="다름의 정도"
+            />
+            <p className="mt-2 text-xs text-text-secondary">
+              미리보기 범위: {previewRange.min.toFixed(3)} -{" "}
+              {previewRange.max.toFixed(3)} (에너지 상한:{" "}
+              {describeEnergyCap(energyLevel)})
+            </p>
           </div>
 
-          {/* Apply Button */}
           <button
             type="button"
             onClick={handleApply}
             disabled={!anchorValue}
-            className="w-full rounded-lg bg-indigo-500 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            className="w-full rounded-lg bg-accent-primary py-2.5 text-sm font-medium text-text-inverse disabled:cursor-not-allowed disabled:opacity-40"
           >
             필터 적용
           </button>
         </div>
       )}
-    </div>
+    </section>
   );
 }
+

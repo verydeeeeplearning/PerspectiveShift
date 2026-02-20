@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PrimaryButton } from "@/app/_shared/components/PrimaryButton";
 import { SecondaryButton } from "@/app/_shared/components/SecondaryButton";
 import { PaperCard } from "@/app/_shared/components/PaperCard";
@@ -21,8 +22,8 @@ function createTimestampPayload() {
 }
 
 export function TrustMoment({ onProceed, onEvent }: TrustMomentProps) {
+  const router = useRouter();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [isDataPanelOpen, setIsDataPanelOpen] = useState(false);
 
   const emitEvent = useCallback(
     (eventName: TrustMomentEventName) => {
@@ -54,7 +55,7 @@ export function TrustMoment({ onProceed, onEvent }: TrustMomentProps) {
 
   const handleDataManagementClick = () => {
     emitEvent("trust_moment_data_mgmt_click");
-    setIsDataPanelOpen((prev) => !prev);
+    router.push("/settings/data-management");
   };
 
   const handleProceed = () => {
@@ -131,16 +132,6 @@ export function TrustMoment({ onProceed, onEvent }: TrustMomentProps) {
         >
           내 데이터 관리 →
         </button>
-        {isDataPanelOpen && (
-          <div
-            role="region"
-            aria-label="데이터 관리 패널"
-            className="mt-3 rounded-chip border border-border-soft bg-paper-warm p-4 text-sm text-text-secondary leading-relaxed"
-          >
-            데이터는 언제든 삭제 요청할 수 있으며, 기록 관리 정책은 온보딩 완료 후
-            설정 화면에서도 다시 확인할 수 있습니다.
-          </div>
-        )}
       </div>
 
       {/* CTA */}

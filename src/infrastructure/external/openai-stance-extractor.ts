@@ -41,7 +41,6 @@ export class OpenAiStanceExtractor implements LlmStanceExtractor {
         { role: "system", content: STANCE_EXTRACTION_SYSTEM_PROMPT },
         { role: "user", content: userPrompt },
       ],
-      temperature: 0.2,
       response_format: { type: "json_object" },
     });
 

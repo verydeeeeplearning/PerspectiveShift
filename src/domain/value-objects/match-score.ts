@@ -12,12 +12,14 @@ export interface MatchScoreComponents {
   topicRelevance: number;
   energyCompat: number;
   declinePenalty: number;
+  poolScarcityBonus: number;
 }
 
 export interface MatchScoreOptions {
   topicRelevance?: number;
   energyCompat?: number;
   declinePenalty?: number;
+  poolScarcityBonus?: number;
 }
 
 export class MatchScore {
@@ -27,6 +29,7 @@ export class MatchScore {
   readonly topicRelevance: number;
   readonly energyCompat: number;
   readonly declinePenalty: number;
+  readonly poolScarcityBonus: number;
 
   private constructor(components: MatchScoreComponents) {
     this.distanceFit = Math.round(components.distanceFit * 1000) / 1000;
@@ -38,13 +41,16 @@ export class MatchScore {
       Math.round(components.energyCompat * 1000) / 1000;
     this.declinePenalty =
       Math.round(components.declinePenalty * 1000) / 1000;
+    this.poolScarcityBonus =
+      Math.round(components.poolScarcityBonus * 1000) / 1000;
     const raw =
       this.distanceFit * W_DISTANCE +
       this.readinessComponent * W_READINESS +
       this.topicRelevance * W_TOPIC +
       this.energyCompat * W_ENERGY -
-      this.declinePenalty;
-    this.value = Math.round(Math.max(0, raw) * 1000) / 1000;
+      this.declinePenalty +
+      this.poolScarcityBonus;
+    this.value = Math.round(Math.max(0, Math.min(1, raw)) * 1000) / 1000;
   }
 
   static calculate(
@@ -61,6 +67,7 @@ export class MatchScore {
       topicRelevance: options?.topicRelevance ?? 0.5,
       energyCompat: options?.energyCompat ?? 0.5,
       declinePenalty: options?.declinePenalty ?? 0,
+      poolScarcityBonus: options?.poolScarcityBonus ?? 0,
     });
   }
 

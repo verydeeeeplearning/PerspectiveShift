@@ -29,22 +29,22 @@ describe("determineFinalCTA", () => {
     expect(determineFinalCTA(ctx)).toBe("REST_FOR_TODAY");
   });
 
-  it("returns TALK_TO_HUMAN when agent dialogue and has human match", () => {
+  it("returns FIND_NEXT_DIALOGUE for agent dialogue", () => {
     const ctx: FinalCTAContext = {
       ...baseContext,
       isAgentDialogue: true,
       hasHumanMatch: true,
     };
-    expect(determineFinalCTA(ctx)).toBe("TALK_TO_HUMAN");
+    expect(determineFinalCTA(ctx)).toBe("FIND_NEXT_DIALOGUE");
   });
 
-  it("returns NOTIFY_AND_OTHER_PERSONA when agent dialogue and no human match", () => {
+  it("returns FIND_NEXT_DIALOGUE for agent dialogue without human match", () => {
     const ctx: FinalCTAContext = {
       ...baseContext,
       isAgentDialogue: true,
       hasHumanMatch: false,
     };
-    expect(determineFinalCTA(ctx)).toBe("NOTIFY_AND_OTHER_PERSONA");
+    expect(determineFinalCTA(ctx)).toBe("FIND_NEXT_DIALOGUE");
   });
 
   it("returns BECOME_FRIENDS when feelHeardScore >= 80 and real person", () => {
@@ -93,14 +93,6 @@ describe("getCTALabel", () => {
     expect(getCTALabel("BECOME_FRIENDS")).toBe("친구 되기");
   });
 
-  it("returns Korean label for TALK_TO_HUMAN", () => {
-    expect(getCTALabel("TALK_TO_HUMAN")).toBe("실제 사람과 대화하기");
-  });
-
-  it("returns Korean label for NOTIFY_AND_OTHER_PERSONA", () => {
-    expect(getCTALabel("NOTIFY_AND_OTHER_PERSONA")).toBe("알림 받기");
-  });
-
   it("returns Korean label for REST_FOR_TODAY", () => {
     expect(getCTALabel("REST_FOR_TODAY")).toBe("오늘은 여기까지");
   });
@@ -109,8 +101,6 @@ describe("getCTALabel", () => {
     const allTypes: FinalCTAType[] = [
       "FIND_NEXT_DIALOGUE",
       "BECOME_FRIENDS",
-      "TALK_TO_HUMAN",
-      "NOTIFY_AND_OTHER_PERSONA",
       "REST_FOR_TODAY",
     ];
 

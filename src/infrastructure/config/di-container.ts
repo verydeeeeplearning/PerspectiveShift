@@ -9,15 +9,22 @@ function createContainer() {
 
 export type Container = ReturnType<typeof createContainer>;
 
-let container: Container | null = null;
+const globalForContainer = globalThis as unknown as {
+  __perspectiveShiftContainer?: Container;
+};
 
 export function getContainer(): Container {
-  if (!container) {
-    container = createContainer();
+  if (!globalForContainer.__perspectiveShiftContainer) {
+    globalForContainer.__perspectiveShiftContainer = createContainer();
   }
-  return container;
+  return globalForContainer.__perspectiveShiftContainer;
 }
 
 export function resetContainer(): void {
-  container = null;
+  globalForContainer.__perspectiveShiftContainer = undefined;
+}
+
+// Reset container on HMR so use case changes are picked up in dev
+if (process.env.NODE_ENV !== "production") {
+  resetContainer();
 }

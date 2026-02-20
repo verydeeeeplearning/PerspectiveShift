@@ -8,6 +8,7 @@ function getSessionId(): string {
 export async function apiGet<T>(url: string): Promise<T> {
   const res = await fetch(url, {
     headers: { "X-Session-Id": getSessionId() },
+    cache: "no-store",
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

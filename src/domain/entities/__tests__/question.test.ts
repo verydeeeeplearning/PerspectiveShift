@@ -8,7 +8,7 @@ describe("Question", () => {
   const validProps = {
     id: 1,
     text: "AI 기술 발전에 대한 정부의 규제가 더 강화되어야 한다",
-    type: QuestionType.OX as const,
+    type: QuestionType.OX,
     dimension: StanceDimension.TECH_REGULATION,
     phase: "core" as const,
     polarity: 1 as const,

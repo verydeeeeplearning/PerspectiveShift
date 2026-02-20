@@ -1,10 +1,12 @@
 "use client";
 
+import { TypingIndicator } from "../_components/TypingIndicator";
+
 const STEP_LABELS: Record<string, string> = {
-  POSITION: "입장",
-  QUESTION: "질문",
-  ANSWER: "답변",
-  REFLECTION: "성찰",
+  POSITION: "position",
+  QUESTION: "question",
+  ANSWER: "answer",
+  REFLECTION: "reflection",
 };
 
 interface WaitingForOpponentProps {
@@ -14,20 +16,20 @@ interface WaitingForOpponentProps {
 export function WaitingForOpponent({
   currentStep,
 }: WaitingForOpponentProps) {
-  const stepLabel = STEP_LABELS[currentStep] ?? currentStep;
+  const stepLabel = STEP_LABELS[currentStep] ?? currentStep.toLowerCase();
 
   return (
-    <div className="text-center py-8 px-4 bg-yellow-50 rounded-lg border border-yellow-200">
-      <div className="text-3xl mb-3" aria-hidden="true">
-        &#9203;
+    <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-8 text-center">
+      <div className="mb-3 flex justify-center">
+        <TypingIndicator />
       </div>
-      <h3 className="font-medium text-lg mb-2">
-        상대의 {stepLabel}을(를) 기다리고 있습니다
+      <h3 className="mb-2 text-lg font-medium">
+        Waiting for your partner&apos;s {stepLabel}
       </h3>
       <p className="text-sm text-gray-600">
-        상대가 {stepLabel}을(를) 제출하면 다음 단계로 진행됩니다.
-        알림을 받으실 수 있습니다.
+        The next step starts automatically after their response is submitted.
       </p>
     </div>
   );
 }
+

@@ -14,6 +14,8 @@ describe("EvaluateJitaiRulesUseCase", () => {
       highlightCount: 0,
       quoteCount: 0,
       hasReport: false,
+      turnCount: 5,
+      currentStep: "POSITION",
     });
 
     expect(result.map((action) => action.type)).toEqual([
@@ -36,6 +38,8 @@ describe("EvaluateJitaiRulesUseCase", () => {
       highlightCount: 1,
       quoteCount: 1,
       hasReport: false,
+      turnCount: 3,
+      currentStep: "QUESTION",
     });
 
     expect(result).toHaveLength(0);
@@ -51,6 +55,8 @@ describe("EvaluateJitaiRulesUseCase", () => {
       highlightCount: 1,
       quoteCount: 1,
       hasReport: true,
+      turnCount: 4,
+      currentStep: "REFLECTION",
     });
 
     expect(result[0]?.type).toBe("break_suggest");

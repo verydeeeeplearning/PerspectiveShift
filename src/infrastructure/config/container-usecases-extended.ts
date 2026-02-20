@@ -1,5 +1,6 @@
 import {
   ApplyDownshiftUseCase,
+  ApplyAnchorFilterUseCase,
   ApplyRecoveryRoutineUseCase,
   BuildJointSummaryCardUseCase,
   BuildMatchCardUseCase,
@@ -68,6 +69,7 @@ export function createExtendedUseCases(deps: CoreDependencies) {
     determineNextStepUseCase: new DetermineNextStepUseCase(),
     buildMatchCardUseCase: new BuildMatchCardUseCase(),
     selectEnergyLevelUseCase: new SelectEnergyLevelUseCase(),
+    applyAnchorFilterUseCase: new ApplyAnchorFilterUseCase(),
     recordDeclineReasonUseCase: new RecordDeclineReasonUseCase(),
     getScaffoldForStepUseCase: new GetScaffoldForStepUseCase(),
     getCoachSuggestionsUseCase: new GetCoachSuggestionsUseCase(),

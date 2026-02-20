@@ -24,8 +24,8 @@ export class OpenAiFacilitator implements Facilitator {
   async checkTone(content: string): Promise<ToneCheckResult> {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
-      temperature: 0.2,
-      max_tokens: 200,
+
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: TONE_CHECK_SYSTEM_PROMPT },
@@ -50,8 +50,8 @@ export class OpenAiFacilitator implements Facilitator {
   ): Promise<DriftCheckResult> {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
-      temperature: 0.2,
-      max_tokens: 200,
+
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: DRIFT_CHECK_SYSTEM_PROMPT },
@@ -76,8 +76,8 @@ export class OpenAiFacilitator implements Facilitator {
     try {
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
-        temperature: 0.3,
-        max_tokens: 300,
+
+        max_completion_tokens: 1024,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: RECEPTIVENESS_DETECTION_SYSTEM_PROMPT },
@@ -98,8 +98,8 @@ export class OpenAiFacilitator implements Facilitator {
   async suggestReceptivenessTemplate(text: string): Promise<string[]> {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
-      temperature: 0.5,
-      max_tokens: 300,
+
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         {

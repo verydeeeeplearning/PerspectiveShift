@@ -20,7 +20,7 @@ export class GetContextualRecommendationsUseCase {
 
     if (!input.hasHumanMatchPool) {
       recommendations.push(
-        new ContextualRecommendation("ai_practice", "AI 연습 대화", 90),
+        new ContextualRecommendation("ai_practice", "AI 대화", 90),
       );
     }
 

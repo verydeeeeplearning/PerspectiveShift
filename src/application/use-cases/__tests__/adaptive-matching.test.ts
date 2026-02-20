@@ -3,6 +3,7 @@ import { FindMatchCandidatesUseCase } from "../find-match-candidates";
 import { StanceVector } from "@/domain/entities/stance-vector";
 import type { StanceRepository, StanceProfile } from "@/domain/interfaces/stance-repository";
 import type { MatchRepository } from "@/domain/interfaces/match-repository";
+import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
 
 function makeProfile(
   sessionId: string,
@@ -67,9 +68,14 @@ function setup(
     findPendingProposal: vi.fn(),
     updateProposal: vi.fn(),
   };
+  const personaRepo: PersonaRepository = {
+    findAll: vi.fn().mockResolvedValue([]),
+    findById: vi.fn().mockResolvedValue(null),
+  };
   const uc = new FindMatchCandidatesUseCase({
     stanceRepository: stanceRepo,
     matchRepository: matchRepo,
+    personaRepository: personaRepo,
   });
   return { uc, stanceRepo, matchRepo };
 }

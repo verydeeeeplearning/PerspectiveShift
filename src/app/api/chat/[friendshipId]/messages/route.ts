@@ -3,6 +3,8 @@ import { getContainer } from "@/infrastructure/config/di-container";
 import { requireAuthUserId } from "@/infrastructure/config/auth-session";
 import { handleError } from "../../../_shared/error-handler";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ friendshipId: string }> },

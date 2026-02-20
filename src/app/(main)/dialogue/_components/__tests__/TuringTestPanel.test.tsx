@@ -26,7 +26,7 @@ describe("TuringTestPanel", () => {
     const onSubmitGuess = vi.fn().mockResolvedValue({
       actual: "human",
       isCorrect: true,
-      rewards: [{ type: "observer_badge", message: "관찰자 뱃지 +1" }],
+      rewards: [{ type: "correct_human", message: "사람을 정확히 알아봤어요." }],
     });
 
     render(<TuringTestPanel onSubmitGuess={onSubmitGuess} />);
@@ -34,7 +34,7 @@ describe("TuringTestPanel", () => {
 
     await waitFor(() => {
       expect(onSubmitGuess).toHaveBeenCalledWith("human");
-      expect(screen.getByText(/관찰자 뱃지/)).toBeInTheDocument();
+      expect(screen.getByText(/사람을 정확히 알아봤어요/)).toBeInTheDocument();
     });
   });
 });

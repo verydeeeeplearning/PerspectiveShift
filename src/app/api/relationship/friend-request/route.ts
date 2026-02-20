@@ -4,6 +4,8 @@ import { requireAuthUserId } from "@/infrastructure/config/auth-session";
 import { RequestFriendshipInputSchema } from "@/application/dtos/friend-input";
 import { handleError } from "../../_shared/error-handler";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     if (process.env.FEATURE_RELATIONSHIP !== "true") {

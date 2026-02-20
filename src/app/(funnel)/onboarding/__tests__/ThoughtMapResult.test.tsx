@@ -28,6 +28,12 @@ const SAMPLE_OUTPUT: ThoughtMapOutput = {
     emoji: "\u2696\uFE0F",
     description: "다양한 관점을 균형 있게 고려합니다.",
   },
+  alias: {
+    key: "CAREFUL_SCALE",
+    label: "신중한 저울",
+    emoji: "\u2696\uFE0F",
+    description: "여러 관점을 차분하게 저울질하며, 극단보다 균형을 선호합니다.",
+  },
   percentiles: [
     { dimension: "TECH_REGULATION", label: "기술 규제", percentile: 75, value: 0.5 },
     { dimension: "REDISTRIBUTION", label: "소득 재분배", percentile: 60, value: 0.3 },
@@ -48,7 +54,7 @@ describe("ThoughtMapResult", () => {
 
   it("renders percentile display", () => {
     render(<ThoughtMapResult data={SAMPLE_OUTPUT} />);
-    expect(screen.getByText("기술 규제")).toBeInTheDocument();
+    expect(screen.getAllByText("기술 규제").length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows precision level", () => {

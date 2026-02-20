@@ -20,7 +20,7 @@ const SAMPLE_OUTPUT: ThoughtMapOutput = {
     description: "다양한 관점을 균형 있게 고려합니다.",
   },
   alias: {
-    key: "BALANCED_THINKER",
+    key: "CAREFUL_SCALE",
     label: "균형 사색가",
     emoji: "🧭",
     description: "다양한 관점을 고르게 탐색하는 유형",

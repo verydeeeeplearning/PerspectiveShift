@@ -56,6 +56,7 @@ function answerMapToDomainAnswers(
 export async function calculateStance(
   sessionId: string,
   answerMap: AnswerMap,
+  demographic?: { ageGroup: string; jobCategory: string },
 ): Promise<ThoughtMapOutput> {
   const answers = answerMapToDomainAnswers(answerMap);
 
@@ -92,7 +93,21 @@ export async function calculateStance(
     stanceRepository: container.stanceRepository,
   });
 
-  return generateUseCase.execute(stanceResult);
+  const output = await generateUseCase.execute(stanceResult);
+
+  // Save demographic info if provided
+  if (demographic) {
+    try {
+      await container.stanceRepository.update(sessionId, {
+        ageGroup: demographic.ageGroup,
+        jobCategory: demographic.jobCategory,
+      });
+    } catch {
+      // Non-critical: demographic save failure shouldn't block the flow
+    }
+  }
+
+  return output;
 }
 
 export async function submitSelfAffirmation(

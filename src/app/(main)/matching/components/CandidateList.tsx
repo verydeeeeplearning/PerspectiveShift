@@ -5,7 +5,7 @@ import { ProposalCard } from "./ProposalCard";
 
 interface CandidateListProps {
   candidates: MatchCandidateOutput[];
-  onPropose: (targetSessionId: string) => void;
+  onPropose: (candidate: MatchCandidateOutput) => void;
 }
 
 export function CandidateList({
@@ -18,7 +18,7 @@ export function CandidateList({
         <ProposalCard
           key={candidate.sessionId}
           candidate={candidate}
-          onPropose={() => onPropose(candidate.sessionId)}
+          onPropose={() => onPropose(candidate)}
         />
       ))}
     </div>

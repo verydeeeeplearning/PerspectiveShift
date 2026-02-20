@@ -53,7 +53,7 @@ export default function Home() {
             <span aria-hidden="true">&#x1f512;</span>
             대화는 익명 · 데이터는 내 손 안에{" "}
             <Link
-              href="/settings/privacy"
+              href="/settings/data-management"
               className="underline hover:text-text-secondary"
             >
               내 데이터 관리

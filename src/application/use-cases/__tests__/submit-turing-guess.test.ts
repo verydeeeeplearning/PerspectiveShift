@@ -36,7 +36,7 @@ describe("SubmitTuringGuessUseCase", () => {
     });
 
     expect(result.isCorrect).toBe(false);
-    expect(result.rewards[0]?.type).toBe("impressive_view");
+    expect(result.rewards[0]?.type).toBe("wrong_human_for_ai");
     expect(result.events).toContain("turing_guess_human");
     expect(result.events).toContain("turing_badge_earned");
   });

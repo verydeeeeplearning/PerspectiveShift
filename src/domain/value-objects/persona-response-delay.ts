@@ -14,6 +14,23 @@ export class PersonaResponseDelay {
     return new PersonaResponseDelay(clamped);
   }
 
+  static calculateFromDistribution(
+    meanSeconds: number,
+    stdDevSeconds: number,
+  ): PersonaResponseDelay {
+    if (stdDevSeconds < 0) {
+      throw new Error("stdDevSeconds must be non-negative");
+    }
+
+    const u1 = Math.max(Number.EPSILON, Math.random());
+    const u2 = Math.random();
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    const sampledSeconds = meanSeconds + z * stdDevSeconds;
+    const rawMs = sampledSeconds * 1000;
+    const clampedMs = Math.max(2000, Math.min(30000, rawMs));
+    return new PersonaResponseDelay(clampedMs);
+  }
+
   get seconds(): number {
     return this.delayMs / 1000;
   }

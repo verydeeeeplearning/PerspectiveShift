@@ -8,7 +8,12 @@ describe("MatchCandidate", () => {
   function createCandidate(
     distanceVal = 0.55,
     readinessVal = 0.8,
-    extra?: { energyCompat?: number; recentDeclinePenalty?: number },
+    extra?: {
+      energyCompat?: number;
+      recentDeclinePenalty?: number;
+      candidateType?: "human" | "agent";
+      personaId?: string;
+    },
   ) {
     const distance = OpinionDistance.create(distanceVal);
     const readiness = ReadinessScore.create(readinessVal);
@@ -63,5 +68,30 @@ describe("MatchCandidate", () => {
     });
     expect(candidate.energyCompat).toBe(0.7);
     expect(candidate.recentDeclinePenalty).toBe(0.1);
+  });
+
+  it("stores candidateType as human", () => {
+    const candidate = createCandidate(0.55, 0.8, {
+      candidateType: "human",
+    });
+    expect(candidate.candidateType).toBe("human");
+    expect(candidate.personaId).toBeUndefined();
+  });
+
+  it("stores candidateType as agent with personaId", () => {
+    const candidate = createCandidate(0.55, 0.8, {
+      candidateType: "agent",
+      personaId: "persona-1",
+    });
+    expect(candidate.candidateType).toBe("agent");
+    expect(candidate.personaId).toBe("persona-1");
+  });
+
+  it("allows agent candidate without personaId", () => {
+    const candidate = createCandidate(0.55, 0.8, {
+      candidateType: "agent",
+    });
+    expect(candidate.candidateType).toBe("agent");
+    expect(candidate.personaId).toBeUndefined();
   });
 });

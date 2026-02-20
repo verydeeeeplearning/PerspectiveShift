@@ -1,9 +1,11 @@
 import {
   BlockUserUseCase,
   CalculateMisperceptionUseCase,
+  SubmitAgentDialogueTurnUseCase,
   CheckExpiredSessionsUseCase,
   CheckRealtimeEligibilityUseCase,
   ClaimSessionUseCase,
+  CreateAgentDialogueSessionUseCase,
   CreateMatchProposalUseCase,
   CreateOfflineProposalUseCase,
   EvaluateUnderstandingUseCase,
@@ -56,6 +58,11 @@ export function createCoreUseCases(deps: CoreDependencies) {
     findMatchCandidatesUseCase: new FindMatchCandidatesUseCase({
       stanceRepository: deps.stanceRepository,
       matchRepository: deps.matchRepository,
+      personaRepository: deps.personaRepository,
+    }),
+    createAgentDialogueSessionUseCase: new CreateAgentDialogueSessionUseCase({
+      personaRepository: deps.personaRepository,
+      dialogueRepository: deps.dialogueRepository,
     }),
     createMatchProposalUseCase: new CreateMatchProposalUseCase({
       stanceRepository: deps.stanceRepository,
@@ -69,6 +76,13 @@ export function createCoreUseCases(deps: CoreDependencies) {
       dialogueRepository: deps.dialogueRepository,
       piiScrubber: deps.piiScrubber,
       facilitator: deps.facilitator,
+    }),
+    submitAgentDialogueTurnUseCase: new SubmitAgentDialogueTurnUseCase({
+      dialogueRepository: deps.dialogueRepository,
+      piiScrubber: deps.piiScrubber,
+      facilitator: deps.facilitator,
+      personaRepository: deps.personaRepository,
+      personaDialogueGenerator: deps.personaDialogueGenerator,
     }),
     getDialogueSessionUseCase: new GetDialogueSessionUseCase({
       dialogueRepository: deps.dialogueRepository,

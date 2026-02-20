@@ -2,6 +2,19 @@ import { describe, it, expect, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { TrustMoment } from "../components/TrustMoment";
 
+const mockPush = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+  }),
+}));
+
 describe("TrustMoment", () => {
   it("renders lock title, checklist, and CTA", () => {
     render(<TrustMoment onProceed={vi.fn()} />);
@@ -63,5 +76,23 @@ describe("TrustMoment", () => {
     expect(
       screen.getByRole("button", { name: "시작하기" }),
     ).toBeInTheDocument();
+  });
+
+  it("navigates to /settings/data-management on data management click", () => {
+    mockPush.mockClear();
+    render(<TrustMoment onProceed={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "내 데이터 관리 열기" }));
+    expect(mockPush).toHaveBeenCalledWith("/settings/data-management");
+  });
+
+  it("does not render inline data panel", () => {
+    render(<TrustMoment onProceed={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "내 데이터 관리 열기" }));
+
+    expect(
+      screen.queryByRole("region", { name: "데이터 관리 패널" }),
+    ).not.toBeInTheDocument();
   });
 });

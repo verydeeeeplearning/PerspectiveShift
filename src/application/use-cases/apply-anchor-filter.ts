@@ -1,5 +1,7 @@
 import { AnchorAttribute } from "@/domain/value-objects/anchor-attribute";
 import type { AnchorType } from "@/domain/value-objects/anchor-type";
+import { DifferenceLevel } from "@/domain/value-objects/difference-level";
+import type { EnergyLevelKey } from "@/domain/value-objects/energy-level";
 
 interface CandidateProfile {
   userId: string;
@@ -10,7 +12,8 @@ interface CandidateProfile {
 interface ApplyAnchorFilterInput {
   anchorType: AnchorType;
   anchorValue: string;
-  differenceSlider: number; // 0-100: 0=매우 비슷, 100=매우 다름
+  differenceLevel: number; // 0-1: 0=매우 비슷, 1=매우 다름
+  energyLevel: EnergyLevelKey;
   candidates: CandidateProfile[];
 }
 
@@ -24,12 +27,25 @@ export interface ApplyAnchorFilterResult {
   filtered: FilteredCandidate[];
   totalBefore: number;
   totalAfter: number;
+  appliedRange: { min: number; max: number };
+}
+
+function getEnergyDifferenceCap(energyLevel: EnergyLevelKey): number {
+  if (energyLevel === "LOW") return 0.4;
+  if (energyLevel === "NORMAL") return 0.7;
+  return 1.0;
 }
 
 export class ApplyAnchorFilterUseCase {
   execute(input: ApplyAnchorFilterInput): ApplyAnchorFilterResult {
     const userAnchor = AnchorAttribute.create(input.anchorType, input.anchorValue);
-    const differenceThreshold = input.differenceSlider / 100;
+    const difference = DifferenceLevel.create(input.differenceLevel);
+    const rangeCap = getEnergyDifferenceCap(input.energyLevel);
+    const range = difference.toDistanceRange(rangeCap);
+    const appliedRange =
+      range.min === range.max
+        ? { min: Math.max(0, Math.round((range.max - 0.2) * 1000) / 1000), max: range.max }
+        : range;
 
     const filtered: FilteredCandidate[] = input.candidates
       .map((c) => {
@@ -44,23 +60,18 @@ export class ApplyAnchorFilterUseCase {
           anchorMatched,
         };
       })
-      .filter((c) => {
-        // 앵커 일치 후보 우선, 다름 슬라이더에 따라 stance distance 필터
-        if (differenceThreshold < 0.3) {
-          // 비슷한 상대 선호: 앵커 일치 + 낮은 stance distance
-          return c.anchorMatched && c.stanceDistance <= 0.5;
-        } else if (differenceThreshold > 0.7) {
-          // 다른 상대 선호: 앵커 일치 불문 + 높은 stance distance
-          return c.stanceDistance >= 0.3;
-        }
-        // 중간: 앵커 일치 우선, 적당한 stance distance
-        return c.anchorMatched || c.stanceDistance >= 0.2;
-      });
+      .filter(
+        (c) =>
+          c.anchorMatched &&
+          c.stanceDistance >= appliedRange.min &&
+          c.stanceDistance <= appliedRange.max,
+      );
 
     return {
       filtered,
       totalBefore: input.candidates.length,
       totalAfter: filtered.length,
+      appliedRange,
     };
   }
 }

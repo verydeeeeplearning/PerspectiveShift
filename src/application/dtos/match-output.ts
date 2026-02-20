@@ -2,10 +2,13 @@ import type { FacilitatorIntensity, ReflectionLevel } from "@/domain/services/di
 
 export interface MatchCandidateOutput {
   sessionId: string;
+  candidateType?: "human" | "agent";
+  personaId?: string;
   distance: number;
   readiness: number;
   score: number;
   inSweetSpot: boolean;
+  poolScarcityBonus?: number;
 }
 
 export interface AdaptiveMatchResult {

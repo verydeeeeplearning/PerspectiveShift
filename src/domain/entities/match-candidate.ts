@@ -9,6 +9,8 @@ export interface MatchCandidateProps {
   score: MatchScore;
   energyCompat?: number;
   recentDeclinePenalty?: number;
+  candidateType?: "human" | "agent";
+  personaId?: string;
 }
 
 export class MatchCandidate {
@@ -18,6 +20,8 @@ export class MatchCandidate {
   readonly score: MatchScore;
   readonly energyCompat: number;
   readonly recentDeclinePenalty: number;
+  readonly candidateType: "human" | "agent";
+  readonly personaId?: string;
 
   private constructor(props: MatchCandidateProps) {
     this.sessionId = props.sessionId;
@@ -26,6 +30,8 @@ export class MatchCandidate {
     this.score = props.score;
     this.energyCompat = props.energyCompat ?? 0.5;
     this.recentDeclinePenalty = props.recentDeclinePenalty ?? 0;
+    this.candidateType = props.candidateType ?? "human";
+    this.personaId = props.personaId;
   }
 
   static create(props: MatchCandidateProps): MatchCandidate {

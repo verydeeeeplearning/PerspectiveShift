@@ -18,6 +18,22 @@ export function getSupabaseClient(): SupabaseClient {
   return client;
 }
 
+/**
+ * Returns the service-role client for server-side operations (bypasses RLS).
+ * Falls back to anon client if service role key is not configured.
+ */
+export function getServerSupabaseClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (url && serviceKey && serviceKey.length > 20) {
+    return createClient(url, serviceKey);
+  }
+
+  // Fallback to anon client if service role key not configured
+  return getSupabaseClient();
+}
+
 export function getSupabaseServiceClient(): SupabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

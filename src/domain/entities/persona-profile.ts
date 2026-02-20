@@ -1,4 +1,5 @@
 import type { StanceVector } from "./stance-vector";
+import type { AnchorType } from "../value-objects/anchor-type";
 
 export type ConversationStyle = "logical" | "emotional" | "humorous" | "careful";
 
@@ -41,5 +42,12 @@ export class PersonaProfile {
     if (!props.id.trim()) throw new Error("PersonaProfile id must not be empty");
     if (!props.name.trim()) throw new Error("PersonaProfile name must not be empty");
     return new PersonaProfile(props);
+  }
+
+  toAnchorAttributes(): Array<{ type: AnchorType; value: string }> {
+    return [
+      { type: "age_group", value: this.ageGroup },
+      { type: "job_category", value: this.jobCategory },
+    ];
   }
 }

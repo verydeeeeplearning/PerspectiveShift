@@ -24,7 +24,6 @@ export class OpenAIValueExtractor implements ValueExtractor {
           { role: "system", content: VALUE_EXTRACTION_PROMPT },
           { role: "user", content: text },
         ],
-        temperature: 0.2,
         response_format: { type: "json_object" },
       });
 

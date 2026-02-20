@@ -53,4 +53,24 @@ describe("PersonaResponseDelay", () => {
       expect(delay.seconds).toBe(delay.delayMs / 1000);
     });
   });
+
+  describe("calculateFromDistribution", () => {
+    it("samples delays and clamps within 2000-30000ms", () => {
+      for (let i = 0; i < 50; i++) {
+        const delay = PersonaResponseDelay.calculateFromDistribution(8, 2);
+        expect(delay.delayMs).toBeGreaterThanOrEqual(2000);
+        expect(delay.delayMs).toBeLessThanOrEqual(30000);
+      }
+    });
+
+    it("clamps to minimum 2000ms", () => {
+      const delay = PersonaResponseDelay.calculateFromDistribution(0, 0);
+      expect(delay.delayMs).toBe(2000);
+    });
+
+    it("clamps to maximum 30000ms", () => {
+      const delay = PersonaResponseDelay.calculateFromDistribution(100, 0);
+      expect(delay.delayMs).toBe(30000);
+    });
+  });
 });

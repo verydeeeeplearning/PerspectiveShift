@@ -22,20 +22,29 @@ function buildDefaultResult(guess: TuringSide, actual: TuringSide): TuringGuessR
     return {
       actual,
       isCorrect,
-      rewards: [{ type: "observer_badge", message: "관찰자 뱃지 +1" }],
+      rewards: [{
+        type: actual === "human" ? "correct_human" : "correct_ai",
+        message: actual === "human" ? "사람을 정확히 알아봤어요." : "AI를 정확히 알아봤어요.",
+      }],
     };
   }
   if (guess === "human" && actual === "ai") {
     return {
       actual,
       isCorrect,
-      rewards: [{ type: "impressive_view", message: "인상적인 관점" }],
+      rewards: [{
+        type: "wrong_human_for_ai",
+        message: "AI를 사람으로 봤어요. 인상적인 관점이에요.",
+      }],
     };
   }
   return {
     actual,
     isCorrect,
-    rewards: [{ type: "unexpected_view", message: "의외의 시각" }],
+    rewards: [{
+      type: "wrong_ai_for_human",
+      message: "사람을 AI로 봤어요. 의외의 시각이에요.",
+    }],
   };
 }
 

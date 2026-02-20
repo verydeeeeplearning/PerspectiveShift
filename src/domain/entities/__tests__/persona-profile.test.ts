@@ -96,4 +96,24 @@ describe("PersonaProfile", () => {
       expect(persona.experienceBank).toEqual(original);
     });
   });
+
+  describe("toAnchorAttributes", () => {
+    it("maps ageGroup to age_group anchor attribute", () => {
+      const persona = PersonaProfile.create(makeValidProps());
+
+      expect(persona.toAnchorAttributes()).toContainEqual({
+        type: "age_group",
+        value: "30대",
+      });
+    });
+
+    it("maps jobCategory to job_category anchor attribute", () => {
+      const persona = PersonaProfile.create(makeValidProps());
+
+      expect(persona.toAnchorAttributes()).toContainEqual({
+        type: "job_category",
+        value: "IT직군",
+      });
+    });
+  });
 });

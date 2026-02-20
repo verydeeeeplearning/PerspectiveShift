@@ -66,9 +66,18 @@ export default function MatchingPage() {
     setCandidates((prev) => prev.slice(1));
   };
 
-  const handleSelectPersona = (personaId: string) => {
-    // Navigate to persona dialogue — use agent- prefix convention
-    window.location.href = `/dialogue/agent-${personaId}`;
+  const handleSelectPersona = async (personaId: string) => {
+    try {
+      const session = await apiPost<{ id: string }>("/api/dialogue/sessions", {
+        candidateType: "agent",
+        personaId,
+      });
+      window.location.href = `/dialogue/${session.id}`;
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "대화를 시작하는 데 실패했습니다",
+      );
+    }
   };
 
   if (!isReady) {
@@ -174,7 +183,7 @@ export default function MatchingPage() {
                 <AnimatedListItem key={c.sessionId} index={idx}>
                   <CandidateList
                     candidates={[c]}
-                    onPropose={handlePropose}
+                    onPropose={(candidate) => handlePropose(candidate.sessionId)}
                   />
                 </AnimatedListItem>
               ))}

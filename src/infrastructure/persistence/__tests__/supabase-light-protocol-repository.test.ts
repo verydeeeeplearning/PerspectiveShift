@@ -41,7 +41,7 @@ function mockSupabase(overrides: {
         eq: vi.fn().mockResolvedValue({ error: overrides.updateError ?? null }),
       }),
     }),
-  } as unknown as Parameters<typeof SupabaseLightProtocolRepository extends new (s: infer S) => unknown ? S : never>[0] extends infer T ? T : never;
+  };
 }
 
 describe("SupabaseLightProtocolRepository", () => {

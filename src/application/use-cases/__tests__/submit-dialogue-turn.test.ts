@@ -46,6 +46,8 @@ describe("SubmitDialogueTurnUseCase", () => {
         drifted: false,
         suggestion: null,
       }),
+      suggestReceptivenessTemplate: vi.fn().mockResolvedValue([]),
+      detectReceptiveExpressions: vi.fn().mockResolvedValue([]),
     };
     const uc = new SubmitDialogueTurnUseCase({
       dialogueRepository: dialogueRepo,

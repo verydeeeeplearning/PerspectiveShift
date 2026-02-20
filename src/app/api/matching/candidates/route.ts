@@ -2,6 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getContainer } from "@/infrastructure/config/di-container";
 import { handleError } from "../../_shared/error-handler";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const sessionId = request.headers.get("x-session-id");

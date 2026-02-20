@@ -14,6 +14,8 @@ export interface StanceProfile {
   coreValue?: CoreValueKey | null;
   selfAffirmationExperience?: string | null;
   confidenceMap?: Record<StanceDimension, ConfidenceLevelKey> | null;
+  ageGroup?: string | null;
+  jobCategory?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,7 +28,7 @@ export interface StanceRepository {
     updates: Partial<
       Pick<
         StanceProfile,
-        "vector" | "mapType" | "reasoning" | "readiness" | "precision" | "coreValue" | "selfAffirmationExperience" | "confidenceMap"
+        "vector" | "mapType" | "reasoning" | "readiness" | "precision" | "coreValue" | "selfAffirmationExperience" | "confidenceMap" | "ageGroup" | "jobCategory"
       >
     >,
   ): Promise<void>;

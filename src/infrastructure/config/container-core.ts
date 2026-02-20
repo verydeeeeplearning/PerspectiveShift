@@ -71,7 +71,7 @@ import { SupabaseEventRepository } from "../persistence/supabase-event-repositor
 import { InMemoryPersonaRepository } from "../persistence/in-memory-persona-repository";
 import { InMemorySavedPersonaRepository } from "../persistence/in-memory-saved-persona-repository";
 import { InMemoryTuringGuessRepository } from "../persistence/in-memory-turing-guess-repository";
-import { getSupabaseClient } from "../persistence/supabase-client";
+import { getServerSupabaseClient } from "../persistence/supabase-client";
 import questionsData from "../external/data/questions.json";
 import {
   stubReceptivenessRepo,
@@ -118,7 +118,7 @@ export function createCoreDependencies() {
     ? new OpenAiStanceExtractor(openaiKey)
     : createFallbackExtractor();
   const baselineProvider: BaselineProvider = new KgssBaselineProvider();
-  const supabase = getSupabaseClient();
+  const supabase = getServerSupabaseClient();
   const stanceRepository: StanceRepository = new SupabaseStanceRepository(
     supabase,
   );

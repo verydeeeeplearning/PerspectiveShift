@@ -3,13 +3,12 @@ import { getContainer } from "@/infrastructure/config/di-container";
 import { requireAuthUserId } from "@/infrastructure/config/auth-session";
 import { handleError } from "../../_shared/error-handler";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     if (process.env.FEATURE_RELATIONSHIP !== "true") {
-      return NextResponse.json(
-        { error: "Feature disabled" },
-        { status: 404 },
-      );
+      return NextResponse.json({ friends: [] });
     }
 
     const userId = await requireAuthUserId();

@@ -78,13 +78,13 @@ const AUTHENTICATED_TABS: Tab[] = [
   },
   {
     label: "더보기",
-    href: "/profile",
-    activePattern: "/profile",
+    href: "/settings",
+    activePattern: "/settings",
     iconPath: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   },
 ];
 
-const MORE_PATTERNS = ["/profile", "/safety", "/offline"];
+const MORE_PATTERNS = ["/settings", "/safety", "/offline"];
 
 export function BottomTabBar() {
   const pathname = usePathname();

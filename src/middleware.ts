@@ -7,6 +7,18 @@ const AUTH_ROUTES = ["/auth/login"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // API routes: add Cache-Control to prevent browser heuristic caching
+  if (pathname.startsWith("/api/")) {
+    const response = NextResponse.next({
+      request: { headers: request.headers },
+    });
+    response.headers.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate",
+    );
+    return response;
+  }
+
   const response = NextResponse.next({
     request: { headers: request.headers },
   });
@@ -56,6 +68,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

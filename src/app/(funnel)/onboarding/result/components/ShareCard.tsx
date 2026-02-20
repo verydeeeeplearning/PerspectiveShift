@@ -30,21 +30,24 @@ export function ShareCard({ data, onShare }: ShareCardProps) {
   const handleShare = async () => {
     onShare?.();
 
-    if (typeof navigator === "undefined") {
+    if (typeof navigator === "undefined" || typeof window === "undefined") {
       return;
     }
 
     const text = buildShareText(data);
+    const ogUrl = `${window.location.origin}/api/og-image?type=ALIAS&alias=${encodeURIComponent(data.alias.label)}&emoji=${encodeURIComponent(data.mapType.emoji)}&description=${encodeURIComponent(data.mapType.description)}`;
+
     if (typeof navigator.share === "function") {
       await navigator.share({
         title: "PerspectiveShift 유형 카드",
         text,
+        url: ogUrl,
       });
       return;
     }
 
     if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(`${text}\n${ogUrl}`);
     }
   };
 
