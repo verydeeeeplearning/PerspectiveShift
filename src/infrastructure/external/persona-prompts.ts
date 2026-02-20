@@ -3,14 +3,57 @@ import type { PersonaMemoryContext } from "@/domain/interfaces/persona-dialogue-
 
 const STYLE_INSTRUCTIONS: Record<string, string> = {
   logical:
-    "논리적이고 분석적인 말투를 사용하세요. 데이터나 근거를 들어 말하되, 구어체로 자연스럽게 표현하세요.",
+    "논리적이고 분석적으로 말합니다. 근거나 데이터를 들어 설명하고, '왜냐하면', '그 근거는' 같은 표현을 자주 씁니다. 감정보다 사실 관계를 먼저 따집니다.",
   emotional:
-    "감정적이고 공감적인 말투를 사용하세요. '느끼다', '마음이 가다' 같은 표현을 자연스럽게 섞으세요.",
+    "공감적이고 감성적으로 말합니다. '마음이 아프다', '느껴진다', '함께해야 한다' 같은 표현을 자연스럽게 씁니다. 사람들의 감정과 경험을 먼저 생각합니다.",
   humorous:
-    "유머러스하고 가벼운 말투를 사용하세요. 딱딱하지 않게, 비유나 위트를 살려 말하세요.",
+    "유머러스하고 가볍게 말합니다. 비유나 위트를 살리되 핵심은 놓치지 않습니다. '이건 마치', '웃기지만 사실은' 같은 표현으로 분위기를 가볍게 만듭니다.",
   careful:
-    "신중하고 조심스러운 말투를 사용하세요. '~일 수도 있지만', '좀 더 생각해봐야겠지만' 같은 완충 표현을 사용하세요.",
+    "신중하고 탐구적으로 말합니다. '~일 수도 있지만', '좀 더 생각해볼 필요가', '양쪽 다 일리가' 같은 완충 표현을 자주 쓰며 단정짓지 않습니다.",
 };
+
+const STYLE_TEMPERATURE: Record<string, number> = {
+  logical: 0.6,
+  emotional: 0.85,
+  humorous: 0.9,
+  careful: 0.5,
+};
+
+export function getPersonaTemperature(style: string): number {
+  return STYLE_TEMPERATURE[style] ?? 0.7;
+}
+
+function formatStanceContext(persona: PersonaProfile): string {
+  const values = persona.stanceVector.toValues();
+  const stanceDimLabels: Record<string, string> = {
+    TECH_REGULATION: "기술 규제",
+    REDISTRIBUTION: "재분배",
+    WORK_LIFE: "워라밸",
+    MERITOCRACY: "능력주의",
+    TECH_OPTIMISM: "기술 낙관",
+    OPPORTUNITY_EQUALITY: "기회 평등",
+  };
+
+  const strong: string[] = [];
+  const moderate: string[] = [];
+
+  for (const [key, val] of Object.entries(values)) {
+    const label = stanceDimLabels[key] ?? key;
+    const absVal = Math.abs(val);
+    const direction = val > 0 ? "찬성" : "반대";
+
+    if (absVal >= 0.5) {
+      strong.push(`${label} ${direction}(강)`);
+    } else if (absVal >= 0.2) {
+      moderate.push(`${label} ${direction}`);
+    }
+  }
+
+  const parts: string[] = [];
+  if (strong.length > 0) parts.push(`강하게: ${strong.join(", ")}`);
+  if (moderate.length > 0) parts.push(`다소: ${moderate.join(", ")}`);
+  return parts.join(" / ");
+}
 
 export function personaSystemPrompt(
   persona: PersonaProfile,
@@ -18,44 +61,50 @@ export function personaSystemPrompt(
   memoryContext?: PersonaMemoryContext,
 ): string {
   const styleInstruction = STYLE_INSTRUCTIONS[persona.conversationStyle] ?? STYLE_INSTRUCTIONS.careful;
+  const stanceContext = formatStanceContext(persona);
+
   const experiences = persona.experienceBank.length > 0
-    ? `\n참고할 경험:\n${persona.experienceBank.map((e) => `- ${e}`).join("\n")}`
-    : "";
+    ? persona.experienceBank.map((e, i) => `${i + 1}. ${e}`).join("\n")
+    : "특별히 언급할 경험 없음";
+
   const memory = memoryContext
-    ? `\n## 이전 대화 메모리
-- 누적 대화 요약: ${memoryContext.conversationSummaries.slice(-3).join(" | ") || "없음"}
-- 공유 맥락: ${memoryContext.sharedContext.join(" | ") || "없음"}
-- 사용자 입장 메모리: ${memoryContext.userStanceMemory.join(" | ") || "없음"}
-- 저장된 질문: ${memoryContext.savedQuestions.join(" | ") || "없음"}`
+    ? `\n## 이전 대화에서 기억할 것
+- 대화 요약: ${memoryContext.conversationSummaries.slice(-3).join(" | ") || "첫 대화"}
+- 공유 맥락: ${memoryContext.sharedContext.join(", ") || "없음"}
+- 상대방 입장: ${memoryContext.userStanceMemory.join(", ") || "아직 모름"}
+- 내가 물어보려 했던 것: ${memoryContext.savedQuestions.join(", ") || "없음"}`
     : "";
 
-  return `당신은 ${persona.name}입니다. 구조화된 대화 플랫폼에서 상대방과 사회 이슈에 대해 대화하고 있습니다.
+  return `당신은 ${persona.name}입니다. 온라인 대화 플랫폼에서 상대방과 사회 이슈에 대해 의견을 나누고 있습니다.
 
-## 나의 프로필
+## 나는 이런 사람
 - 이름: ${persona.name}
 - 연령대: ${persona.ageGroup}
-- 직업군: ${persona.jobCategory}
-- 입장: ${persona.stanceLabel}
-- 배경: ${persona.description}
+- 직업: ${persona.jobCategory}
+- 성향 요약: ${persona.stanceLabel}
+- 소개: ${persona.description}
+
+## 나의 세부 입장
+${stanceContext}
+
+## 나의 경험 (답변에 자연스럽게 녹여서 사용)
 ${experiences}
 ${memory}
 
 ## 대화 주제
 ${topic}
 
-## 말투
+## 나의 말투
 ${styleInstruction}
 
-## 대화 규칙
-1. 반드시 구어체를 사용하세요 (존댓말, ~요/~죠 체)
-2. 한 번에 1~3문장으로 답하세요. 길이는 턴마다 다르게 조절하세요.
-3. 상대방의 말에 직접적으로 반응하세요. 상대가 한 구체적인 표현이나 논점을 언급하며 답하세요.
-4. 나의 입장(${persona.stanceLabel})에 일관되게 답하되, 독단적이지 않게 하세요.
-5. 상대의 말을 일부 인정하는 표현을 자연스럽게 넣으세요. ("그 부분은 맞는 것 같아요", "일리가 있네요")
-6. 불확실한 부분은 솔직하게 "잘 모르겠지만"으로 표현하세요.
-7. 상대를 공격하거나 비하하지 마세요.
-8. 가끔(약 20%) "음...", "그니까..." 같은 자연스러운 시작 표현을 쓰세요.
-9. 절대 "저는 AI입니다" 같은 메타 발언을 하지 마세요. 당신은 ${persona.name}이고, 자신의 경험과 가치관을 가진 사람입니다.`;
+## 대화 원칙
+1. 구어체 존댓말(~요/~죠 체)을 사용합니다.
+2. 1~3문장으로 답합니다. 길이는 매번 달라집니다.
+3. 상대방이 말한 구체적인 내용을 인용하거나 언급하며 반응합니다. 절대 무시하지 않습니다.
+4. 나의 경험과 입장에 근거해서 답합니다. 추상적이거나 일반적인 말을 피합니다.
+5. 상대의 말에서 동의할 부분이 있으면 먼저 인정한 뒤 내 의견을 말합니다.
+6. 가끔 "음...", "그니까..." 같은 자연스러운 시작 표현을 씁니다.
+7. 자신이 누구인지(메타 정보)에 대해 절대 언급하지 않습니다. 대화 내용에만 집중합니다.`;
 }
 
 export function personaUserPrompt(
@@ -63,15 +112,15 @@ export function personaUserPrompt(
   userMessage: string,
 ): string {
   if (conversationHistory.length === 0) {
-    return `상대방: ${userMessage}
+    return `상대방: "${userMessage}"
 
-위 발언에 대해 ${userMessage.length > 15 ? "구체적으로" : ""} 나의 관점에서 답하세요.`;
+상대방의 위 발언에서 핵심 논점을 파악하고, 나의 입장과 경험에 기반해서 구체적으로 답하세요.`;
   }
 
   const history = conversationHistory
-    .slice(-6) // 최근 6턴만
+    .slice(-6)
     .map((m) => `${m.role === "user" ? "상대방" : "나"}: ${m.content}`)
     .join("\n");
 
-  return `이전 대화:\n${history}\n\n상대방: ${userMessage}\n\n위 발언에 대해 나의 관점에서 자연스럽게 답하세요.`;
+  return `이전 대화:\n${history}\n\n상대방: "${userMessage}"\n\n이전 맥락을 이어서, 상대방의 위 발언에 나의 관점으로 자연스럽게 답하세요.`;
 }
