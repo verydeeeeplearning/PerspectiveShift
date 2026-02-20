@@ -64,9 +64,6 @@ export default function MatchingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <span className="text-[11px] font-semibold tracking-widest uppercase text-accent-primary">
-          매칭
-        </span>
         <h1 className="text-2xl font-bold font-heading text-text-primary tracking-[-0.02em]">
           대화 상대 찾기
         </h1>

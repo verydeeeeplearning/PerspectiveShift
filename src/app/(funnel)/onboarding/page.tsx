@@ -98,9 +98,6 @@ export default function OnboardingPage() {
   return (
     <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
       <div className="mb-8 space-y-2">
-        <span className="text-[11px] font-semibold tracking-widest uppercase text-text-secondary">
-          입장 탐색
-        </span>
         <h1 className="text-2xl font-bold font-heading text-text-primary tracking-[-0.02em]">
           나의 생각 발견하기
         </h1>

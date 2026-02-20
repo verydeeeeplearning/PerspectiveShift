@@ -82,9 +82,6 @@ export default function FriendsPage() {
         transition={{ duration: 0.3 }}
       >
         <div className="space-y-1">
-          <span className="text-[11px] font-semibold tracking-widest uppercase text-accent-primary">
-            친구
-          </span>
           <h1 className="text-2xl font-bold font-heading text-text-primary tracking-[-0.02em]">
             친구 목록
           </h1>

@@ -29,11 +29,6 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-[var(--container-x)]">
       <div className="max-w-sm w-full text-center space-y-10">
-        {/* Section Label */}
-        <span className="text-[11px] font-semibold tracking-widest uppercase text-text-secondary">
-          시작하기
-        </span>
-
         {/* Hero Title */}
         <div className="space-y-3">
           <h1 className="text-[32px] leading-[1.2] font-bold font-heading text-text-primary tracking-[-0.02em]">
