@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useAnonymousSession } from "@/app/_shared/hooks/useAnonymousSession";
 import { apiGet, apiPost } from "@/app/_shared/api-client";
 import type { MatchCandidateOutput } from "@/application/dtos/match-output";
 import { CandidateList } from "./components/CandidateList";
 import { EnergyReactiveMatchCard } from "./components/EnergyReactiveMatchCard";
+import { MatchCardSkeleton } from "@/app/_shared/components/Skeleton";
+import { AnimatedListItem } from "@/app/_shared/components/AnimatedList";
 
 export default function MatchingPage() {
   const { isReady } = useAnonymousSession();
@@ -40,13 +43,28 @@ export default function MatchingPage() {
   };
 
   if (!isReady) {
-    return <div className="p-6 text-text-secondary">세션 초기화 중...</div>;
+    return (
+      <main className="p-6 max-w-2xl mx-auto space-y-4">
+        <div className="space-y-2">
+          <div className="skeleton h-3 w-12" />
+          <div className="skeleton h-7 w-40" />
+          <div className="skeleton h-4 w-64" />
+        </div>
+        <MatchCardSkeleton />
+      </main>
+    );
   }
 
   return (
     <main className="p-6 max-w-2xl mx-auto">
-      <div className="mb-6 space-y-2">
-        <span className="text-[11px] font-semibold tracking-widest uppercase text-text-secondary">
+      {/* Page header */}
+      <motion.div
+        className="mb-6 space-y-2"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <span className="text-[11px] font-semibold tracking-widest uppercase text-accent-primary">
           매칭
         </span>
         <h1 className="text-2xl font-bold font-heading text-text-primary tracking-[-0.02em]">
@@ -56,26 +74,51 @@ export default function MatchingPage() {
           당신과 적절한 의견 거리를 가진 상대를 찾아 구조화된 대화를
           시작하세요.
         </p>
-      </div>
+      </motion.div>
 
-      {loading && <p className="text-text-tertiary">후보 검색 중...</p>}
-      {error && (
-        <p className="text-semantic-difference bg-semantic-difference-soft p-3 rounded-chip mb-4">
-          {error}
-        </p>
+      {/* Loading state */}
+      {loading && (
+        <div className="space-y-4">
+          <MatchCardSkeleton />
+          <MatchCardSkeleton />
+        </div>
       )}
 
+      {/* Error state */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-semantic-difference-soft border border-semantic-difference/20 text-semantic-difference p-4 rounded-card mb-4"
+        >
+          <p className="text-sm font-medium">{error}</p>
+        </motion.div>
+      )}
+
+      {/* Empty state */}
       {!loading && candidates.length === 0 && (
-        <div className="text-center py-12 space-y-2">
-          <p className="text-lg text-text-primary font-heading">
+        <motion.div
+          className="text-center py-16 space-y-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent-primary-soft flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+            </svg>
+          </div>
+          <p className="text-lg text-text-primary font-heading font-semibold">
             지금은 매칭 상대가 없어요
           </p>
           <p className="text-sm text-text-tertiary">
             다른 참여자가 온보딩을 완료하면 후보가 표시됩니다
           </p>
-        </div>
+        </motion.div>
       )}
 
+      {/* Candidates */}
       {!loading && candidates.length > 0 && featuredCandidate && (
         <section className="space-y-4">
           <EnergyReactiveMatchCard
@@ -88,12 +131,18 @@ export default function MatchingPage() {
           />
 
           {secondaryCandidates.length > 0 && (
-            <section className="space-y-2">
-              <h2 className="text-xs font-semibold text-text-secondary">다른 후보</h2>
-              <CandidateList
-                candidates={secondaryCandidates}
-                onPropose={handlePropose}
-              />
+            <section className="space-y-3">
+              <h2 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
+                다른 후보
+              </h2>
+              {secondaryCandidates.map((c, idx) => (
+                <AnimatedListItem key={c.sessionId} index={idx}>
+                  <CandidateList
+                    candidates={[c]}
+                    onPropose={handlePropose}
+                  />
+                </AnimatedListItem>
+              ))}
             </section>
           )}
         </section>

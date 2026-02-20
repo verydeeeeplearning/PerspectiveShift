@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { springSnappy, springSoft } from "@/app/_shared/motion";
 
 interface DistanceLabelInfo {
   level: string;
@@ -61,36 +62,39 @@ export function MatchCardV3({
 
   return (
     <motion.div
-      className={`rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 ${
-        isTransitioning ? "scale-[0.99] opacity-80" : "scale-100 opacity-100"
-      }`}
+      className="rounded-card border border-border-soft bg-surface-card p-6 shadow-card"
       data-testid="match-card-root"
       data-transitioning={isTransitioning ? "true" : "false"}
       animate={{
         scale: isTransitioning ? 0.99 : 1,
-        opacity: isTransitioning ? 0.8 : 1,
+        opacity: isTransitioning ? 0.85 : 1,
       }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={springSoft}
     >
+      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-accent-primary">
           TODAY&apos;S MATCH
         </span>
-        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500">
+        <span className="rounded-pill bg-accent-primary-soft px-2.5 py-0.5 text-[11px] font-medium text-text-secondary">
           🔒 익명
         </span>
       </div>
 
-      <h3 className="mb-3 text-xl font-bold text-gray-900">{topic}</h3>
+      {/* Topic */}
+      <h3 className="mb-4 text-xl font-bold font-heading text-text-primary tracking-[-0.02em]">
+        {topic}
+      </h3>
 
+      {/* Distance + Time info */}
       <div className="mb-4 flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{distanceLabel.emoji}</span>
+        <div className="flex items-center gap-2.5">
+          <span className="text-xl">{distanceLabel.emoji}</span>
           <div>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-text-primary">
               {distanceLabel.shortText}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-text-secondary">
               {distanceLabel.description}
             </p>
           </div>
@@ -103,7 +107,7 @@ export function MatchCardV3({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.2 }}
-              className="text-sm font-medium text-gray-900 transition-opacity duration-300"
+              className="text-sm font-medium text-text-primary num"
               data-testid="match-card-time"
             >
               약 {estimatedMinutes}분
@@ -116,7 +120,7 @@ export function MatchCardV3({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.2 }}
-              className="text-xs text-gray-500 transition-opacity duration-300"
+              className="text-xs text-text-secondary num"
               data-testid="match-card-difficulty"
             >
               난이도 Level {difficultyRange[0]}-{difficultyRange[1]}
@@ -125,26 +129,32 @@ export function MatchCardV3({
         </div>
       </div>
 
+      {/* Trailer */}
       {trailer && (
-        <div className="mb-4 rounded-lg bg-blue-50 px-4 py-3">
-          <p className="text-sm leading-relaxed text-blue-800">
+        <div className="mb-4 rounded-input bg-accent-primary-soft px-4 py-3">
+          <p className="text-sm leading-relaxed text-text-primary">
             {trailer}
           </p>
         </div>
       )}
 
+      {/* Social proof */}
       {socialProof && (
-        <p className="mb-4 text-center text-xs text-gray-400">
+        <p className="mb-4 text-center text-xs text-text-tertiary">
           {socialProof}
         </p>
       )}
 
+      {/* CTA Buttons */}
       <div className="flex gap-3">
-        <button
+        <motion.button
           type="button"
           onClick={onStart}
           aria-label={ctaLabel}
-          className="flex-1 rounded-xl bg-blue-600 px-6 py-3 text-center font-bold text-white transition-colors hover:bg-blue-700"
+          className="flex-1 rounded-pill gradient-cta px-6 py-3 text-center font-bold text-text-inverse shadow-cta"
+          whileHover={{ scale: 1.02, boxShadow: "0 4px 20px rgba(44, 62, 80, 0.2)" }}
+          whileTap={{ scale: 0.96 }}
+          transition={springSnappy}
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -152,22 +162,23 @@ export function MatchCardV3({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="transition-opacity duration-300"
+              transition={{ duration: 0.15 }}
             >
               {ctaLabel}
             </motion.span>
-          </AnimatePresence>{" "}
-          →
-        </button>
-        <button
+          </AnimatePresence>
+          {" →"}
+        </motion.button>
+        <motion.button
           type="button"
           onClick={onDecline}
           aria-label="다음에"
-          className="rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+          className="rounded-pill border border-border-soft px-4 py-3 text-sm text-text-secondary hover:bg-accent-primary-soft transition-colors"
+          whileTap={{ scale: 0.96 }}
+          transition={springSnappy}
         >
           다음에
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );

@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import type { MatchCandidateOutput } from "@/application/dtos/match-output";
 import { SelectEnergyLevelUseCase } from "@/application/use-cases/select-energy-level";
 import { BuildMatchCardUseCase } from "@/application/use-cases/build-match-card";
 import type { EnergyLevelKey } from "@/domain/value-objects/energy-level";
 import { EnergySelector } from "./EnergySelector";
 import { MatchCardV3 } from "./MatchCardV3";
+import { springSoft } from "@/app/_shared/motion";
 
 export type EnergyMatchingEventName =
   | "energy_check_select_high"
@@ -135,9 +137,14 @@ export function EnergyReactiveMatchCard({
   }, [emitEvent, selectedEnergy]);
 
   return (
-    <section className="mb-6 space-y-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <motion.section
+      className="mb-6 space-y-4 rounded-card border border-border-soft bg-surface-card p-5 shadow-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={springSoft}
+    >
       <div className="space-y-2">
-        <p className="text-sm font-semibold text-gray-800">지금 에너지 체크</p>
+        <p className="text-sm font-semibold text-text-primary">지금 에너지 체크</p>
         <EnergySelector selected={selectedEnergy} onSelect={handleEnergySelect} />
       </div>
 
@@ -156,6 +163,6 @@ export function EnergyReactiveMatchCard({
         onStart={onStart}
         onDecline={onDecline}
       />
-    </section>
+    </motion.section>
   );
 }

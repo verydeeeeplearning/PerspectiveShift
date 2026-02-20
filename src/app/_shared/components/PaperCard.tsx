@@ -1,4 +1,8 @@
+"use client";
+
+import { motion } from "framer-motion";
 import type { HTMLAttributes, ReactNode } from "react";
+import { springSnappy } from "@/app/_shared/motion";
 
 export type PaperCardVariant =
   | "default"
@@ -29,7 +33,7 @@ const VARIANT_CLASS: Record<PaperCardVariant, string> = {
   selected: "bg-surface-card border-2 border-indigo-depth shadow-paper",
   semantic: "bg-surface-card border border-border-soft shadow-paper",
   interactive:
-    "bg-surface-card border border-border-soft shadow-paper hover:shadow-card cursor-pointer transition-shadow",
+    "bg-surface-card border border-border-soft shadow-paper cursor-pointer",
 };
 
 const ACCENT_CLASS: Record<SemanticAccent, string> = {
@@ -45,17 +49,34 @@ export function PaperCard({
   ...props
 }: PaperCardProps) {
   const showAccent = variant === "semantic" && semanticAccent;
+  const isInteractive = variant === "interactive";
+
+  const className = `
+    rounded-card
+    ${PADDING_CLASS[padding]}
+    ${VARIANT_CLASS[variant]}
+    ${showAccent ? ACCENT_CLASS[semanticAccent] : ""}
+  `.trim();
+
+  if (isInteractive) {
+    return (
+      <motion.div
+        className={className}
+        whileHover={{
+          y: -2,
+          boxShadow: "0 4px 16px rgba(44, 62, 80, 0.08)",
+        }}
+        whileTap={{ scale: 0.98 }}
+        transition={springSnappy}
+        {...(props as Record<string, unknown>)}
+      >
+        {children}
+      </motion.div>
+    );
+  }
 
   return (
-    <div
-      className={`
-        rounded-card
-        ${PADDING_CLASS[padding]}
-        ${VARIANT_CLASS[variant]}
-        ${showAccent ? ACCENT_CLASS[semanticAccent] : ""}
-      `.trim()}
-      {...props}
-    >
+    <div className={className} {...props}>
       {children}
     </div>
   );

@@ -52,13 +52,15 @@ describe("PaperCard", () => {
     expect(card.className).toContain("border-l-semantic-difference");
   });
 
-  it("applies interactive variant with hover styles", () => {
+  it("applies interactive variant with cursor-pointer and motion", () => {
     const { container } = render(
       <PaperCard variant="interactive">Interactive</PaperCard>,
     );
     const card = container.firstChild as HTMLElement;
     expect(card.className).toContain("cursor-pointer");
-    expect(card.className).toContain("hover:shadow-card");
+    // Interactive variant now uses Framer Motion for hover/tap animations
+    // instead of CSS hover:shadow-card
+    expect(card.className).toContain("bg-surface-card");
   });
 
   it("uses compact padding (p-4) by default", () => {

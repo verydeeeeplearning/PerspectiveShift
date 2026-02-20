@@ -1,7 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
+import { springSnappy } from "@/app/_shared/motion";
 
 export type TopAppBarVariant = "wordmark" | "title" | "minimal" | "immersive";
 
@@ -43,6 +45,20 @@ const CloseIcon = () => (
   </svg>
 );
 
+function IconButton({ onClick, label, children }: { onClick: () => void; label: string; children: ReactNode }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      aria-label={label}
+      className="w-10 h-10 flex items-center justify-center rounded-full text-text-primary hover:bg-accent-primary-soft transition-colors"
+      whileTap={{ scale: 0.9 }}
+      transition={springSnappy}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
 export function TopAppBar({
   variant = "wordmark",
   title,
@@ -75,20 +91,16 @@ export function TopAppBar({
       className={`fixed top-0 inset-x-0 z-50 h-14 ${
         isImmersive
           ? "bg-transparent"
-          : "bg-paper border-b border-border-divider"
+          : "bg-paper glass border-b border-white/20"
       }`}
     >
       <div className="flex items-center justify-between h-full px-4 max-w-lg mx-auto">
         {/* Left */}
         <div className="w-11 flex items-center">
           {showBack && (
-            <button
-              onClick={handleBack}
-              aria-label="뒤로 가기"
-              className="w-11 h-11 flex items-center justify-center text-text-primary hover:text-indigo-depth transition-colors"
-            >
+            <IconButton onClick={handleBack} label="뒤로 가기">
               <BackIcon />
-            </button>
+            </IconButton>
           )}
           {variant === "wordmark" && (
             <span className="text-lg font-heading font-semibold text-text-primary tracking-tight">
@@ -96,13 +108,9 @@ export function TopAppBar({
             </span>
           )}
           {isImmersive && (
-            <button
-              onClick={handleClose}
-              aria-label="뒤로 가기"
-              className="w-11 h-11 flex items-center justify-center text-text-primary hover:text-indigo-depth transition-colors"
-            >
+            <IconButton onClick={handleClose} label="뒤로 가기">
               <BackIcon />
-            </button>
+            </IconButton>
           )}
         </div>
 
@@ -116,13 +124,9 @@ export function TopAppBar({
         {/* Right */}
         <div className="w-11 flex items-center justify-end">
           {isImmersive && (
-            <button
-              onClick={handleClose}
-              aria-label="닫기"
-              className="w-11 h-11 flex items-center justify-center text-text-primary hover:text-indigo-depth transition-colors"
-            >
+            <IconButton onClick={handleClose} label="닫기">
               <CloseIcon />
-            </button>
+            </IconButton>
           )}
           {!isImmersive && rightAction}
         </div>

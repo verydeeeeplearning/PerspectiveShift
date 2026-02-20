@@ -21,7 +21,7 @@ describe("EnergySelector", () => {
   it("marks selected option", () => {
     render(<EnergySelector selected="NORMAL" onSelect={onSelect} />);
     const normalButton = screen.getByText("🔋🔋").closest("button");
-    expect(normalButton?.className).toContain("border-blue");
+    expect(normalButton?.className).toContain("border-indigo-depth");
     expect(normalButton).toHaveAttribute("aria-checked", "true");
   });
 

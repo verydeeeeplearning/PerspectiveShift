@@ -1,12 +1,17 @@
 "use client";
 
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { motion } from "framer-motion";
+import type { ReactNode, MouseEventHandler } from "react";
+import { springSnappy } from "@/app/_shared/motion";
 
-interface PrimaryButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
+interface PrimaryButtonProps {
   children: ReactNode;
   loading?: boolean;
   fullWidth?: boolean;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  "aria-label"?: string;
 }
 
 export function PrimaryButton({
@@ -14,32 +19,40 @@ export function PrimaryButton({
   loading = false,
   fullWidth = false,
   disabled,
-  ...props
+  type = "button",
+  onClick,
+  "aria-label": ariaLabel,
 }: PrimaryButtonProps) {
   return (
-    <button
+    <motion.button
       className={`
+        relative overflow-hidden
         h-12 px-6 rounded-pill
-        bg-cta-primary text-text-inverse font-semibold text-base
+        gradient-cta text-text-inverse font-semibold text-base
         shadow-cta
-        active:scale-[0.98] transition-transform
         focus:outline-none focus:ring-4 focus:ring-border-focus
         disabled:bg-cta-disabled disabled:text-text-tertiary disabled:shadow-none
+        disabled:pointer-events-none
         ${fullWidth ? "w-full max-w-xs mx-auto" : ""}
       `.trim()}
+      whileHover={{ scale: 1.02, boxShadow: "0 4px 20px rgba(44, 62, 80, 0.2)" }}
+      whileTap={{ scale: 0.96 }}
+      transition={springSnappy}
       disabled={disabled || loading}
-      {...props}
+      type={type}
+      onClick={onClick}
+      aria-label={ariaLabel}
     >
-      <span className="inline-flex items-center gap-2">
+      <span className="relative z-10 inline-flex items-center gap-2">
         {children}
         {loading && (
-          <span className="inline-flex gap-0.5" aria-label="로딩 중">
-            <span className="w-1 h-1 rounded-full bg-current animate-pulse" />
-            <span className="w-1 h-1 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
-            <span className="w-1 h-1 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
+          <span className="inline-flex gap-1" aria-label="로딩 중">
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce [animation-delay:0ms]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce [animation-delay:150ms]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce [animation-delay:300ms]" />
           </span>
         )}
       </span>
-    </button>
+    </motion.button>
   );
 }
