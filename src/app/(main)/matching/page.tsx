@@ -7,12 +7,23 @@ import { apiGet, apiPost } from "@/app/_shared/api-client";
 import type { MatchCandidateOutput } from "@/application/dtos/match-output";
 import { CandidateList } from "./components/CandidateList";
 import { EnergyReactiveMatchCard } from "./components/EnergyReactiveMatchCard";
+import { PersonaSelector } from "./components/PersonaSelector";
 import { MatchCardSkeleton } from "@/app/_shared/components/Skeleton";
 import { AnimatedListItem } from "@/app/_shared/components/AnimatedList";
+
+interface PersonaCard {
+  id: string;
+  name: string;
+  ageGroup: string;
+  jobCategory: string;
+  stanceLabel: string;
+  description: string;
+}
 
 export default function MatchingPage() {
   const { isReady } = useAnonymousSession();
   const [candidates, setCandidates] = useState<MatchCandidateOutput[]>([]);
+  const [personas, setPersonas] = useState<PersonaCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const featuredCandidate = candidates[0] ?? null;
@@ -21,8 +32,21 @@ export default function MatchingPage() {
   useEffect(() => {
     if (!isReady) return;
     setLoading(true);
-    apiGet<{ candidates: MatchCandidateOutput[] }>("/api/matching/candidates")
-      .then((data) => setCandidates(data.candidates))
+
+    // Fetch human candidates and AI personas in parallel
+    Promise.all([
+      apiGet<{ candidates: MatchCandidateOutput[] }>("/api/matching/candidates")
+        .then((data) => data.candidates)
+        .catch(() => [] as MatchCandidateOutput[]),
+      fetch("/api/matching/personas")
+        .then((res) => res.json())
+        .then((data: { personas: PersonaCard[] }) => data.personas)
+        .catch(() => [] as PersonaCard[]),
+    ])
+      .then(([humanCandidates, aiPersonas]) => {
+        setCandidates(humanCandidates);
+        setPersonas(aiPersonas);
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [isReady]);
@@ -42,11 +66,15 @@ export default function MatchingPage() {
     setCandidates((prev) => prev.slice(1));
   };
 
+  const handleSelectPersona = (personaId: string) => {
+    // Navigate to persona dialogue — use agent- prefix convention
+    window.location.href = `/dialogue/agent-${personaId}`;
+  };
+
   if (!isReady) {
     return (
       <main className="p-6 max-w-2xl mx-auto space-y-4">
         <div className="space-y-2">
-          <div className="skeleton h-3 w-12" />
           <div className="skeleton h-7 w-40" />
           <div className="skeleton h-4 w-64" />
         </div>
@@ -54,6 +82,8 @@ export default function MatchingPage() {
       </main>
     );
   }
+
+  const showPersonaFallback = !loading && candidates.length === 0 && personas.length > 0;
 
   return (
     <main className="p-6 max-w-2xl mx-auto">
@@ -92,8 +122,16 @@ export default function MatchingPage() {
         </motion.div>
       )}
 
-      {/* Empty state */}
-      {!loading && candidates.length === 0 && (
+      {/* AI Persona fallback when no human candidates */}
+      {showPersonaFallback && (
+        <PersonaSelector
+          personas={personas}
+          onSelect={handleSelectPersona}
+        />
+      )}
+
+      {/* Empty state — no candidates AND no personas */}
+      {!loading && candidates.length === 0 && personas.length === 0 && !error && (
         <motion.div
           className="text-center py-16 space-y-3"
           initial={{ opacity: 0 }}
@@ -115,7 +153,7 @@ export default function MatchingPage() {
         </motion.div>
       )}
 
-      {/* Candidates */}
+      {/* Human Candidates */}
       {!loading && candidates.length > 0 && featuredCandidate && (
         <section className="space-y-4">
           <EnergyReactiveMatchCard
