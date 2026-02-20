@@ -6,11 +6,13 @@ import type {
 import type { PersonaProfile } from "@/domain/entities/persona-profile";
 import { personaSystemPrompt, personaUserPrompt } from "./persona-prompts";
 
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
   private client: OpenAI;
 
   constructor(apiKey: string) {
-    this.client = new OpenAI({ apiKey });
+    this.client = new OpenAI({ apiKey, timeout: 30_000 });
   }
 
   async generateResponse(
@@ -20,69 +22,83 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     topic: string,
     memoryContext?: PersonaMemoryContext,
   ): Promise<string> {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      { role: "system", content: personaSystemPrompt(persona, topic, memoryContext) },
+      { role: "user", content: personaUserPrompt(conversationHistory, userMessage) },
+    ];
+
+    // Attempt 1: Full prompt
+    const result1 = await this.callApi(messages, 1024);
+    if (result1) return result1;
+
+    // Attempt 2: Retry full prompt after delay
+    await delay(2000);
+    console.warn(`[PersonaGenerator] Attempt 1 failed for ${persona.name}, retrying full prompt...`);
+    const result2 = await this.callApi(messages, 1024);
+    if (result2) return result2;
+
+    // Attempt 3: Simplified prompt after delay
+    await delay(2000);
+    console.warn(`[PersonaGenerator] Attempt 2 failed for ${persona.name}, trying simplified prompt...`);
+    const result3 = await this.callSimplified(persona, userMessage, topic);
+    if (result3) return result3;
+
+    console.error(`[PersonaGenerator] All 3 attempts failed for ${persona.name}`);
+    return `그 부분에 대해 저도 생각이 있는데요, 좀 더 자세히 말씀해주시겠어요?`;
+  }
+
+  private async callApi(
+    messages: OpenAI.ChatCompletionMessageParam[],
+    maxTokens: number,
+  ): Promise<string | null> {
     try {
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
-        max_completion_tokens: 1024,
-        messages: [
-          { role: "system", content: personaSystemPrompt(persona, topic, memoryContext) },
-          { role: "user", content: personaUserPrompt(conversationHistory, userMessage) },
-        ],
+        max_completion_tokens: maxTokens,
+        messages,
       });
 
       const content = response.choices[0]?.message?.content;
-      if (content) return content.trim();
+      if (content && content.trim().length > 0) return content.trim();
 
       console.error("[PersonaGenerator] Empty content:", JSON.stringify({
         finishReason: response.choices[0]?.finish_reason,
         model: response.model,
-        persona: persona.name,
         usage: response.usage,
       }));
-
-      return this.retryWithSimplifiedPrompt(persona, userMessage, topic);
+      return null;
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : String(error);
       console.error("[PersonaGenerator] API error:", errMsg);
-      return this.retryWithSimplifiedPrompt(persona, userMessage, topic);
+      return null;
     }
   }
 
-  private async retryWithSimplifiedPrompt(
+  private async callSimplified(
     persona: PersonaProfile,
     userMessage: string,
     topic: string,
-  ): Promise<string> {
-    try {
-      const experience = persona.experienceBank[0] ?? "";
-      const response = await this.client.chat.completions.create({
-        model: "gpt-5-mini",
-        max_completion_tokens: 512,
-        messages: [
-          {
-            role: "system",
-            content: [
-              `당신은 ${persona.name}입니다.`,
-              `${persona.ageGroup}, ${persona.jobCategory}.`,
-              `입장: ${persona.stanceLabel}.`,
-              persona.description,
-              experience ? `경험: ${experience}` : "",
-              `한국어 존댓말로 1-3문장 답하세요. 상대방의 말에 직접 반응하세요.`,
-            ].filter(Boolean).join(" "),
-          },
-          {
-            role: "user",
-            content: `"${userMessage}" — ${topic} 맥락에서 나의 경험과 입장으로 답하세요.`,
-          },
-        ],
-      });
-
-      const content = response.choices[0]?.message?.content;
-      if (content) return content.trim();
-    } catch (retryError) {
-      console.error("[PersonaGenerator] Retry failed:", retryError);
-    }
-
-    return `그 부분에 대해 저도 생각이 있는데요, 좀 더 자세히 말씀해주시겠어요?`;
+  ): Promise<string | null> {
+    const experience = persona.experienceBank[0] ?? "";
+    return this.callApi(
+      [
+        {
+          role: "system",
+          content: [
+            `당신은 ${persona.name}입니다.`,
+            `${persona.ageGroup}, ${persona.jobCategory}.`,
+            `입장: ${persona.stanceLabel}.`,
+            persona.description,
+            experience ? `경험: ${experience}` : "",
+            `한국어 존댓말로 1-3문장 답하세요. 상대방의 말에 직접 반응하세요.`,
+          ].filter(Boolean).join(" "),
+        },
+        {
+          role: "user",
+          content: `"${userMessage}" — ${topic} 맥락에서 나의 경험과 입장으로 답하세요.`,
+        },
+      ],
+      512,
+    );
   }
 }

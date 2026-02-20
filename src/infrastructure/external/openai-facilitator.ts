@@ -18,58 +18,66 @@ export class OpenAiFacilitator implements Facilitator {
   private client: OpenAI;
 
   constructor(apiKey: string) {
-    this.client = new OpenAI({ apiKey });
+    this.client = new OpenAI({ apiKey, timeout: 20_000 });
   }
 
   async checkTone(content: string): Promise<ToneCheckResult> {
-    const response = await this.client.chat.completions.create({
-      model: "gpt-5-mini",
+    try {
+      const response = await this.client.chat.completions.create({
+        model: "gpt-5-mini",
+        max_completion_tokens: 256,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: TONE_CHECK_SYSTEM_PROMPT },
+          { role: "user", content: toneCheckUserPrompt(content) },
+        ],
+      });
 
-      max_completion_tokens: 1024,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: TONE_CHECK_SYSTEM_PROMPT },
-        { role: "user", content: toneCheckUserPrompt(content) },
-      ],
-    });
+      const raw = response.choices[0]?.message?.content;
+      if (!raw) return { passed: true, suggestion: null, alternatives: [] };
 
-    const raw = response.choices[0]?.message?.content;
-    if (!raw) return { passed: true, suggestion: null, alternatives: [] };
-
-    const parsed = JSON.parse(raw);
-    return {
-      passed: parsed.passed ?? true,
-      suggestion: parsed.suggestion ?? null,
-      alternatives: Array.isArray(parsed.alternatives) ? parsed.alternatives : [],
-    };
+      const parsed = JSON.parse(raw);
+      return {
+        passed: parsed.passed ?? true,
+        suggestion: parsed.suggestion ?? null,
+        alternatives: Array.isArray(parsed.alternatives) ? parsed.alternatives : [],
+      };
+    } catch (error) {
+      console.error("[Facilitator] checkTone error:", error instanceof Error ? error.message : error);
+      return { passed: true, suggestion: null, alternatives: [] };
+    }
   }
 
   async checkDrift(
     content: string,
     originalPosition: string,
   ): Promise<DriftCheckResult> {
-    const response = await this.client.chat.completions.create({
-      model: "gpt-5-mini",
+    try {
+      const response = await this.client.chat.completions.create({
+        model: "gpt-5-mini",
+        max_completion_tokens: 256,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: DRIFT_CHECK_SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: driftCheckUserPrompt(content, originalPosition),
+          },
+        ],
+      });
 
-      max_completion_tokens: 1024,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: DRIFT_CHECK_SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: driftCheckUserPrompt(content, originalPosition),
-        },
-      ],
-    });
+      const raw = response.choices[0]?.message?.content;
+      if (!raw) return { drifted: false, suggestion: null };
 
-    const raw = response.choices[0]?.message?.content;
-    if (!raw) return { drifted: false, suggestion: null };
-
-    const parsed = JSON.parse(raw);
-    return {
-      drifted: parsed.drifted ?? false,
-      suggestion: parsed.suggestion ?? null,
-    };
+      const parsed = JSON.parse(raw);
+      return {
+        drifted: parsed.drifted ?? false,
+        suggestion: parsed.suggestion ?? null,
+      };
+    } catch (error) {
+      console.error("[Facilitator] checkDrift error:", error instanceof Error ? error.message : error);
+      return { drifted: false, suggestion: null };
+    }
   }
 
   async detectReceptiveExpressions(opponentText: string): Promise<DetectedReceptiveExpression[]> {
