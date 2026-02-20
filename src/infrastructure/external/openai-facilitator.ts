@@ -25,7 +25,7 @@ export class OpenAiFacilitator implements Facilitator {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
 
-      max_tokens: 1024,
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: TONE_CHECK_SYSTEM_PROMPT },
@@ -51,7 +51,7 @@ export class OpenAiFacilitator implements Facilitator {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
 
-      max_tokens: 1024,
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: DRIFT_CHECK_SYSTEM_PROMPT },
@@ -77,7 +77,7 @@ export class OpenAiFacilitator implements Facilitator {
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
 
-        max_tokens: 1024,
+        max_completion_tokens: 1024,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: RECEPTIVENESS_DETECTION_SYSTEM_PROMPT },
@@ -99,7 +99,7 @@ export class OpenAiFacilitator implements Facilitator {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
 
-      max_tokens: 1024,
+      max_completion_tokens: 1024,
       response_format: { type: "json_object" },
       messages: [
         {

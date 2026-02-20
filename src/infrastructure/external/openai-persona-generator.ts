@@ -23,7 +23,7 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     try {
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
-        max_tokens: 1024,
+        max_completion_tokens: 1024,
         messages: [
           { role: "system", content: personaSystemPrompt(persona, topic, memoryContext) },
           { role: "user", content: personaUserPrompt(conversationHistory, userMessage) },
@@ -61,7 +61,7 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     try {
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
-        max_tokens: 512,
+        max_completion_tokens: 512,
         messages: [
           {
             role: "system",
