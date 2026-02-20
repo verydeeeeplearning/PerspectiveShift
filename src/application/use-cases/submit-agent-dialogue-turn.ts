@@ -31,15 +31,119 @@ export class SubmitAgentDialogueTurnUseCase {
       throw new Error(`Session ${sessionId} not found`);
     }
 
-    // --- 1. Submit user turn (PII scrub + tone/drift check) ---
     const scrubbed = this.deps.piiScrubber.scrub(content);
+    const isAgentSession = session.participantB.startsWith("agent:");
 
-    // Parallelize tone check and drift check for faster response
     const positionTurns = session.turnsForStep("POSITION");
     const myPosition = positionTurns.find(
       (t) => t.participantId === participantId,
     );
 
+    // --- For agent sessions: run tone/drift AND persona generation ALL in parallel ---
+    // This prevents rate limiting from blocking persona response
+    if (isAgentSession) {
+      const personaId = session.participantB.replace("agent:", "");
+      const persona = await this.deps.personaRepository.findById(personaId);
+      if (!persona) {
+        throw new Error(`Persona not found: ${personaId}`);
+      }
+
+      const stepBefore = session.currentStep;
+      const userTurn = DialogueTurn.create({
+        id: crypto.randomUUID(),
+        sessionId,
+        step: session.currentStep,
+        participantId,
+        content: scrubbed.scrubbed,
+        createdAt: new Date(),
+      });
+
+      session.submitTurn(userTurn);
+      await this.deps.dialogueRepository.saveTurn(userTurn);
+      await this.deps.dialogueRepository.updateSession(session);
+
+      const history = session.turns
+        .filter((t) => t.step === session.currentStep || t.step === stepBefore)
+        .map((t) => ({
+          role: (t.participantId === participantId ? "user" : "persona") as
+            | "user"
+            | "persona",
+          content: t.content,
+        }));
+
+      // Fire all API calls simultaneously — persona response gets same priority
+      const [toneCheck, driftCheck, agentContent] = await Promise.all([
+        this.deps.facilitator.checkTone(scrubbed.scrubbed),
+        myPosition
+          ? this.deps.facilitator.checkDrift(scrubbed.scrubbed, myPosition.content)
+          : Promise.resolve({ drifted: false, suggestion: null as string | null }),
+        this.deps.personaDialogueGenerator.generateResponse(
+          persona,
+          history,
+          scrubbed.scrubbed,
+          DEFAULT_TOPIC,
+        ),
+      ]);
+
+      // Submit agent turn
+      const agentTurn = DialogueTurn.create({
+        id: crypto.randomUUID(),
+        sessionId,
+        step: session.currentStep,
+        participantId: session.participantB,
+        content: agentContent,
+        createdAt: new Date(),
+      });
+
+      session.submitTurn(agentTurn);
+      await this.deps.dialogueRepository.saveTurn(agentTurn);
+      await this.deps.dialogueRepository.updateSession(session);
+
+      // Auto-complete JOINT_SUMMARY for agent sessions
+      if (session.currentStep === "JOINT_SUMMARY") {
+        const now = new Date();
+        const userSummaryTurn = DialogueTurn.create({
+          id: crypto.randomUUID(),
+          sessionId,
+          step: "JOINT_SUMMARY",
+          participantId,
+          content: "대화 요약이 자동으로 생성되었습니다.",
+          createdAt: now,
+        });
+        session.submitTurn(userSummaryTurn);
+        await this.deps.dialogueRepository.saveTurn(userSummaryTurn);
+
+        const agentSummaryTurn = DialogueTurn.create({
+          id: crypto.randomUUID(),
+          sessionId,
+          step: "JOINT_SUMMARY",
+          participantId: session.participantB,
+          content: "대화 요약이 자동으로 생성되었습니다.",
+          createdAt: now,
+        });
+        session.submitTurn(agentSummaryTurn);
+        await this.deps.dialogueRepository.saveTurn(agentSummaryTurn);
+        await this.deps.dialogueRepository.updateSession(session);
+      }
+
+      const delay = PersonaResponseDelay.calculate(agentContent.length);
+
+      return {
+        turnId: userTurn.id,
+        toneCheck: { passed: toneCheck.passed, suggestion: toneCheck.suggestion },
+        driftCheck: { drifted: driftCheck.drifted, suggestion: driftCheck.suggestion },
+        advanced: session.currentStep !== stepBefore,
+        newStep: session.currentStep,
+        sessionStatus: session.status,
+        agentResponse: {
+          content: agentContent,
+          delayMs: delay.delayMs,
+          personaName: persona.name,
+        },
+      };
+    }
+
+    // --- For human sessions: sequential tone/drift checks only ---
     const [toneCheck, driftCheck] = await Promise.all([
       this.deps.facilitator.checkTone(scrubbed.scrubbed),
       myPosition
@@ -61,111 +165,14 @@ export class SubmitAgentDialogueTurnUseCase {
     await this.deps.dialogueRepository.saveTurn(userTurn);
     await this.deps.dialogueRepository.updateSession(session);
 
-    // --- 2. Check if agent session ---
-    const isAgentSession = session.participantB.startsWith("agent:");
-    if (!isAgentSession) {
-      return {
-        turnId: userTurn.id,
-        toneCheck: {
-          passed: toneCheck.passed,
-          suggestion: toneCheck.suggestion,
-        },
-        driftCheck: {
-          drifted: driftCheck.drifted,
-          suggestion: driftCheck.suggestion,
-        },
-        advanced: session.currentStep !== stepBefore,
-        newStep: session.currentStep,
-        sessionStatus: session.status,
-        agentResponse: null,
-      };
-    }
-
-    // --- 3. Generate agent response ---
-    const personaId = session.participantB.replace("agent:", "");
-    const persona = await this.deps.personaRepository.findById(personaId);
-    if (!persona) {
-      throw new Error(`Persona not found: ${personaId}`);
-    }
-
-    const history = session.turns
-      .filter((t) => t.step === session.currentStep || t.step === stepBefore)
-      .map((t) => ({
-        role: (t.participantId === participantId ? "user" : "persona") as
-          | "user"
-          | "persona",
-        content: t.content,
-      }));
-
-    const agentContent =
-      await this.deps.personaDialogueGenerator.generateResponse(
-        persona,
-        history,
-        scrubbed.scrubbed,
-        DEFAULT_TOPIC,
-      );
-
-    // --- 4. Submit agent turn ---
-    const agentTurn = DialogueTurn.create({
-      id: crypto.randomUUID(),
-      sessionId,
-      step: session.currentStep,
-      participantId: session.participantB,
-      content: agentContent,
-      createdAt: new Date(),
-    });
-
-    session.submitTurn(agentTurn);
-    await this.deps.dialogueRepository.saveTurn(agentTurn);
-    await this.deps.dialogueRepository.updateSession(session);
-
-    // --- 5. Auto-complete JOINT_SUMMARY for agent sessions ---
-    if (session.currentStep === "JOINT_SUMMARY") {
-      const now = new Date();
-      const userSummaryTurn = DialogueTurn.create({
-        id: crypto.randomUUID(),
-        sessionId,
-        step: "JOINT_SUMMARY",
-        participantId,
-        content: "대화 요약이 자동으로 생성되었습니다.",
-        createdAt: now,
-      });
-      session.submitTurn(userSummaryTurn);
-      await this.deps.dialogueRepository.saveTurn(userSummaryTurn);
-
-      const agentSummaryTurn = DialogueTurn.create({
-        id: crypto.randomUUID(),
-        sessionId,
-        step: "JOINT_SUMMARY",
-        participantId: session.participantB,
-        content: "대화 요약이 자동으로 생성되었습니다.",
-        createdAt: now,
-      });
-      session.submitTurn(agentSummaryTurn);
-      await this.deps.dialogueRepository.saveTurn(agentSummaryTurn);
-      await this.deps.dialogueRepository.updateSession(session);
-    }
-
-    const delay = PersonaResponseDelay.calculate(agentContent.length);
-
     return {
       turnId: userTurn.id,
-      toneCheck: {
-        passed: toneCheck.passed,
-        suggestion: toneCheck.suggestion,
-      },
-      driftCheck: {
-        drifted: driftCheck.drifted,
-        suggestion: driftCheck.suggestion,
-      },
+      toneCheck: { passed: toneCheck.passed, suggestion: toneCheck.suggestion },
+      driftCheck: { drifted: driftCheck.drifted, suggestion: driftCheck.suggestion },
       advanced: session.currentStep !== stepBefore,
       newStep: session.currentStep,
       sessionStatus: session.status,
-      agentResponse: {
-        content: agentContent,
-        delayMs: delay.delayMs,
-        personaName: persona.name,
-      },
+      agentResponse: null,
     };
   }
 }
