@@ -60,7 +60,7 @@ describe("OpenAiStanceExtractor", () => {
     expect(result.readiness).toBe(0.8);
   });
 
-  it("handles empty response gracefully", async () => {
+  it("handles empty response gracefully with fallback", async () => {
     const OpenAIMock = (await import("openai")).default;
     vi.mocked(OpenAIMock).mockImplementationOnce(
       () =>
@@ -76,11 +76,13 @@ describe("OpenAiStanceExtractor", () => {
     );
 
     const emptyExtractor = new OpenAiStanceExtractor("test-key");
-    await expect(
-      emptyExtractor.extract([
-        { questionId: 9, scrubbedText: "test" },
-      ]),
-    ).rejects.toThrow("Empty response from OpenAI");
+    const result = await emptyExtractor.extract([
+      { questionId: 9, scrubbedText: "test" },
+    ]);
+
+    expect(result.axes).toEqual({});
+    expect(result.reasoning).toBe("");
+    expect(result.readiness).toBe(0.5);
   });
 
   it("filters out invalid axis values", async () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingFlow, type AnswerMap } from "./components/OnboardingFlow";
 import { TrustMoment } from "./components/TrustMoment";
@@ -14,7 +14,9 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<"trust" | "demographic" | "questions">("trust");
   const [demographic, setDemographic] = useState<DemographicInfo | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ThoughtMapOutput | null>(null);
+  const lastAnswersRef = useRef<AnswerMap | null>(null);
 
   const sessionId =
     typeof window !== "undefined"
@@ -35,9 +37,11 @@ export default function OnboardingPage() {
     setStep("questions");
   }, []);
 
-  const handleCoreComplete = useCallback(
+  const runCalculateStance = useCallback(
     async (answers: AnswerMap) => {
       setLoading(true);
+      setError(null);
+      lastAnswersRef.current = answers;
       try {
         const output = await calculateStance(
           sessionId,
@@ -45,8 +49,9 @@ export default function OnboardingPage() {
           demographic ?? undefined,
         );
         setResult(output);
-      } catch (error) {
-        console.error("Failed to calculate stance:", error);
+      } catch (err) {
+        console.error("Failed to calculate stance:", err);
+        setError("생각 분석에 실패했습니다. 다시 시도해주세요.");
       } finally {
         setLoading(false);
       }
@@ -54,23 +59,18 @@ export default function OnboardingPage() {
     [sessionId, demographic],
   );
 
-  const handleExtendedComplete = useCallback(
-    async (answers: AnswerMap) => {
-      setLoading(true);
-      try {
-        const output = await calculateStance(
-          sessionId,
-          answers,
-          demographic ?? undefined,
-        );
-        setResult(output);
-      } catch (error) {
-        console.error("Failed to calculate stance:", error);
-      } finally {
-        setLoading(false);
-      }
+  const handleCoreComplete = useCallback(
+    (answers: AnswerMap) => {
+      runCalculateStance(answers);
     },
-    [sessionId, demographic],
+    [runCalculateStance],
+  );
+
+  const handleExtendedComplete = useCallback(
+    (answers: AnswerMap) => {
+      runCalculateStance(answers);
+    },
+    [runCalculateStance],
   );
 
   const handleSkipExtended = useCallback(() => {
@@ -78,8 +78,16 @@ export default function OnboardingPage() {
       router.push(
         `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
       );
+    } else if (lastAnswersRef.current) {
+      runCalculateStance(lastAnswersRef.current);
     }
-  }, [result, router]);
+  }, [result, router, runCalculateStance]);
+
+  const handleRetry = useCallback(() => {
+    if (lastAnswersRef.current) {
+      runCalculateStance(lastAnswersRef.current);
+    }
+  }, [runCalculateStance]);
 
   useEffect(() => {
     if (result) {
@@ -97,6 +105,32 @@ export default function OnboardingPage() {
           <p className="text-base text-text-secondary">
             Thought Map을 생성하고 있습니다...
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4 max-w-sm px-4">
+          <div className="mx-auto w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-semantic-difference, #e53e3e)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <p className="text-base text-text-primary font-medium">
+            {error}
+          </p>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="mx-auto rounded-lg bg-indigo-depth px-6 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+          >
+            다시 시도
+          </button>
         </div>
       </div>
     );

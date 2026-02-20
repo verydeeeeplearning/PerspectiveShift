@@ -15,7 +15,6 @@ interface AuthContextType {
   session: Session | null;
   isAuthenticated: boolean;
   loading: boolean;
-  loginWithGoogle: () => Promise<void>;
   loginWithEmail: (email: string) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
 }
@@ -49,13 +48,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const loginWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
-    });
-  };
-
   const loginWithEmail = async (
     email: string,
   ): Promise<{ error: string | null }> => {
@@ -77,7 +69,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         isAuthenticated: !!session,
         loading,
-        loginWithGoogle,
         loginWithEmail,
         logout,
       }}

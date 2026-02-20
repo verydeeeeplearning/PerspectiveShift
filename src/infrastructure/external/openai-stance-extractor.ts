@@ -35,6 +35,22 @@ export class OpenAiStanceExtractor implements LlmStanceExtractor {
       })),
     );
 
+    try {
+      return await this.callOpenAi(userPrompt);
+    } catch (error) {
+      console.error("[StanceExtractor] First attempt failed, retrying:", error);
+      try {
+        return await this.callOpenAi(userPrompt);
+      } catch (retryError) {
+        console.error("[StanceExtractor] Retry also failed:", retryError);
+        return { axes: {}, reasoning: "", readiness: 0.5 };
+      }
+    }
+  }
+
+  private async callOpenAi(
+    userPrompt: string,
+  ): Promise<LlmExtractionResult> {
     const response = await this.client.chat.completions.create({
       model: this.model,
       messages: [
