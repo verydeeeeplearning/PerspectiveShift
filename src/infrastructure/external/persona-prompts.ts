@@ -12,17 +12,6 @@ const STYLE_INSTRUCTIONS: Record<string, string> = {
     "신중하고 탐구적으로 말합니다. '~일 수도 있지만', '좀 더 생각해볼 필요가', '양쪽 다 일리가' 같은 완충 표현을 자주 쓰며 단정짓지 않습니다.",
 };
 
-const STYLE_TEMPERATURE: Record<string, number> = {
-  logical: 0.6,
-  emotional: 0.85,
-  humorous: 0.9,
-  careful: 0.5,
-};
-
-export function getPersonaTemperature(style: string): number {
-  return STYLE_TEMPERATURE[style] ?? 0.7;
-}
-
 function formatStanceContext(persona: PersonaProfile): string {
   const values = persona.stanceVector.toValues();
   const stanceDimLabels: Record<string, string> = {

@@ -4,7 +4,7 @@ import type {
   PersonaMemoryContext,
 } from "@/domain/interfaces/persona-dialogue-generator";
 import type { PersonaProfile } from "@/domain/entities/persona-profile";
-import { personaSystemPrompt, personaUserPrompt, getPersonaTemperature } from "./persona-prompts";
+import { personaSystemPrompt, personaUserPrompt } from "./persona-prompts";
 
 export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
   private client: OpenAI;
@@ -20,12 +20,9 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     topic: string,
     memoryContext?: PersonaMemoryContext,
   ): Promise<string> {
-    const temperature = getPersonaTemperature(persona.conversationStyle);
-
     try {
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
-        temperature,
         max_completion_tokens: 1024,
         messages: [
           { role: "system", content: personaSystemPrompt(persona, topic, memoryContext) },
@@ -42,10 +39,10 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
         persona: persona.name,
       });
 
-      return this.retryWithSimplifiedPrompt(persona, userMessage, topic, temperature);
+      return this.retryWithSimplifiedPrompt(persona, userMessage, topic);
     } catch (error) {
       console.error("[PersonaGenerator] API error:", error);
-      return this.retryWithSimplifiedPrompt(persona, userMessage, topic, temperature);
+      return this.retryWithSimplifiedPrompt(persona, userMessage, topic);
     }
   }
 
@@ -53,13 +50,11 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     persona: PersonaProfile,
     userMessage: string,
     topic: string,
-    temperature: number,
   ): Promise<string> {
     try {
       const experience = persona.experienceBank[0] ?? "";
       const response = await this.client.chat.completions.create({
         model: "gpt-5-mini",
-        temperature,
         max_completion_tokens: 512,
         messages: [
           {
