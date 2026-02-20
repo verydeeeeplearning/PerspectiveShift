@@ -18,7 +18,7 @@ export async function GET() {
     const client = new OpenAI({ apiKey });
     const response = await client.chat.completions.create({
       model: "gpt-5-mini",
-      max_completion_tokens: 128,
+      max_tokens: 128,
       messages: [
         { role: "system", content: "한국어로 한 문장만 답하세요." },
         { role: "user", content: "안녕하세요, 테스트입니다. 짧게 답해주세요." },

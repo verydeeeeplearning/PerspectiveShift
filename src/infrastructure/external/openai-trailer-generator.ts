@@ -19,7 +19,7 @@ export class OpenAiTrailerGenerator implements TrailerGenerator {
     const response = await this.client.chat.completions.create({
       model: "gpt-5-mini",
 
-      max_completion_tokens: 512,
+      max_tokens: 512,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: TRAILER_SYSTEM_PROMPT },
