@@ -20,6 +20,9 @@ interface StanceRow {
   reasoning: string | null;
   readiness: number;
   precision: string;
+  core_value: string | null;
+  self_affirmation_experience: string | null;
+  confidence_map: Record<string, string> | null;
   created_at: string;
   updated_at: string;
 }
@@ -71,7 +74,7 @@ export class SupabaseStanceRepository implements StanceRepository {
     updates: Partial<
       Pick<
         StanceProfile,
-        "vector" | "mapType" | "reasoning" | "readiness" | "precision"
+        "vector" | "mapType" | "reasoning" | "readiness" | "precision" | "coreValue" | "selfAffirmationExperience" | "confidenceMap"
       >
     >,
   ): Promise<void> {
@@ -89,6 +92,12 @@ export class SupabaseStanceRepository implements StanceRepository {
     if (updates.reasoning !== undefined) row.reasoning = updates.reasoning;
     if (updates.readiness !== undefined) row.readiness = updates.readiness;
     if (updates.precision !== undefined) row.precision = updates.precision;
+    if (updates.coreValue !== undefined) row.core_value = updates.coreValue;
+    if (updates.selfAffirmationExperience !== undefined)
+      row.self_affirmation_experience = updates.selfAffirmationExperience;
+    if (updates.confidenceMap !== undefined)
+      row.confidence_map = updates.confidenceMap;
+
     const { error } = await this.client
       .from("stance_profiles")
       .update(row)
@@ -118,6 +127,9 @@ export class SupabaseStanceRepository implements StanceRepository {
       reasoning: profile.reasoning,
       readiness: profile.readiness,
       precision: profile.precision,
+      core_value: profile.coreValue ?? null,
+      self_affirmation_experience: profile.selfAffirmationExperience ?? null,
+      confidence_map: profile.confidenceMap ?? null,
       created_at: profile.createdAt.toISOString(),
       updated_at: profile.updatedAt.toISOString(),
     };
@@ -141,6 +153,9 @@ export class SupabaseStanceRepository implements StanceRepository {
       reasoning: row.reasoning,
       readiness: row.readiness,
       precision: row.precision as "initial" | "refined",
+      coreValue: row.core_value as StanceProfile["coreValue"],
+      selfAffirmationExperience: row.self_affirmation_experience,
+      confidenceMap: row.confidence_map as StanceProfile["confidenceMap"],
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
     };
