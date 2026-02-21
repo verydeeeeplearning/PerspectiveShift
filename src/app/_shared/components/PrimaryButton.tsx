@@ -33,7 +33,7 @@ export function PrimaryButton({
         focus:outline-none focus:ring-4 focus:ring-border-focus
         disabled:bg-cta-disabled disabled:text-text-tertiary disabled:shadow-none
         disabled:pointer-events-none
-        ${fullWidth ? "block w-full max-w-xs mx-auto" : ""}
+        ${fullWidth ? "block w-full mx-auto" : ""}
       `.trim()}
       whileHover={{ scale: 1.02, boxShadow: "0 4px 20px rgba(44, 62, 80, 0.2)" }}
       whileTap={{ scale: 0.96 }}
