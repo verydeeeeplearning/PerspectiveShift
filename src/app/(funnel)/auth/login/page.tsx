@@ -53,7 +53,7 @@ export default function LoginPage() {
             PerspectiveShift
           </h1>
           <p className="text-sm text-text-secondary leading-relaxed">
-            이메일로 간편하게 로그인하세요
+            이메일을 입력하면 바로 시작됩니다
           </p>
         </motion.div>
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
             loading={sending}
             disabled={!email.trim()}
           >
-            로그인
+            시작하기
           </PrimaryButton>
         </motion.form>
 
