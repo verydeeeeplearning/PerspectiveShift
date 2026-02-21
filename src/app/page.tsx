@@ -51,13 +51,7 @@ export default function Home() {
 
           <p className="flex items-center justify-center gap-1 text-xs text-text-tertiary">
             <span aria-hidden="true">&#x1f512;</span>
-            대화는 익명 · 데이터는 내 손 안에{" "}
-            <Link
-              href="/settings/data-management"
-              className="underline hover:text-text-secondary"
-            >
-              내 데이터 관리
-            </Link>
+            대화는 익명 · 데이터는 내 손 안에
           </p>
 
           <p className="text-sm text-text-tertiary">
