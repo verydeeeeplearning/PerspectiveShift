@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import { ThoughtMapChart } from "./ThoughtMapChart";
 import { TypeAlias } from "./TypeAlias";
-import { AliasCard } from "./AliasCard";
 import { PercentileDisplay } from "./PercentileDisplay";
 import type { StanceDimension } from "@/domain/value-objects/stance-dimension";
 import { GetContextualRecommendationsUseCase } from "@/application/use-cases/get-contextual-recommendations";
@@ -84,8 +83,6 @@ export function ThoughtMapResult({ data, onEvent }: ThoughtMapResultProps) {
   return (
     <div className="flex flex-col gap-8">
       <TypeAlias mapType={data.mapType} />
-
-      {data.alias && <AliasCard alias={data.alias} />}
 
       <ThoughtMapChart
         vector={data.vector as Record<StanceDimension, number>}

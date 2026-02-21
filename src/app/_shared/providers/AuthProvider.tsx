@@ -5,14 +5,25 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
   type ReactNode,
 } from "react";
-import { createBrowserClient } from "@supabase/ssr";
-import type { Session, User, SupabaseClient } from "@supabase/supabase-js";
+
+const STORAGE_KEY = "perspectiveshift_user";
+
+interface AppUser {
+  id: string;
+  email: string;
+  displayAlias: string;
+}
+
+interface AppSession {
+  user: AppUser;
+}
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: AppUser | null;
+  session: AppSession | null;
   isAuthenticated: boolean;
   loading: boolean;
   loginWithEmail: (email: string) => Promise<{ error: string | null }>;
@@ -21,46 +32,58 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const supabase: SupabaseClient = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
+  const [session, setSession] = useState<AppSession | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as AppUser;
+        setUser(parsed);
+        setSession({ user: parsed });
+      }
+    } catch {
+      // ignore parse errors
+    }
+    setLoading(false);
   }, []);
 
-  const loginWithEmail = async (
-    email: string,
-  ): Promise<{ error: string | null }> => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
-    });
-    return { error: error?.message ?? null };
-  };
+  const loginWithEmail = useCallback(
+    async (email: string): Promise<{ error: string | null }> => {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-  const logout = async () => {
-    await supabase.auth.signOut();
-  };
+      const data = await res.json();
+
+      if (!res.ok) {
+        return { error: data.error ?? "로그인 실패" };
+      }
+
+      const appUser: AppUser = {
+        id: data.userId,
+        email: data.email,
+        displayAlias: data.displayAlias,
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appUser));
+      setUser(appUser);
+      setSession({ user: appUser });
+      return { error: null };
+    },
+    [],
+  );
+
+  const logout = useCallback(async () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setUser(null);
+    setSession(null);
+  }, []);
 
   return (
     <AuthContext.Provider
