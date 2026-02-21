@@ -1,0 +1,4006 @@
+{
+  "source": "한국리서치 주4일제·주4.5일제 도입 인식 조사 2025【801817414768511†L642-L668】, 동아일보 주4.5일제 찬반 여론조사【345650775427555†L300-L303】, 한국보건사회연구원 2025 사회통합 실태진단 보고서【15017398419766†L2838-L2890】, 2025 인공지능 인식조사 보고서【825964603095494†L162-L172】【825964603095494†L197-L216】, 시사IN 기사(한국종합사회조사·KBS 보도)【210821976600923†L184-L189】【210821976600923†L250-L255】, Trendmonitor 및 경향신문 등 여론 조사 요약.",
+  "methodology": "본 데이터는 한국리서치의 주4일제·주4.5일제 여론조사에서 연령 및 직업별 찬반 비율을 추출해 WORK_LIFE 차원의 평균값과 표준편차를 계산하였고, 한국보건사회연구원의 2025년 사회통합 실태조사에서 정부의 소득격차 완화·실업자 지원·빈곤층 지원 항목의 5점 척도 점수를 -1~+1로 환산하여 REDISTRIBUTION 차원의 연령별 평균값을 추정하였다. 여타 차원은 Trendmonitor·경향신문 등의 능력주의·기회평등 인식 조사와 한국리서치 AI 인식조사를 바탕으로 연령별 대략적인 찬반 비율을 도출한 뒤 -1~+1 스케일로 환산하였다. 직업군별 데이터가 부족한 차원은 직종 성향(전문직·자영업·생산·서비스 등)에 대한 일반적인 연구와 여론 흐름을 참고해 조정값을 부여하였으며, 이러한 추정이 불확실할 경우 confidence: \"low\"로 표시하였다. 표준편차는 응답이 두 범주(찬성/반대) 또는 5점 척도로 분포한다고 가정하고 베르누이 분포를 적용해 근사하였다.",
+  "groups": [
+    {
+      "ageGroup": "10대",
+      "jobCategory": "학생",
+      "sampleDescription": "10대 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.2,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.48,
+          "stdDev": 0.87
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "10대 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.05,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.58,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": 0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.7,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "금융",
+      "sampleDescription": "10대 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.05,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.58,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": 0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "의료",
+      "sampleDescription": "10대 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.2,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.58,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.1,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "교육",
+      "sampleDescription": "10대 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.25,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.58,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.25,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "법조",
+      "sampleDescription": "10대 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.1,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.58,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "공무원",
+      "sampleDescription": "10대 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.3,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.58,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.25,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "자영업",
+      "sampleDescription": "10대 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.0,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.22,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "10대 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.15,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.4,
+          "stdDev": 0.9
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "서비스업",
+      "sampleDescription": "10대 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.1,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.38,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.1,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "10대 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.3,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.44,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.35,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "농림어업",
+      "sampleDescription": "10대 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.15,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.41,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.5,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "10대 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.0,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.4,
+          "stdDev": 0.9
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "10대 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.2,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.9
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "기타",
+      "sampleDescription": "10대 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.1,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.44,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "학생",
+      "sampleDescription": "20대 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.19,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.45,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "20대 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.04,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.55,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": 0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.7,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.12,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "금융",
+      "sampleDescription": "20대 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.04,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.55,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": 0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.12,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "의료",
+      "sampleDescription": "20대 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.19,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.55,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.03,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "교육",
+      "sampleDescription": "20대 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.24,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.55,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.18,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "법조",
+      "sampleDescription": "20대 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.55,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "공무원",
+      "sampleDescription": "20대 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.29,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.55,
+          "stdDev": 0.81
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.18,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "자영업",
+      "sampleDescription": "20대 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": -0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.19,
+          "stdDev": 0.9
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.12,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "20대 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.14,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.36,
+          "stdDev": 0.91
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "서비스업",
+      "sampleDescription": "20대 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.35,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.03,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "20대 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.29,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.42,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.28,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "농림어업",
+      "sampleDescription": "20대 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.14,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.39,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.5,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "20대 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.1,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": -0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.36,
+          "stdDev": 0.91
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.12,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "20대 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.05,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.19,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.3,
+          "stdDev": 0.91
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "기타",
+      "sampleDescription": "20대 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.42,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "학생",
+      "sampleDescription": "30대 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.02,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.19,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.46,
+          "stdDev": 0.86
+        },
+        "MERITOCRACY": {
+          "mean": -0.35,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.1,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "30대 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": -0.03,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.04,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.65,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.1,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "금융",
+      "sampleDescription": "30대 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.07,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.04,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.1,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "의료",
+      "sampleDescription": "30대 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.12,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.19,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "교육",
+      "sampleDescription": "30대 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.12,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.24,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.35,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.2,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "법조",
+      "sampleDescription": "30대 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.0,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "공무원",
+      "sampleDescription": "30대 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.29,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.35,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.2,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "자영업",
+      "sampleDescription": "30대 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.02,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": -0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.1,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "30대 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.14,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.38,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.0,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "서비스업",
+      "sampleDescription": "30대 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.12,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.36,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "30대 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.07,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.29,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.43,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.35,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.3,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "농림어업",
+      "sampleDescription": "30대 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.14,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.4,
+          "stdDev": 0.86
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.45,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.0,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "30대 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": -0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.38,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.1,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "30대 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.12,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.19,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.31,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.35,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.5,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.1,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "기타",
+      "sampleDescription": "30대 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.07,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.43,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.0,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "학생",
+      "sampleDescription": "40대 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.08,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.22,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.36,
+          "stdDev": 0.91
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.53,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.18,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "40대 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.03,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.07,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.47,
+          "stdDev": 0.85
+        },
+        "MERITOCRACY": {
+          "mean": 0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.58,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "금융",
+      "sampleDescription": "40대 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.07,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.47,
+          "stdDev": 0.85
+        },
+        "MERITOCRACY": {
+          "mean": 0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "의료",
+      "sampleDescription": "40대 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.22,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.47,
+          "stdDev": 0.85
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.13,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "교육",
+      "sampleDescription": "40대 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.27,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.47,
+          "stdDev": 0.85
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.53,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.28,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "법조",
+      "sampleDescription": "40대 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.47,
+          "stdDev": 0.85
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "공무원",
+      "sampleDescription": "40대 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.32,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.47,
+          "stdDev": 0.85
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.28,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "자영업",
+      "sampleDescription": "40대 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.08,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.02,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.1,
+          "stdDev": 0.93
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "40대 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.17,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.28,
+          "stdDev": 0.94
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.53,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "서비스업",
+      "sampleDescription": "40대 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.26,
+          "stdDev": 0.93
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.13,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "40대 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.32,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.93
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.38,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "농림어업",
+      "sampleDescription": "40대 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.17,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.3,
+          "stdDev": 0.92
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.38,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "40대 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.02,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.28,
+          "stdDev": 0.94
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "40대 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.22,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.21,
+          "stdDev": 0.94
+        },
+        "MERITOCRACY": {
+          "mean": -0.3,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.43,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.18,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "기타",
+      "sampleDescription": "40대 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.93
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "학생",
+      "sampleDescription": "50대 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.22,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.27,
+          "stdDev": 0.94
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.45,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.25,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "50대 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.08,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.07,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": 0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.5,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "금융",
+      "sampleDescription": "50대 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.07,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": 0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "의료",
+      "sampleDescription": "50대 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.22,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.2,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "교육",
+      "sampleDescription": "50대 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.27,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.45,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.35,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "법조",
+      "sampleDescription": "50대 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.28,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "공무원",
+      "sampleDescription": "50대 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.28,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.32,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.88
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.35,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "자영업",
+      "sampleDescription": "50대 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.02,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.01,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "50대 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.28,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.17,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.18,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.45,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "서비스업",
+      "sampleDescription": "50대 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.16,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.2,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "50대 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.32,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.23,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.45,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "농림어업",
+      "sampleDescription": "50대 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.28,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.17,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.3,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "50대 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.28,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.02,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.18,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "50대 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.22,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.12,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.25,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "기타",
+      "sampleDescription": "50대 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.23,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "학생",
+      "sampleDescription": "60대 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.22,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.19,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "60대 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.12,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.06,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.45,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.01,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "금융",
+      "sampleDescription": "60대 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.22,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.06,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.01,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "의료",
+      "sampleDescription": "60대 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.27,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.14,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "교육",
+      "sampleDescription": "60대 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.27,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.26,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.29,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "법조",
+      "sampleDescription": "60대 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.32,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.09,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "공무원",
+      "sampleDescription": "60대 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.32,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.31,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.33,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.29,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "자영업",
+      "sampleDescription": "60대 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.17,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": -0.04,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": 0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.01,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "60대 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.32,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.16,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.14,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.09,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "서비스업",
+      "sampleDescription": "60대 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.27,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.12,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": 0.0,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.14,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "60대 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.22,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.31,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.19,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.39,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "농림어업",
+      "sampleDescription": "60대 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.32,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.16,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.16,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.09,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "60대 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.32,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.14,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": 0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.01,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "60대 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.27,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.07,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.3,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.19,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "기타",
+      "sampleDescription": "60대 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.22,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.19,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.09,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "학생",
+      "sampleDescription": "70대 이상 학생 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.2,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.1,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.3,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "70대 이상 IT·테크 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.15,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.06,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "금융",
+      "sampleDescription": "70대 이상 금융 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.25,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.06,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "의료",
+      "sampleDescription": "70대 이상 의료 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.3,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.1,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "교육",
+      "sampleDescription": "70대 이상 교육 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.3,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.26,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.3,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.25,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "법조",
+      "sampleDescription": "70대 이상 법조 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.35,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "공무원",
+      "sampleDescription": "70대 이상 공무원 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.35,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.31,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.2,
+          "stdDev": 0.89
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.25,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "자영업",
+      "sampleDescription": "70대 이상 자영업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.2,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": -0.16,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": 0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "70대 이상 제조·생산 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.35,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.16,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.01,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.3,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "서비스업",
+      "sampleDescription": "70대 이상 서비스업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.3,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": -0.01,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": 0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.1,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "70대 이상 예술·문화 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.25,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.31,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.06,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.35,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "농림어업",
+      "sampleDescription": "70대 이상 농림어업 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.35,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.16,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.04,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.15,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "70대 이상 군·경찰 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.35,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.01,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": 0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "70대 이상 무직·은퇴 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.3,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": -0.05,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.2,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "기타",
+      "sampleDescription": "70대 이상 기타 그룹은 해당 연령과 직업 특성을 가진 성인을 포함하며, 조사에서 나타난 가치관 특징을 반영합니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.25,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.06,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      },
+      "confidence": "low"
+    },
+    {
+      "ageGroup": "10대",
+      "jobCategory": "전체",
+      "sampleDescription": "10대 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.1,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.6,
+          "stdDev": 0.82
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "20대",
+      "jobCategory": "전체",
+      "sampleDescription": "20대 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.0,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.54,
+          "stdDev": 0.83
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.6,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.02,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "30대",
+      "jobCategory": "전체",
+      "sampleDescription": "30대 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.07,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.09,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.56,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.25,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.55,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.0,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "40대",
+      "jobCategory": "전체",
+      "sampleDescription": "40대 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.37,
+          "stdDev": 0.9
+        },
+        "MERITOCRACY": {
+          "mean": -0.2,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.48,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.08,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "50대",
+      "jobCategory": "전체",
+      "sampleDescription": "50대 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.12,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.17,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": -0.15,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.4,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.15,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "60대",
+      "jobCategory": "전체",
+      "sampleDescription": "60대 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.22,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.09,
+          "stdDev": 0.97
+        },
+        "MERITOCRACY": {
+          "mean": -0.1,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.35,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.09,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "70대 이상",
+      "jobCategory": "전체",
+      "sampleDescription": "70대 이상 전체 직업군을 포함한 성인 그룹에 대한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.25,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": -0.16,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": -0.05,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.25,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.05,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "학생",
+      "sampleDescription": "학생 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.08,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.36,
+          "stdDev": 0.92
+        },
+        "MERITOCRACY": {
+          "mean": -0.26,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.49,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.17,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "IT·테크",
+      "sampleDescription": "IT·테크 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.03,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.06,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.57,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": 0.14,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.54,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.03,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "금융",
+      "sampleDescription": "금융 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.06,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.57,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": 0.14,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.03,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "의료",
+      "sampleDescription": "의료 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.57,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.16,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.12,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "교육",
+      "sampleDescription": "교육 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.26,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.57,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.26,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.49,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.27,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "법조",
+      "sampleDescription": "법조 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.57,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.06,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.07,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "공무원",
+      "sampleDescription": "공무원 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.31,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.57,
+          "stdDev": 0.8
+        },
+        "MERITOCRACY": {
+          "mean": -0.26,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.27,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "자영업",
+      "sampleDescription": "자영업 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.08,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": -0.16,
+          "stdDev": 0.96
+        },
+        "MERITOCRACY": {
+          "mean": 0.04,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.03,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "제조·생산",
+      "sampleDescription": "제조·생산 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.16,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.19,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": -0.06,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.49,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.07,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "서비스업",
+      "sampleDescription": "서비스업 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.15,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.06,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.12,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "예술·문화",
+      "sampleDescription": "예술·문화 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.31,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.29,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.26,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.37,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "농림어업",
+      "sampleDescription": "농림어업 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.16,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.23,
+          "stdDev": 0.93
+        },
+        "MERITOCRACY": {
+          "mean": -0.21,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.34,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.07,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "군·경찰",
+      "sampleDescription": "군·경찰 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.23,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.01,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.19,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": 0.04,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": -0.03,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "무직·은퇴",
+      "sampleDescription": "무직·은퇴 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.18,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.21,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.06,
+          "stdDev": 0.98
+        },
+        "MERITOCRACY": {
+          "mean": -0.26,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.39,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.17,
+          "stdDev": 0.4
+        }
+      }
+    },
+    {
+      "ageGroup": "전체",
+      "jobCategory": "기타",
+      "sampleDescription": "기타 직업군의 전체 연령대를 포함한 평균 값입니다.",
+      "dimensions": {
+        "TECH_REGULATION": {
+          "mean": 0.13,
+          "stdDev": 0.5
+        },
+        "REDISTRIBUTION": {
+          "mean": 0.11,
+          "stdDev": 0.3
+        },
+        "WORK_LIFE": {
+          "mean": 0.29,
+          "stdDev": 0.95
+        },
+        "MERITOCRACY": {
+          "mean": -0.16,
+          "stdDev": 0.35
+        },
+        "TECH_OPTIMISM": {
+          "mean": 0.44,
+          "stdDev": 0.6
+        },
+        "OPPORTUNITY_EQUALITY": {
+          "mean": 0.07,
+          "stdDev": 0.4
+        }
+      }
+    }
+  ]
+}

@@ -64,7 +64,7 @@ describe("ThoughtMapResult", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows baseline label", () => {
+  it("shows baseline label in percentile display", () => {
     render(<ThoughtMapResult data={SAMPLE_OUTPUT} />);
     expect(
       screen.getByText("한국 사회조사 데이터 기준 (N=1,500)"),

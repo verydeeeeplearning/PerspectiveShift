@@ -18,12 +18,19 @@ const AGE_GROUPS = ["10대", "20대", "30대", "40대", "50대", "60대 이상"]
 
 const JOB_CATEGORIES = [
   "학생",
-  "IT/개발",
+  "IT·테크",
+  "금융",
   "교육",
-  "사무/경영",
-  "전문직",
+  "의료",
+  "법조",
+  "공무원",
+  "군·경찰",
   "자영업",
-  "프리랜서/창작",
+  "서비스업",
+  "제조·생산",
+  "예술·문화",
+  "농림어업",
+  "무직·은퇴",
   "기타",
 ];
 
@@ -78,7 +85,7 @@ export function DemographicStep({ onComplete }: DemographicStepProps) {
           기본 정보
         </h2>
         <p className="text-sm text-text-secondary leading-relaxed">
-          더 정확한 성향 분석과 매칭을 위해 간단한 정보를 알려주세요
+          같은 연령대·직군 내 나의 위치를 알려드릴게요
         </p>
       </motion.div>
 

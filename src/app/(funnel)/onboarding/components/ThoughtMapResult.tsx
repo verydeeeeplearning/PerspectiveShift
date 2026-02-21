@@ -88,7 +88,7 @@ export function ThoughtMapResult({ data, onEvent }: ThoughtMapResultProps) {
         vector={data.vector as Record<StanceDimension, number>}
       />
 
-      <PercentileDisplay percentiles={data.percentiles} />
+      <PercentileDisplay percentiles={data.percentiles} baselineLabel={data.baselineLabel} />
 
       <div className="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-500">
         <p>
@@ -96,7 +96,6 @@ export function ThoughtMapResult({ data, onEvent }: ThoughtMapResultProps) {
             ? "확장 질문 포함 정밀 프로필"
             : "핵심 질문 기반 초기 프로필"}
         </p>
-        <p className="mt-1">{data.baselineLabel}</p>
       </div>
 
       {data.precision === "initial" && (

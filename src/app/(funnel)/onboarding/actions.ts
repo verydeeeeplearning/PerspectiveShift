@@ -7,6 +7,7 @@ import { ExtractStanceUseCase } from "@/application/use-cases/extract-stance";
 import { GenerateThoughtMapUseCase } from "@/application/use-cases/generate-thought-map";
 import { RegexPiiScrubber } from "@/infrastructure/external/regex-pii-scrubber";
 import { KgssBaselineProvider } from "@/infrastructure/external/kgss-baseline-provider";
+import { DemographicBaselineProvider } from "@/infrastructure/external/demographic-baseline-provider";
 import { getContainer } from "@/infrastructure/config/di-container";
 import type { LlmStanceExtractor } from "@/domain/interfaces/llm-stance-extractor";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
@@ -94,8 +95,12 @@ export async function calculateStance(
   );
 
   const container = getContainer();
+  const baselineProvider = demographic
+    ? new DemographicBaselineProvider(demographic.ageGroup, demographic.jobCategory)
+    : new KgssBaselineProvider();
+
   const generateUseCase = new GenerateThoughtMapUseCase({
-    baselineProvider: new KgssBaselineProvider(),
+    baselineProvider,
     stanceRepository: container.stanceRepository,
   });
 
@@ -193,8 +198,12 @@ export async function calculateDynamicStance(
   const stanceResult = await extractUseCase.execute(sessionId, answers);
 
   const container = getContainer();
+  const baselineProvider = demographic
+    ? new DemographicBaselineProvider(demographic.ageGroup, demographic.jobCategory)
+    : new KgssBaselineProvider();
+
   const generateUseCase = new GenerateThoughtMapUseCase({
-    baselineProvider: new KgssBaselineProvider(),
+    baselineProvider,
     stanceRepository: container.stanceRepository,
   });
 
