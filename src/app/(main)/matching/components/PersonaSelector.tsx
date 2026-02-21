@@ -30,7 +30,34 @@ const STYLE_COLORS: Record<string, string> = {
   "데이터 중심": "bg-slate-100 text-slate-700",
   "개인 자유": "bg-violet-50 text-violet-700",
   "전통 가치": "bg-stone-100 text-stone-700",
+  "노동 존중": "bg-orange-50 text-orange-700",
+  "노동 연대": "bg-orange-50 text-orange-700",
+  "전문가 존중": "bg-cyan-50 text-cyan-700",
+  "안보 우선": "bg-gray-100 text-gray-700",
+  "치안 질서": "bg-gray-100 text-gray-700",
+  "생태 전환": "bg-green-50 text-green-700",
+  "문화 진보": "bg-pink-50 text-pink-700",
+  "법치 우선": "bg-indigo-50 text-indigo-700",
+  "경제 안정": "bg-yellow-50 text-yellow-700",
+  "재정 건전": "bg-yellow-50 text-yellow-700",
+  "성장 중심": "bg-sky-50 text-sky-700",
+  "증거 기반": "bg-slate-100 text-slate-700",
+  "탈중앙화": "bg-purple-50 text-purple-700",
 };
+
+const FALLBACK_COLORS = [
+  "bg-teal-50 text-teal-700",
+  "bg-lime-50 text-lime-700",
+  "bg-fuchsia-50 text-fuchsia-700",
+];
+
+function getStanceColor(label: string): string {
+  if (STYLE_COLORS[label]) return STYLE_COLORS[label];
+  // deterministic fallback based on label hash
+  let hash = 0;
+  for (let i = 0; i < label.length; i++) hash = (hash * 31 + label.charCodeAt(i)) | 0;
+  return FALLBACK_COLORS[Math.abs(hash) % FALLBACK_COLORS.length];
+}
 
 function getAvatarColor(index: number) {
   const colors = [
@@ -102,7 +129,7 @@ export function PersonaSelector({ personas, onSelect, onRequestNotification }: P
                   <p className="text-xs text-text-secondary mt-0.5">
                     {p.ageGroup} · {p.jobCategory}
                   </p>
-                  <span className={`inline-block mt-1.5 px-2 py-0.5 text-[11px] font-medium rounded-pill ${STYLE_COLORS[p.stanceLabel] ?? "bg-border-divider text-text-secondary"}`}>
+                  <span className={`inline-block mt-1.5 px-2 py-0.5 text-[11px] font-medium rounded-pill ${getStanceColor(p.stanceLabel)}`}>
                     {p.stanceLabel}
                   </span>
                   <p className="text-sm text-text-secondary mt-2 leading-relaxed">
