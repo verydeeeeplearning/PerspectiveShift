@@ -1,31 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/app/_shared/hooks/useAuth";
 import { PrimaryButton } from "@/app/_shared/components/PrimaryButton";
 
 export default function Home() {
-  const { isAuthenticated, loading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && isAuthenticated) {
-      router.replace("/friends");
-    }
-  }, [isAuthenticated, loading, router]);
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-soft border-t-indigo-depth" />
-      </div>
-    );
-  }
-
-  if (isAuthenticated) return null;
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-[var(--container-x)]">
       <div className="max-w-sm w-full text-center space-y-10">
@@ -46,22 +24,12 @@ export default function Home() {
         {/* CTA */}
         <div className="space-y-4">
           <Link href="/onboarding" className="block">
-            <PrimaryButton fullWidth>생각 발견 시작하기</PrimaryButton>
+            <PrimaryButton fullWidth>시작하기</PrimaryButton>
           </Link>
 
           <p className="flex items-center justify-center gap-1 text-xs text-text-tertiary">
             <span aria-hidden="true">&#x1f512;</span>
             대화는 익명 · 데이터는 내 손 안에
-          </p>
-
-          <p className="text-sm text-text-tertiary">
-            이미 계정이 있나요?{" "}
-            <Link
-              href="/auth/login"
-              className="text-text-primary font-medium hover:underline"
-            >
-              로그인
-            </Link>
           </p>
         </div>
       </div>

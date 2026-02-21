@@ -28,7 +28,7 @@ export default function LoginPage() {
     if (result.error) {
       setError(result.error);
     } else {
-      const next = searchParams.get("next") || "/friends";
+      const next = searchParams.get("next") || "/onboarding";
       router.push(next);
     }
   };

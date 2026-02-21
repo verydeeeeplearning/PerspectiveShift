@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { OnboardingFlow, type AnswerMap } from "./components/OnboardingFlow";
 import { DynamicOnboardingFlow, type GeneratedQuestionMeta } from "./components/DynamicOnboardingFlow";
 import { TrustMoment } from "./components/TrustMoment";
+import { EmailStep } from "./components/EmailStep";
 import { DemographicStep, type DemographicInfo } from "./components/DemographicStep";
 import { calculateStance, calculateDynamicStance } from "./actions";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
@@ -17,7 +18,7 @@ const SEED_QUESTION_COUNT = 10;
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [step, setStep] = useState<"trust" | "demographic" | "questions">("trust");
+  const [step, setStep] = useState<"trust" | "email" | "demographic" | "questions">("trust");
   const [demographic, setDemographic] = useState<DemographicInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +36,10 @@ export default function OnboardingPage() {
       : "server-render";
 
   const handleTrustProceed = useCallback(() => {
+    setStep("email");
+  }, []);
+
+  const handleEmailComplete = useCallback(() => {
     setStep("demographic");
   }, []);
 
@@ -180,6 +185,14 @@ export default function OnboardingPage() {
     return (
       <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
         <TrustMoment onProceed={handleTrustProceed} />
+      </main>
+    );
+  }
+
+  if (step === "email") {
+    return (
+      <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
+        <EmailStep onComplete={handleEmailComplete} />
       </main>
     );
   }
