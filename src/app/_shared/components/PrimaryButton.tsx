@@ -27,7 +27,7 @@ export function PrimaryButton({
     <motion.button
       className={`
         relative overflow-hidden
-        h-12 px-6 rounded-pill
+        h-12 ${fullWidth ? "px-4 rounded-card" : "px-6 rounded-pill"}
         gradient-cta text-text-inverse font-semibold text-base
         shadow-cta
         focus:outline-none focus:ring-4 focus:ring-border-focus

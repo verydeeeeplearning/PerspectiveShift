@@ -4,7 +4,7 @@ import { createSupabaseAuthClient } from "@/infrastructure/config/supabase-auth-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/friends";
+  const next = searchParams.get("next") ?? "/matching";
 
   if (!code) {
     return NextResponse.redirect(

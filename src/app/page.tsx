@@ -14,13 +14,7 @@ export default function Home() {
     if (loading) return;
     if (!isAuthenticated) return;
 
-    // Logged in: check if onboarding is done
-    const done = localStorage.getItem("ps_onboarding_done");
-    if (done) {
-      router.replace("/matching");
-    } else {
-      router.replace("/onboarding");
-    }
+    router.replace("/matching");
   }, [isAuthenticated, loading, router]);
 
   if (loading) {

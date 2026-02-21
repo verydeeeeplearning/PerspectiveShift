@@ -16,10 +16,10 @@ export function EmailStep({ onComplete }: EmailStepProps) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Already logged in — skip this step
+  // Already logged in — skip this step (deferred to avoid state update during parent render)
   useEffect(() => {
     if (isAuthenticated) {
-      onComplete();
+      requestAnimationFrame(() => onComplete());
     }
   }, [isAuthenticated, onComplete]);
 

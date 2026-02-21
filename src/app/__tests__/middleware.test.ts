@@ -93,13 +93,13 @@ describe("middleware", () => {
     expect(response.status).not.toBe(307);
   });
 
-  it("redirects authenticated users from /auth/login to /friends", async () => {
+  it("redirects authenticated users from /auth/login to /matching", async () => {
     const request = createMockRequest("/auth/login", {
       ps_user_id: "test@test.com",
     });
     const response = await middleware(request as never);
     expect(response.status).toBe(307);
-    expect(response.headers.get("location")).toContain("/friends");
+    expect(response.headers.get("location")).toContain("/matching");
   });
 
   it("allows unauthenticated users to visit /auth/login", async () => {

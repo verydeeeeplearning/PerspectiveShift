@@ -41,9 +41,16 @@ describe("PrimaryButton", () => {
     expect(btn.className).toContain("w-full");
   });
 
-  it("applies pill border radius", () => {
+  it("applies pill border radius when not fullWidth", () => {
     render(<PrimaryButton>Pill</PrimaryButton>);
     const btn = screen.getByRole("button");
     expect(btn.className).toContain("rounded-pill");
+  });
+
+  it("applies card border radius when fullWidth", () => {
+    render(<PrimaryButton fullWidth>Full</PrimaryButton>);
+    const btn = screen.getByRole("button");
+    expect(btn.className).toContain("rounded-card");
+    expect(btn.className).not.toContain("rounded-pill");
   });
 });

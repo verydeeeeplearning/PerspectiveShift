@@ -27,10 +27,6 @@ function ResultContent() {
   let data: ThoughtMapOutput;
   try {
     data = JSON.parse(decodeURIComponent(dataParam));
-    // Mark onboarding as complete
-    if (typeof window !== "undefined") {
-      localStorage.setItem("ps_onboarding_done", "true");
-    }
   } catch {
     return (
       <div className="text-center">
