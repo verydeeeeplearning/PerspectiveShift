@@ -23,6 +23,13 @@ const STYLE_COLORS: Record<string, string> = {
   "경제 보수": "bg-semantic-difference-soft text-semantic-difference",
   "사회 진보": "bg-semantic-similarity-soft text-semantic-similarity",
   "중도": "bg-accent-primary-soft text-accent-primary",
+  "기술 낙관": "bg-blue-50 text-blue-700",
+  "복지 확대": "bg-emerald-50 text-emerald-700",
+  "자유 시장": "bg-amber-50 text-amber-700",
+  "사회 변혁": "bg-rose-50 text-rose-700",
+  "데이터 중심": "bg-slate-100 text-slate-700",
+  "개인 자유": "bg-violet-50 text-violet-700",
+  "전통 가치": "bg-stone-100 text-stone-700",
 };
 
 function getAvatarColor(index: number) {

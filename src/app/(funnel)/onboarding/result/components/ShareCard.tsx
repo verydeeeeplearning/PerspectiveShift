@@ -13,6 +13,15 @@ interface ShareCardProps {
   onShare?: () => void;
 }
 
+const MAP_TYPE_SLUGS: Record<string, string> = {
+  BALANCE_SEEKER: "balance-seeker",
+  LIBERTY_INNOVATOR: "liberty-innovator",
+  FAIRNESS_GUARDIAN: "fairness-guardian",
+  PRAGMATIC_MEDIATOR: "pragmatic-mediator",
+  SYSTEM_CHALLENGER: "system-challenger",
+  TRADITION_STABILIZER: "tradition-stabilizer",
+};
+
 function buildShareText(data: ThoughtMapOutput): string {
   return `${data.mapType.emoji} ${data.mapType.alias}\n${data.mapType.description}`;
 }
@@ -35,19 +44,20 @@ export function ShareCard({ data, onShare }: ShareCardProps) {
     }
 
     const text = buildShareText(data);
-    const ogUrl = `${window.location.origin}/api/og-image?type=ALIAS&alias=${encodeURIComponent(data.alias.label)}&emoji=${encodeURIComponent(data.mapType.emoji)}&description=${encodeURIComponent(data.mapType.description)}`;
+    const slug = MAP_TYPE_SLUGS[data.mapType.name] ?? "balance-seeker";
+    const typeUrl = `${window.location.origin}/types/${slug}`;
 
     if (typeof navigator.share === "function") {
       await navigator.share({
-        title: "PerspectiveShift 유형 카드",
+        title: `PerspectiveShift - ${data.mapType.alias}`,
         text,
-        url: ogUrl,
+        url: typeUrl,
       });
       return;
     }
 
     if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(`${text}\n${ogUrl}`);
+      await navigator.clipboard.writeText(`${text}\n${typeUrl}`);
     }
   };
 
