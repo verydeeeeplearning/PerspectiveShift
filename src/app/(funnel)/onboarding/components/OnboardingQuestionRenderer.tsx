@@ -7,7 +7,7 @@ interface OnboardingQuestionRendererProps {
   question: QuestionData;
   answers: AnswerMap;
   onAnswer: (
-    questionId: number,
+    questionId: number | string,
     value: boolean | RubricAnswerValue | string,
   ) => void;
   onCoachClick: () => void;

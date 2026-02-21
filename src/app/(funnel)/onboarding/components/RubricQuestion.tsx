@@ -22,9 +22,9 @@ export type RubricAnswerValue =
   | (typeof UNCERTAIN_OPTIONS)[number]["key"];
 
 interface RubricQuestionProps {
-  questionId: number;
+  questionId: number | string;
   text: string;
-  onAnswer: (questionId: number, value: RubricAnswerValue) => void;
+  onAnswer: (questionId: number | string, value: RubricAnswerValue) => void;
   selected?: RubricAnswerValue | null;
   allowUncertain?: boolean;
   tooltipText?: string;

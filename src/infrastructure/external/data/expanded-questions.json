@@ -1,0 +1,212 @@
+[
+  {
+    "id": 21,
+    "text": "플랫폼 기업(네이버, 카카오 등)의 시장 독점을 정부가 적극 규제해야 한다",
+    "type": "OX",
+    "dimension": "TECH_REGULATION",
+    "polarity": 1
+  },
+  {
+    "id": 22,
+    "text": "상속세를 대폭 인상하여 부의 대물림을 줄여야 한다",
+    "type": "OX",
+    "dimension": "REDISTRIBUTION",
+    "polarity": 1
+  },
+  {
+    "id": 23,
+    "text": "회사에서 성과와 무관하게 정시 퇴근할 권리가 보장되어야 한다",
+    "type": "RUBRIC",
+    "dimension": "WORK_LIFE",
+    "polarity": 1
+  },
+  {
+    "id": 24,
+    "text": "명문대 졸업이 사회적 성공에 결정적 영향을 미친다",
+    "type": "RUBRIC",
+    "dimension": "MERITOCRACY",
+    "polarity": -1
+  },
+  {
+    "id": 25,
+    "text": "자율주행차는 교통사고를 크게 줄여 삶을 더 안전하게 만들 것이다",
+    "type": "OX",
+    "dimension": "TECH_OPTIMISM",
+    "polarity": 1
+  },
+  {
+    "id": 26,
+    "text": "장애인 의무 고용 비율을 현재보다 높여야 한다",
+    "type": "OX",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "polarity": 1
+  },
+  {
+    "id": 27,
+    "text": "소셜미디어 기업은 가짜뉴스 확산에 법적 책임을 져야 한다",
+    "type": "RUBRIC",
+    "dimension": "TECH_REGULATION",
+    "polarity": 1
+  },
+  {
+    "id": 28,
+    "text": "무상 교육을 대학교까지 확대해야 한다",
+    "type": "OX",
+    "dimension": "REDISTRIBUTION",
+    "polarity": 1
+  },
+  {
+    "id": 29,
+    "text": "직장에서 업무 외 메시지(카톡 등)에 응답하지 않을 권리가 법으로 보장되어야 한다",
+    "type": "OX",
+    "dimension": "WORK_LIFE",
+    "polarity": 1
+  },
+  {
+    "id": 30,
+    "text": "부자 부모 아래 태어난 사람이 성공할 확률이 압도적으로 높다",
+    "type": "RUBRIC",
+    "dimension": "MERITOCRACY",
+    "polarity": -1
+  },
+  {
+    "id": 31,
+    "text": "AI 의사가 인간 의사보다 더 정확한 진단을 내릴 수 있게 될 것이다",
+    "type": "RUBRIC",
+    "dimension": "TECH_OPTIMISM",
+    "polarity": 1
+  },
+  {
+    "id": 32,
+    "text": "여성 임원 할당제를 도입해야 한다",
+    "type": "OX",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "polarity": 1
+  },
+  {
+    "id": 33,
+    "text": "안면인식 기술의 공공장소 사용을 금지해야 한다",
+    "type": "OX",
+    "dimension": "TECH_REGULATION",
+    "polarity": 1
+  },
+  {
+    "id": 34,
+    "text": "건강보험료를 소득에 비례하여 더 차등 부과해야 한다",
+    "type": "RUBRIC",
+    "dimension": "REDISTRIBUTION",
+    "polarity": 1
+  },
+  {
+    "id": 35,
+    "text": "육아휴직을 아버지에게도 의무적으로 부여해야 한다",
+    "type": "OX",
+    "dimension": "WORK_LIFE",
+    "polarity": 1
+  },
+  {
+    "id": 36,
+    "text": "좋은 직업을 갖는 것은 운보다 노력의 결과이다",
+    "type": "RUBRIC",
+    "dimension": "MERITOCRACY",
+    "polarity": 1
+  },
+  {
+    "id": 37,
+    "text": "로봇이 위험하고 반복적인 일을 대체하는 것은 바람직하다",
+    "type": "OX",
+    "dimension": "TECH_OPTIMISM",
+    "polarity": 1
+  },
+  {
+    "id": 38,
+    "text": "소득 수준에 따라 대학 등록금을 차등 적용해야 한다",
+    "type": "RUBRIC",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "polarity": 1
+  },
+  {
+    "id": 39,
+    "text": "AI가 생성한 콘텐츠에는 반드시 'AI 생성' 라벨을 붙여야 한다",
+    "type": "OX",
+    "dimension": "TECH_REGULATION",
+    "polarity": 1
+  },
+  {
+    "id": 40,
+    "text": "최저임금을 물가 상승률 이상으로 인상해야 한다",
+    "type": "RUBRIC",
+    "dimension": "REDISTRIBUTION",
+    "polarity": 1
+  },
+  {
+    "id": 41,
+    "text": "재택근무를 원하는 직원에게 거부할 수 없는 권리를 줘야 한다",
+    "type": "OX",
+    "dimension": "WORK_LIFE",
+    "polarity": 1
+  },
+  {
+    "id": 42,
+    "text": "학교 성적이 미래의 능력을 잘 예측한다",
+    "type": "RUBRIC",
+    "dimension": "MERITOCRACY",
+    "polarity": 1
+  },
+  {
+    "id": 43,
+    "text": "우주 탐사에 더 많은 국가 예산을 투입해야 한다",
+    "type": "OX",
+    "dimension": "TECH_OPTIMISM",
+    "polarity": 1
+  },
+  {
+    "id": 44,
+    "text": "농어촌 학생을 위한 대학 특별 전형을 확대해야 한다",
+    "type": "OX",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "polarity": 1
+  },
+  {
+    "id": 45,
+    "text": "암호화폐와 디지털 자산에 대한 규제를 강화해야 한다",
+    "type": "RUBRIC",
+    "dimension": "TECH_REGULATION",
+    "polarity": 1
+  },
+  {
+    "id": 46,
+    "text": "부유한 지역과 빈곤한 지역 간 공공서비스 격차를 국가가 해소해야 한다",
+    "type": "OX",
+    "dimension": "REDISTRIBUTION",
+    "polarity": 1
+  },
+  {
+    "id": 47,
+    "text": "연차 사용에 회사의 승인 절차가 필요 없어야 한다",
+    "type": "RUBRIC",
+    "dimension": "WORK_LIFE",
+    "polarity": 1
+  },
+  {
+    "id": 48,
+    "text": "가난한 환경에서 자란 사람도 충분히 노력하면 부자가 될 수 있다",
+    "type": "OX",
+    "dimension": "MERITOCRACY",
+    "polarity": 1
+  },
+  {
+    "id": 49,
+    "text": "유전자 편집 기술이 인류의 질병 퇴치에 큰 기여를 할 것이다",
+    "type": "RUBRIC",
+    "dimension": "TECH_OPTIMISM",
+    "polarity": 1
+  },
+  {
+    "id": 50,
+    "text": "중소기업 근로자를 위한 복지 혜택을 대기업 수준으로 맞춰야 한다",
+    "type": "OX",
+    "dimension": "OPPORTUNITY_EQUALITY",
+    "polarity": 1
+  }
+]

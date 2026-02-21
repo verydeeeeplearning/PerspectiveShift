@@ -39,8 +39,8 @@ describe("OnboardingFlow", () => {
     );
 
     expect(screen.getByText("정밀도 사다리 선택")).toBeInTheDocument();
-    expect(screen.getByText("빠르게 시작")).toBeInTheDocument();
-    expect(screen.getByText("정밀 분석")).toBeInTheDocument();
+    expect(screen.getByText("라이트")).toBeInTheDocument();
+    expect(screen.getByText("종합 분석")).toBeInTheDocument();
   });
 
   it("starts questions after selecting a precision", () => {
@@ -59,7 +59,7 @@ describe("OnboardingFlow", () => {
     expect(screen.getByText("[변경]")).toBeInTheDocument();
   });
 
-  it("completes after 5 answers in quick precision", () => {
+  it("completes after all core answers in lite precision", () => {
     const onCoreComplete = vi.fn();
     render(
       <OnboardingFlow
@@ -70,12 +70,15 @@ describe("OnboardingFlow", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("빠르게 시작"));
+    // Select lite (10 questions); with only 5 core + 5 extended = 10 total
+    fireEvent.click(screen.getByText("라이트"));
+    // Answer 5 core questions
     fireEvent.click(screen.getByText("O"));
     fireEvent.click(screen.getByText("X"));
     fireEvent.click(screen.getByText("O"));
     fireEvent.click(screen.getByText("동의"));
     fireEvent.click(screen.getByText("보통"));
+    // Upsell appears for lite
     expect(screen.getByText("더 정확한 결과를 원하시면?")).toBeInTheDocument();
     fireEvent.click(screen.getByText("지금 결과 보기"));
 
@@ -91,7 +94,7 @@ describe("OnboardingFlow", () => {
     );
   });
 
-  it("upgrades quick flow to standard via upsell", () => {
+  it("upgrades lite flow to standard via upsell", () => {
     render(
       <OnboardingFlow
         questions={MOCK_QUESTIONS}
@@ -101,13 +104,13 @@ describe("OnboardingFlow", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("빠르게 시작"));
+    fireEvent.click(screen.getByText("라이트"));
     fireEvent.click(screen.getByText("O"));
     fireEvent.click(screen.getByText("X"));
     fireEvent.click(screen.getByText("O"));
     fireEvent.click(screen.getByText("동의"));
     fireEvent.click(screen.getByText("보통"));
-    fireEvent.click(screen.getByText("5문항 더 할래요"));
+    fireEvent.click(screen.getByText("10문항 더 할래요"));
 
     expect(screen.getByText("Q6 OX 확장")).toBeInTheDocument();
   });
@@ -166,9 +169,12 @@ describe("OnboardingFlow", () => {
 
     expect(screen.getByText("Q6 OX 확장")).toBeInTheDocument();
     fireEvent.click(screen.getByText("[변경]"));
-    fireEvent.click(screen.getByText("빠르게 시작"));
+    // lite has 10 questions (5 core + 5 extended), so downshifting
+    // continues to extended questions rather than completing immediately
+    fireEvent.click(screen.getByText("라이트"));
 
-    expect(onCoreComplete).toHaveBeenCalledTimes(1);
+    // After answering 5 core, lite still needs 5 extended questions
+    expect(screen.getByText("Q6 OX 확장")).toBeInTheDocument();
   });
 
   it("emits onboarding events for precision/answers", () => {
@@ -190,12 +196,12 @@ describe("OnboardingFlow", () => {
     fireEvent.click(screen.getByText("모르겠어요"));
     fireEvent.click(screen.getByText("보통"));
     fireEvent.click(screen.getByText("[변경]"));
-    fireEvent.click(screen.getByText("빠르게 시작"));
+    fireEvent.click(screen.getByText("라이트"));
 
-    expect(onEvent).toHaveBeenCalledWith("precision_select_10");
+    expect(onEvent).toHaveBeenCalledWith("precision_select_20");
     expect(onEvent).toHaveBeenCalledWith("question_answer_ox");
     expect(onEvent).toHaveBeenCalledWith("question_dontknow");
     expect(onEvent).toHaveBeenCalledWith("precision_change_midway");
-    expect(onEvent).toHaveBeenCalledWith("precision_select_5");
+    expect(onEvent).toHaveBeenCalledWith("precision_select_10");
   });
 });

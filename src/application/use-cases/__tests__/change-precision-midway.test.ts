@@ -22,7 +22,7 @@ function makeQuestionBank(): QuestionBank {
     }),
   );
 
-  const rotating = Array.from({ length: 20 }, (_, index) =>
+  const rotating = Array.from({ length: 50 }, (_, index) =>
     QuestionItem.create({
       id: `r${index + 1}`,
       text: `Rotating ${index + 1}`,
@@ -42,16 +42,16 @@ describe("ChangePrecisionMidwayUseCase", () => {
     });
 
     const result = await uc.execute({
-      currentPrecision: "quick",
+      currentPrecision: "lite",
       nextPrecision: "standard",
-      activeQuestionIds: ["a1", "a2", "a3", "a4", "a5"],
-      answeredCount: 3,
+      activeQuestionIds: ["a1", "a2", "a3", "a4", "a5", "r1", "r2", "r3", "r4", "r5"],
+      answeredCount: 5,
     });
 
     expect(result.precision).toBe("standard");
-    expect(result.questionIds.length).toBeGreaterThanOrEqual(10);
-    expect(result.answeredCount).toBe(3);
-    expect(result.remainingCount).toBe(result.targetQuestionCount - 3);
+    expect(result.questionIds.length).toBeGreaterThanOrEqual(20);
+    expect(result.answeredCount).toBe(5);
+    expect(result.remainingCount).toBe(result.targetQuestionCount - 5);
   });
 
   it("truncates question IDs when precision decreases", async () => {
@@ -60,26 +60,19 @@ describe("ChangePrecisionMidwayUseCase", () => {
     });
 
     const result = await uc.execute({
-      currentPrecision: "detailed",
-      nextPrecision: "quick",
+      currentPrecision: "deep",
+      nextPrecision: "lite",
       activeQuestionIds: [
-        "a1",
-        "a2",
-        "a3",
-        "a4",
-        "a5",
-        "r1",
-        "r2",
-        "r3",
-        "r4",
-        "r5",
+        "a1", "a2", "a3", "a4", "a5",
+        "r1", "r2", "r3", "r4", "r5",
+        "r6", "r7", "r8", "r9", "r10",
       ],
-      answeredCount: 6,
+      answeredCount: 12,
     });
 
-    expect(result.precision).toBe("quick");
-    expect(result.questionIds).toHaveLength(5);
-    expect(result.answeredCount).toBe(5);
+    expect(result.precision).toBe("lite");
+    expect(result.questionIds).toHaveLength(10);
+    expect(result.answeredCount).toBe(10);
     expect(result.isCompleted).toBe(true);
   });
 
@@ -90,9 +83,14 @@ describe("ChangePrecisionMidwayUseCase", () => {
 
     const result = await uc.execute({
       currentPrecision: "standard",
-      nextPrecision: "quick",
-      activeQuestionIds: ["a1", "a2", "a3", "a4", "a5", "r1"],
-      answeredCount: 5,
+      nextPrecision: "lite",
+      activeQuestionIds: [
+        "a1", "a2", "a3", "a4", "a5",
+        "r1", "r2", "r3", "r4", "r5",
+        "r6", "r7", "r8", "r9", "r10",
+        "r11", "r12", "r13", "r14", "r15",
+      ],
+      answeredCount: 15,
     });
 
     expect(result.isCompleted).toBe(true);

@@ -6,6 +6,8 @@ import path from "path";
 const AUTH_DIR = path.join(__dirname, ".auth");
 const STORAGE_STATE_PATH = path.join(AUTH_DIR, "user.json");
 
+setup.setTimeout(60_000);
+
 setup("authenticate via Supabase", async ({ page }) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

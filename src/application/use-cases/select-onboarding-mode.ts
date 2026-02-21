@@ -31,15 +31,17 @@ export interface SelectedModeResult {
 }
 
 const PRECISION_TO_MODE: Record<QuestionPrecision, OnboardingModeKey> = {
-  quick: "QUICK",
+  lite: "LITE",
   standard: "STANDARD",
-  detailed: "PRECISE",
+  deep: "DEEP",
+  comprehensive: "COMPREHENSIVE",
 };
 
 const MODE_TO_PRECISION: Record<OnboardingModeKey, QuestionPrecision> = {
-  QUICK: "quick",
+  LITE: "lite",
   STANDARD: "standard",
-  PRECISE: "detailed",
+  DEEP: "deep",
+  COMPREHENSIVE: "comprehensive",
 };
 
 export class SelectOnboardingModeUseCase {

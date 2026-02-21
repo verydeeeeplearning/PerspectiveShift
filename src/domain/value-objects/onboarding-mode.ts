@@ -1,32 +1,39 @@
 import { InvalidOnboardingModeError } from "../errors/domain-errors";
 
 export const ONBOARDING_MODES = {
-  QUICK: {
-    label: "빠르게 시작",
-    description: "5문항으로 핵심 입장만 빠르게 파악",
-    questionCount: 5,
-    estimatedMinutes: 2,
-    isRecommended: true,
+  LITE: {
+    label: "라이트",
+    description: "10문항으로 핵심 입장 파악",
+    questionCount: 10,
+    estimatedMinutes: 3,
+    isRecommended: false,
   },
   STANDARD: {
     label: "표준 분석",
-    description: "10문항으로 더 정확한 입장 분석",
-    questionCount: 10,
-    estimatedMinutes: 4,
+    description: "20문항으로 균형 잡힌 분석",
+    questionCount: 20,
+    estimatedMinutes: 7,
+    isRecommended: true,
+  },
+  DEEP: {
+    label: "심층 분석",
+    description: "30문항으로 깊이 있는 입장 탐색",
+    questionCount: 30,
+    estimatedMinutes: 12,
     isRecommended: false,
   },
-  PRECISE: {
-    label: "정밀 분석",
-    description: "20문항으로 가장 정밀한 분석과 매칭 품질 향상",
-    questionCount: 20,
-    estimatedMinutes: 9,
+  COMPREHENSIVE: {
+    label: "종합 분석",
+    description: "50문항으로 가장 정밀한 분석과 매칭 품질 향상",
+    questionCount: 50,
+    estimatedMinutes: 20,
     isRecommended: false,
   },
 } as const;
 
 export type OnboardingModeKey = keyof typeof ONBOARDING_MODES;
 
-const CORE_QUESTION_COUNT = 5;
+const SEED_QUESTION_COUNT = 10;
 
 export class OnboardingMode {
   readonly key: OnboardingModeKey;
@@ -53,12 +60,12 @@ export class OnboardingMode {
     return new OnboardingMode(key);
   }
 
-  get coreQuestionCount(): number {
-    return CORE_QUESTION_COUNT;
+  get seedQuestionCount(): number {
+    return SEED_QUESTION_COUNT;
   }
 
-  get extendedQuestionCount(): number {
-    return this.questionCount - CORE_QUESTION_COUNT;
+  get dynamicQuestionCount(): number {
+    return this.questionCount - SEED_QUESTION_COUNT;
   }
 
   equals(other: OnboardingMode): boolean {

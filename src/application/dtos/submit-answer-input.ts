@@ -1,19 +1,19 @@
 import { z } from "zod";
 
 export const OxAnswerSchema = z.object({
-  questionId: z.number().int().min(1).max(10),
+  questionId: z.number().int().min(1).max(999),
   type: z.literal("OX"),
   value: z.boolean(),
 });
 
 export const RubricAnswerSchema = z.object({
-  questionId: z.number().int().min(1).max(10),
+  questionId: z.number().int().min(1).max(999),
   type: z.literal("RUBRIC"),
   value: z.number().int().min(1).max(5),
 });
 
 export const OpenEndedAnswerSchema = z.object({
-  questionId: z.number().int().min(1).max(10),
+  questionId: z.number().int().min(1).max(999),
   type: z.literal("OPEN_ENDED"),
   value: z.string().min(1).max(2000),
 });

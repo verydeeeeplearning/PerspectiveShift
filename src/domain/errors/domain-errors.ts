@@ -250,8 +250,20 @@ export class InvalidCoreValueError extends DomainError {
 export class InvalidOnboardingModeError extends DomainError {
   constructor(value: string) {
     super(
-      `Invalid onboarding mode: "${value}". Must be one of: QUICK, STANDARD, PRECISE`,
+      `Invalid onboarding mode: "${value}". Must be one of: LITE, STANDARD, DEEP, COMPREHENSIVE`,
     );
+  }
+}
+
+export class InvalidOnboardingTierError extends DomainError {
+  constructor(tier: string) {
+    super(`Invalid onboarding tier: "${tier}"`);
+  }
+}
+
+export class BatchGenerationError extends DomainError {
+  constructor(reason: string) {
+    super(`Failed to generate question batch: ${reason}`);
   }
 }
 

@@ -27,6 +27,8 @@
 - `docs/plans/active/006-v4-p2-persistence-scale-plan.md`: **V4-P2 Persistence & Scale 구현 계획** — 10개 피처 Gap 분석 + 상세 구현 사항
   - JITAI Rule Engine, 복구 고도화, 튜링 게임, 페르소나 메모리, PWA, 역할극 노출, 정밀도 확장, 요약 애니메이션
   - 추정 공수: 50-73h
+- `docs/plans/active/007-v4-browser-rigorous-test-scenarios.md`: **브라우저 기반 전기능 정밀 테스트 시나리오** — 신규 유저 기준 69 케이스 (A~G 7그룹), Playwright 전환 가이드 포함
+- `docs/plans/active/007-v4-browser-rigorous-test-run-2026-02-21.md`: **브라우저 테스트 실행 로그(2026-02-21)** — 파일별 PASS/FAIL 및 auth 차단 원인
 
 ### v3.0 Enhancement Plans
 - `docs/plans/active/003-v3-enhancement-blueprint.md`: **v3 전체 청사진** — 11 Phases, Gap 분석, ADRs

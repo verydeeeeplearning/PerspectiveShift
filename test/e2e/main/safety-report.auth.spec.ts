@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { setupMockRoutes, MOCK_ROUTES } from "../fixtures/test-data";
 
-test.describe("Safety report page (authenticated)", () => {
+test.describe("D-010 신고하기 플로우", () => {
   test.beforeEach(async ({ page }) => {
     await setupMockRoutes(page, MOCK_ROUTES.safetyReport);
   });
 
-  test("renders report form heading", async ({ page }) => {
+  test("신고 폼 헤더 렌더링", async ({ page }) => {
     await page.goto("/safety/report?userId=some-user");
 
     await expect(
@@ -14,7 +14,7 @@ test.describe("Safety report page (authenticated)", () => {
     ).toBeVisible();
   });
 
-  test("shows report reason options", async ({ page }) => {
+  test("신고 사유 5개 옵션 표시", async ({ page }) => {
     await page.goto("/safety/report?userId=some-user");
 
     await expect(page.getByText("신고 사유")).toBeVisible();
@@ -25,10 +25,18 @@ test.describe("Safety report page (authenticated)", () => {
     await expect(page.getByText("기타")).toBeVisible();
   });
 
-  test("shows description textarea and submit button", async ({ page }) => {
+  test("상세 설명 입력란 및 제출 버튼 표시", async ({ page }) => {
     await page.goto("/safety/report?userId=some-user");
 
     await expect(page.getByText("상세 설명")).toBeVisible();
     await expect(page.getByText("신고하기")).toBeVisible();
+  });
+
+  test("userId 없이 접속 시 오류 메시지", async ({ page }) => {
+    await page.goto("/safety/report");
+
+    await expect(
+      page.getByText(/신고 대상이 지정되지 않았습니다|오류|에러/),
+    ).toBeVisible({ timeout: 10_000 });
   });
 });

@@ -28,9 +28,9 @@ const DEFAULT_EXAMPLES: ResponseExample[] = [
 ];
 
 interface OpenEndedQuestionProps {
-  questionId: number;
+  questionId: number | string;
   text: string;
-  onAnswer: (questionId: number, value: string) => void;
+  onAnswer: (questionId: number | string, value: string) => void;
   initialValue?: string;
   examples?: ResponseExample[];
   tooltipText?: string;

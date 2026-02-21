@@ -21,7 +21,7 @@ describe("CalculatePrecisionUseCase", () => {
   });
 
   it("returns null milestone at max precision", () => {
-    const result = uc.execute(20, 1.0);
+    const result = uc.execute(50, 1.0);
 
     expect(result.nextMilestone).toBeNull();
   });

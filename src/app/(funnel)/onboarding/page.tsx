@@ -3,11 +3,17 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingFlow, type AnswerMap } from "./components/OnboardingFlow";
+import { DynamicOnboardingFlow, type GeneratedQuestionMeta } from "./components/DynamicOnboardingFlow";
 import { TrustMoment } from "./components/TrustMoment";
 import { DemographicStep, type DemographicInfo } from "./components/DemographicStep";
-import { calculateStance } from "./actions";
+import { calculateStance, calculateDynamicStance } from "./actions";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import questionsData from "@/infrastructure/external/data/questions.json";
+
+const DYNAMIC_QUESTIONS_ENABLED =
+  process.env.NEXT_PUBLIC_DYNAMIC_QUESTIONS === "true";
+
+const SEED_QUESTION_COUNT = 10;
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -89,6 +95,36 @@ export default function OnboardingPage() {
     }
   }, [runCalculateStance]);
 
+  const handleDynamicComplete = useCallback(
+    async (answers: AnswerMap, generatedMeta: GeneratedQuestionMeta[]) => {
+      setLoading(true);
+      setError(null);
+      lastAnswersRef.current = answers;
+      try {
+        const meta = generatedMeta.map((q, i) => ({
+          id: q.id,
+          numericId: 1000 + i,
+          type: q.type,
+          dimension: q.dimension,
+          polarity: q.polarity,
+        }));
+        const output = await calculateDynamicStance(
+          sessionId,
+          answers,
+          meta,
+          demographic ?? undefined,
+        );
+        setResult(output);
+      } catch (err) {
+        console.error("Failed to calculate dynamic stance:", err);
+        setError("생각 분석에 실패했습니다. 다시 시도해주세요.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [sessionId, demographic],
+  );
+
   useEffect(() => {
     if (result) {
       router.push(
@@ -156,6 +192,45 @@ export default function OnboardingPage() {
     );
   }
 
+  const questionFlowContent = DYNAMIC_QUESTIONS_ENABLED ? (
+    <DynamicOnboardingFlow
+      seedQuestions={questionsData.slice(0, SEED_QUESTION_COUNT).map((q) => ({
+        id: q.id,
+        text: q.text,
+        type: q.type as "OX" | "RUBRIC" | "OPEN_ENDED",
+        phase: "core" as const,
+        dimension: q.dimension,
+        polarity: q.polarity as 1 | -1,
+        allowUncertain: q.type === "RUBRIC",
+      }))}
+      seedMeta={questionsData.slice(0, SEED_QUESTION_COUNT).map((q) => ({
+        id: q.id,
+        text: q.text,
+        type: q.type as "OX" | "RUBRIC" | "OPEN_ENDED",
+        dimension: q.dimension,
+        polarity: q.polarity as 1 | -1,
+      }))}
+      onComplete={handleDynamicComplete}
+    />
+  ) : (
+    <OnboardingFlow
+      questions={questionsData.map((q) => ({
+        id: q.id,
+        text: q.text,
+        type: q.type as "OX" | "RUBRIC" | "OPEN_ENDED",
+        phase: q.phase as "core" | "extended",
+        allowUncertain: q.type === "RUBRIC",
+        tooltipText:
+          q.id === 4 || q.id === 9
+            ? "왜 묻는지: 매칭 시 대화 난이도를 조절하는 데 사용됩니다."
+            : undefined,
+      }))}
+      onCoreComplete={handleCoreComplete}
+      onExtendedComplete={handleExtendedComplete}
+      onSkipExtended={handleSkipExtended}
+    />
+  );
+
   return (
     <main className="mx-auto flex max-w-2xl flex-col px-[var(--container-x)] py-8">
       <div className="mb-8 space-y-2">
@@ -167,22 +242,7 @@ export default function OnboardingPage() {
         </p>
       </div>
 
-      <OnboardingFlow
-        questions={questionsData.map((q) => ({
-          id: q.id,
-          text: q.text,
-          type: q.type as "OX" | "RUBRIC" | "OPEN_ENDED",
-          phase: q.phase as "core" | "extended",
-          allowUncertain: q.type === "RUBRIC",
-          tooltipText:
-            q.id === 4 || q.id === 9
-              ? "왜 묻는지: 매칭 시 대화 난이도를 조절하는 데 사용됩니다."
-              : undefined,
-        }))}
-        onCoreComplete={handleCoreComplete}
-        onExtendedComplete={handleExtendedComplete}
-        onSkipExtended={handleSkipExtended}
-      />
+      {questionFlowContent}
     </main>
   );
 }

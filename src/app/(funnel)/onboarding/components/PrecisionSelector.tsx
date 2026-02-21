@@ -14,7 +14,7 @@ interface PrecisionSelectorProps {
   onQuickUpsellKeepQuick?: () => void;
 }
 
-const PRECISION_ORDER: QuestionPrecision[] = ["quick", "standard", "detailed"];
+const PRECISION_ORDER: QuestionPrecision[] = ["lite", "standard", "deep", "comprehensive"];
 
 export function PrecisionSelector({
   selectedPrecision = null,
@@ -63,9 +63,9 @@ export function PrecisionSelector({
               <p className="mt-1 text-sm text-gray-600">
                 {config.totalQuestions}문항 · 약 {config.estimatedMinutes}분
               </p>
-              {precision === "quick" && (
+              {precision === "lite" && (
                 <p className="mt-1 text-xs font-medium text-blue-700">
-                  1분이면 충분해요
+                  3분이면 충분해요
                 </p>
               )}
             </button>
@@ -79,7 +79,7 @@ export function PrecisionSelector({
             더 정확한 결과를 원하시면?
           </p>
           <p className="text-xs text-blue-800">
-            추가 5문항만 더 답하면 정밀도가 크게 올라가요.
+            추가 10문항만 더 답하면 정밀도가 크게 올라가요.
           </p>
           <div className="flex gap-2">
             <button
@@ -87,7 +87,7 @@ export function PrecisionSelector({
               onClick={onQuickUpsellUpgrade}
               className="flex-1 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700"
             >
-              5문항 더 할래요
+              10문항 더 할래요
             </button>
             <button
               type="button"

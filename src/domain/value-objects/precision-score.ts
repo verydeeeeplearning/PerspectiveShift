@@ -1,20 +1,22 @@
 import { InvalidPrecisionInputError } from "../errors/domain-errors";
 
-const MAX_QUESTION_COUNT = 20;
+const MAX_QUESTION_COUNT = 50;
 const SECONDS_PER_QUESTION = 30;
 
-// Target precision values aligned with product spec (v3.0 Section 4.4)
-// 5q → ~62%, 10q → ~75%, 20q → ~95%
+// Target precision values for 4-tier system
+// 10q → ~62%, 20q → ~75%, 30q → ~88%, 50q → ~95%
 const PRECISION_TARGETS: ReadonlyArray<{ questions: number; precision: number }> = [
   { questions: 0, precision: 0 },
-  { questions: 5, precision: 62 },
-  { questions: 10, precision: 75 },
-  { questions: 20, precision: 95 },
+  { questions: 10, precision: 62 },
+  { questions: 20, precision: 75 },
+  { questions: 30, precision: 88 },
+  { questions: 50, precision: 95 },
 ];
 
 const MILESTONES = [
-  { targetQuestions: 10, label: "75%" },
-  { targetQuestions: 20, label: "90%" },
+  { targetQuestions: 20, label: "75%" },
+  { targetQuestions: 30, label: "88%" },
+  { targetQuestions: 50, label: "95%" },
 ] as const;
 
 export interface PrecisionMilestone {
@@ -43,7 +45,7 @@ export class PrecisionScore {
 
     // Precision formula: linear interpolation between target milestones,
     // scaled by consistency (70%-100% range).
-    // Targets: 0q→0%, 5q→62%, 10q→75%, 20q→95%
+    // Targets: 0q→0%, 10q→62%, 20q→75%, 30q→88%, 50q→95%
     const basePrecision = interpolatePrecision(clampedCount);
     const consistencyMultiplier = 0.7 + 0.3 * clampedConsistency;
     const rawValue = basePrecision * consistencyMultiplier;

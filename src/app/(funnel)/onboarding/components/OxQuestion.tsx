@@ -1,9 +1,9 @@
 "use client";
 
 interface OxQuestionProps {
-  questionId: number;
+  questionId: number | string;
   text: string;
-  onAnswer: (questionId: number, value: boolean) => void;
+  onAnswer: (questionId: number | string, value: boolean) => void;
   selected?: boolean | null;
 }
 

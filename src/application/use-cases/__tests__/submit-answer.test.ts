@@ -42,7 +42,7 @@ describe("SubmitAnswerUseCase", () => {
     const session = new OnboardingSession("sess-1");
     expect(() =>
       useCase.execute(session, {
-        questionId: 99,
+        questionId: 1000,
         type: "OX",
         value: true,
       }),

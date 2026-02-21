@@ -7,28 +7,36 @@ import {
 
 describe("OnboardingMode", () => {
   describe("create", () => {
-    it("creates QUICK mode with 5 questions", () => {
-      const mode = OnboardingMode.create("QUICK");
-      expect(mode.key).toBe("QUICK");
-      expect(mode.questionCount).toBe(5);
-      expect(mode.label).toBe("빠르게 시작");
-      expect(mode.estimatedMinutes).toBe(2);
+    it("creates LITE mode with 10 questions", () => {
+      const mode = OnboardingMode.create("LITE");
+      expect(mode.key).toBe("LITE");
+      expect(mode.questionCount).toBe(10);
+      expect(mode.label).toBe("라이트");
+      expect(mode.estimatedMinutes).toBe(3);
     });
 
-    it("creates STANDARD mode with 10 questions", () => {
+    it("creates STANDARD mode with 20 questions", () => {
       const mode = OnboardingMode.create("STANDARD");
       expect(mode.key).toBe("STANDARD");
-      expect(mode.questionCount).toBe(10);
+      expect(mode.questionCount).toBe(20);
       expect(mode.label).toBe("표준 분석");
-      expect(mode.estimatedMinutes).toBe(4);
+      expect(mode.estimatedMinutes).toBe(7);
     });
 
-    it("creates PRECISE mode with 20 questions", () => {
-      const mode = OnboardingMode.create("PRECISE");
-      expect(mode.key).toBe("PRECISE");
-      expect(mode.questionCount).toBe(20);
-      expect(mode.label).toBe("정밀 분석");
-      expect(mode.estimatedMinutes).toBe(9);
+    it("creates DEEP mode with 30 questions", () => {
+      const mode = OnboardingMode.create("DEEP");
+      expect(mode.key).toBe("DEEP");
+      expect(mode.questionCount).toBe(30);
+      expect(mode.label).toBe("심층 분석");
+      expect(mode.estimatedMinutes).toBe(12);
+    });
+
+    it("creates COMPREHENSIVE mode with 50 questions", () => {
+      const mode = OnboardingMode.create("COMPREHENSIVE");
+      expect(mode.key).toBe("COMPREHENSIVE");
+      expect(mode.questionCount).toBe(50);
+      expect(mode.label).toBe("종합 분석");
+      expect(mode.estimatedMinutes).toBe(20);
     });
 
     it("throws for invalid mode", () => {
@@ -40,53 +48,61 @@ describe("OnboardingMode", () => {
 
   describe("equals", () => {
     it("returns true for same mode", () => {
-      const a = OnboardingMode.create("QUICK");
-      const b = OnboardingMode.create("QUICK");
+      const a = OnboardingMode.create("LITE");
+      const b = OnboardingMode.create("LITE");
       expect(a.equals(b)).toBe(true);
     });
 
     it("returns false for different modes", () => {
-      const a = OnboardingMode.create("QUICK");
+      const a = OnboardingMode.create("LITE");
       const b = OnboardingMode.create("STANDARD");
       expect(a.equals(b)).toBe(false);
     });
   });
 
-  describe("coreQuestionCount", () => {
-    it("QUICK mode has 5 core questions (all are core)", () => {
-      const mode = OnboardingMode.create("QUICK");
-      expect(mode.coreQuestionCount).toBe(5);
+  describe("seedQuestionCount", () => {
+    it("LITE mode has 10 seed questions (all are seed)", () => {
+      const mode = OnboardingMode.create("LITE");
+      expect(mode.seedQuestionCount).toBe(10);
+      expect(mode.dynamicQuestionCount).toBe(0);
     });
 
-    it("STANDARD mode has 5 core + 5 extended", () => {
+    it("STANDARD mode has 10 seed + 10 dynamic", () => {
       const mode = OnboardingMode.create("STANDARD");
-      expect(mode.coreQuestionCount).toBe(5);
-      expect(mode.extendedQuestionCount).toBe(5);
+      expect(mode.seedQuestionCount).toBe(10);
+      expect(mode.dynamicQuestionCount).toBe(10);
     });
 
-    it("PRECISE mode has 5 core + 15 extended", () => {
-      const mode = OnboardingMode.create("PRECISE");
-      expect(mode.coreQuestionCount).toBe(5);
-      expect(mode.extendedQuestionCount).toBe(15);
+    it("DEEP mode has 10 seed + 20 dynamic", () => {
+      const mode = OnboardingMode.create("DEEP");
+      expect(mode.seedQuestionCount).toBe(10);
+      expect(mode.dynamicQuestionCount).toBe(20);
+    });
+
+    it("COMPREHENSIVE mode has 10 seed + 40 dynamic", () => {
+      const mode = OnboardingMode.create("COMPREHENSIVE");
+      expect(mode.seedQuestionCount).toBe(10);
+      expect(mode.dynamicQuestionCount).toBe(40);
     });
   });
 
   describe("isRecommended", () => {
-    it("QUICK mode is recommended", () => {
-      const mode = OnboardingMode.create("QUICK");
+    it("STANDARD mode is recommended", () => {
+      const mode = OnboardingMode.create("STANDARD");
       expect(mode.isRecommended).toBe(true);
     });
 
-    it("STANDARD mode is not recommended", () => {
-      const mode = OnboardingMode.create("STANDARD");
+    it("LITE mode is not recommended", () => {
+      const mode = OnboardingMode.create("LITE");
       expect(mode.isRecommended).toBe(false);
     });
   });
 
-  it("ONBOARDING_MODES has all 3 modes", () => {
-    expect(Object.keys(ONBOARDING_MODES)).toHaveLength(3);
-    expect(ONBOARDING_MODES).toHaveProperty("QUICK");
+  it("ONBOARDING_MODES has all 4 modes", () => {
+    expect(Object.keys(ONBOARDING_MODES)).toHaveLength(4);
+    expect(ONBOARDING_MODES).toHaveProperty("LITE");
     expect(ONBOARDING_MODES).toHaveProperty("STANDARD");
-    expect(ONBOARDING_MODES).toHaveProperty("PRECISE");
+    expect(ONBOARDING_MODES).toHaveProperty("DEEP");
+    expect(ONBOARDING_MODES).toHaveProperty("COMPREHENSIVE");
   });
 });

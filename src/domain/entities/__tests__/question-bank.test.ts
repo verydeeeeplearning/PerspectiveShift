@@ -35,7 +35,7 @@ function makeBank(): QuestionBank {
   ];
 
   const rotating: QuestionItem[] = [];
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 50; i++) {
     const axes = [
       "TECH_REGULATION",
       "REDISTRIBUTION",
@@ -57,7 +57,7 @@ describe("QuestionBank", () => {
     it("separates anchor and rotating questions", () => {
       const bank = makeBank();
       expect(bank.anchorCount).toBe(7);
-      expect(bank.rotatingCount).toBe(30);
+      expect(bank.rotatingCount).toBe(50);
     });
 
     it("throws if fewer than 5 anchor questions", () => {
@@ -72,66 +72,49 @@ describe("QuestionBank", () => {
   });
 
   describe("sampleForMode", () => {
-    it("QUICK mode returns exactly 5 questions", () => {
+    it("LITE mode returns exactly 10 questions", () => {
       const bank = makeBank();
-      const questions = bank.sampleForMode("QUICK");
-      expect(questions).toHaveLength(5);
-    });
-
-    it("STANDARD mode returns exactly 10 questions", () => {
-      const bank = makeBank();
-      const questions = bank.sampleForMode("STANDARD");
+      const questions = bank.sampleForMode("LITE");
       expect(questions).toHaveLength(10);
     });
 
-    it("PRECISE mode returns exactly 20 questions", () => {
+    it("STANDARD mode returns exactly 20 questions", () => {
       const bank = makeBank();
-      const questions = bank.sampleForMode("PRECISE");
+      const questions = bank.sampleForMode("STANDARD");
       expect(questions).toHaveLength(20);
+    });
+
+    it("DEEP mode returns exactly 30 questions", () => {
+      const bank = makeBank();
+      const questions = bank.sampleForMode("DEEP");
+      expect(questions).toHaveLength(30);
+    });
+
+    it("COMPREHENSIVE mode returns exactly 50 questions", () => {
+      const bank = makeBank();
+      const questions = bank.sampleForMode("COMPREHENSIVE");
+      expect(questions).toHaveLength(50);
     });
 
     it("always includes all anchor questions first", () => {
       const bank = makeBank();
-      const questions = bank.sampleForMode("STANDARD");
+      const questions = bank.sampleForMode("LITE");
       const anchorIds = questions
         .filter((q) => q.isAnchor)
         .map((q) => q.id);
       expect(anchorIds.length).toBeGreaterThanOrEqual(5);
     });
 
-    it("QUICK mode uses 5 core anchors only", () => {
-      const bank = makeBank();
-      const questions = bank.sampleForMode("QUICK");
-      // In QUICK mode, all 5 questions should be anchors (core 5)
-      const anchors = questions.filter((q) => q.isAnchor);
-      expect(anchors.length).toBe(5);
-    });
-
     it("fills remaining slots with rotating questions", () => {
       const bank = makeBank();
-      const questions = bank.sampleForMode("STANDARD");
+      const questions = bank.sampleForMode("LITE");
       const rotating = questions.filter((q) => !q.isAnchor);
       expect(rotating.length).toBe(3); // 10 - 7 anchors = 3 rotating
     });
 
-    it("samples different rotating questions on each call", () => {
-      const bank = makeBank();
-      const sample1 = bank.sampleForMode("PRECISE");
-      const sample2 = bank.sampleForMode("PRECISE");
-
-      const ids1 = sample1.filter((q) => !q.isAnchor).map((q) => q.id);
-      const ids2 = sample2.filter((q) => !q.isAnchor).map((q) => q.id);
-
-      // Not guaranteed to be different every time, but with 30 rotating items
-      // and 13 slots, extremely unlikely to be identical
-      // We just check both have the right count
-      expect(ids1.length).toBe(13);
-      expect(ids2.length).toBe(13);
-    });
-
     it("does not include duplicate questions", () => {
       const bank = makeBank();
-      const questions = bank.sampleForMode("PRECISE");
+      const questions = bank.sampleForMode("DEEP");
       const ids = questions.map((q) => q.id);
       const unique = new Set(ids);
       expect(unique.size).toBe(ids.length);
@@ -139,31 +122,28 @@ describe("QuestionBank", () => {
   });
 
   describe("sampleExtension", () => {
-    it("returns additional questions for extending from 5 to 10", () => {
+    it("returns additional questions excluding existing ones", () => {
       const bank = makeBank();
-      const initial = bank.sampleForMode("QUICK");
+      const initial = bank.sampleForMode("LITE");
       const initialIds = new Set(initial.map((q) => q.id));
 
-      const extension = bank.sampleExtension(5, initialIds);
-      expect(extension).toHaveLength(5);
+      const extension = bank.sampleExtension(10, initialIds);
+      expect(extension).toHaveLength(10);
 
       // No overlap with initial questions
       for (const q of extension) {
         expect(initialIds.has(q.id)).toBe(false);
       }
     });
+  });
 
-    it("returns additional questions for extending from 10 to 20", () => {
+  describe("getSeedQuestions", () => {
+    it("returns the first N questions (anchors first)", () => {
       const bank = makeBank();
-      const initial = bank.sampleForMode("STANDARD");
-      const initialIds = new Set(initial.map((q) => q.id));
-
-      const extension = bank.sampleExtension(10, initialIds);
-      expect(extension).toHaveLength(10);
-
-      for (const q of extension) {
-        expect(initialIds.has(q.id)).toBe(false);
-      }
+      const seeds = bank.getSeedQuestions(10);
+      expect(seeds).toHaveLength(10);
+      // First 7 should be anchors
+      expect(seeds.slice(0, 7).every((q) => q.isAnchor)).toBe(true);
     });
   });
 });

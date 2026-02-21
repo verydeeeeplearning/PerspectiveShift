@@ -1,4 +1,4 @@
-export type QuestionPrecision = "quick" | "standard" | "detailed";
+export type QuestionPrecision = "lite" | "standard" | "deep" | "comprehensive";
 
 export interface QuestionPrecisionConfig {
   totalQuestions: number;
@@ -10,19 +10,24 @@ export const QUESTION_PRECISION_CONFIG: Record<
   QuestionPrecision,
   QuestionPrecisionConfig
 > = {
-  quick: {
-    totalQuestions: 5,
-    estimatedMinutes: 1,
-    label: "빠르게 시작",
+  lite: {
+    totalQuestions: 10,
+    estimatedMinutes: 3,
+    label: "라이트",
   },
   standard: {
-    totalQuestions: 10,
-    estimatedMinutes: 4,
+    totalQuestions: 20,
+    estimatedMinutes: 7,
     label: "표준 분석",
   },
-  detailed: {
-    totalQuestions: 20,
-    estimatedMinutes: 9,
-    label: "정밀 분석",
+  deep: {
+    totalQuestions: 30,
+    estimatedMinutes: 12,
+    label: "심층 분석",
+  },
+  comprehensive: {
+    totalQuestions: 50,
+    estimatedMinutes: 20,
+    label: "종합 분석",
   },
 };

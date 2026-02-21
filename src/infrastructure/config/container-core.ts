@@ -49,7 +49,10 @@ import { OpenAiPersonaGenerator } from "../external/openai-persona-generator";
 import { KoreanTextSegmenter } from "../external/korean-text-segmenter";
 import { FallbackTrailerGenerator } from "../external/fallback-trailer-generator";
 import { OpenAiTrailerGenerator } from "../external/openai-trailer-generator";
+import { OpenAiQuestionGenerator } from "../external/openai-question-generator";
+import { FallbackQuestionGenerator } from "../external/fallback-question-generator";
 import { initLangSmithTracing } from "../external/langsmith-tracer";
+import type { QuestionGenerator } from "@/domain/interfaces/question-generator";
 import {
   LangGraphDialogueAgent,
   FallbackDialogueAgent,
@@ -195,6 +198,11 @@ export function createCoreDependencies() {
   const dialogueAgent: DialogueAgent = hasValidKey
     ? new LangGraphDialogueAgent(openaiKey)
     : new FallbackDialogueAgent();
+  const questionGenerator: QuestionGenerator = hasValidKey
+    ? new OpenAiQuestionGenerator(openaiKey)
+    : new FallbackQuestionGenerator();
+  const fallbackQuestionGenerator: QuestionGenerator =
+    new FallbackQuestionGenerator();
 
   return {
     piiScrubber,
@@ -232,6 +240,8 @@ export function createCoreDependencies() {
     textSegmenter,
     trailerGenerator,
     dialogueAgent,
+    questionGenerator,
+    fallbackQuestionGenerator,
     langSmithStatus: initLangSmithTracing(),
   };
 }

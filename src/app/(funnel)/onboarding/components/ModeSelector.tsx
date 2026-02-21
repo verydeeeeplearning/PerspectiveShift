@@ -9,7 +9,7 @@ interface ModeSelectorProps {
   onSelect: (mode: OnboardingModeKey) => void;
 }
 
-const MODE_KEYS: OnboardingModeKey[] = ["QUICK", "STANDARD", "PRECISE"];
+const MODE_KEYS: OnboardingModeKey[] = ["LITE", "STANDARD", "DEEP", "COMPREHENSIVE"];
 
 export function ModeSelector({ onSelect }: ModeSelectorProps) {
   return (
@@ -52,9 +52,9 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
               </div>
             </div>
 
-            {key === "PRECISE" && (
+            {key === "COMPREHENSIVE" && (
               <p className="mt-2 text-xs text-blue-700">
-                정밀 분석으로 매칭 품질이 향상됩니다
+                종합 분석으로 매칭 품질이 향상됩니다
               </p>
             )}
           </button>

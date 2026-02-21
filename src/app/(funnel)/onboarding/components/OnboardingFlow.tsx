@@ -94,7 +94,7 @@ export function OnboardingFlow({
 
   const completeFlow = useCallback(
     (targetPrecision: QuestionPrecision, finalAnswers: AnswerMap) => {
-      if (targetPrecision === "quick") {
+      if (targetPrecision === "lite") {
         onCoreComplete(finalAnswers);
         return;
       }
@@ -129,7 +129,7 @@ export function OnboardingFlow({
         Object.keys(nextAnswers).map((questionId) => Number(questionId)),
       );
       const firstUnansweredIndex = nextSequence.findIndex(
-        (question) => !answeredQuestionIds.has(question.id),
+        (question) => !answeredQuestionIds.has(question.id as number),
       );
 
       setPrecision(targetPrecision);
@@ -163,7 +163,7 @@ export function OnboardingFlow({
 
   const handleAnswer = useCallback(
     (
-      questionId: number,
+      questionId: number | string,
       value: boolean | RubricAnswerValue | string,
     ) => {
       if (!precision || !currentQuestion) {
@@ -190,7 +190,7 @@ export function OnboardingFlow({
       }
 
       if (phase === "core") {
-        if (precision === "quick") {
+        if (precision === "lite") {
           setQuickUpsellAnswers(nextAnswers);
           return;
         }
@@ -232,7 +232,7 @@ export function OnboardingFlow({
         precision={precision}
         quickUpsellAnswers={quickUpsellAnswers}
         onSelectPrecision={handlePrecisionSelect}
-        onCompleteQuick={(finalAnswers) => completeFlow("quick", finalAnswers)}
+        onCompleteQuick={(finalAnswers) => completeFlow("lite", finalAnswers)}
         onClose={() => setQuickUpsellAnswers(null)}
       />
     );

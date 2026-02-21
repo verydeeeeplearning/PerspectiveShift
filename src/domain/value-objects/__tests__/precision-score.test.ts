@@ -3,10 +3,10 @@ import { PrecisionScore } from "../precision-score";
 
 describe("PrecisionScore", () => {
   describe("calculate", () => {
-    it("calculates precision for 5 answered questions with full consistency (~62%)", () => {
+    it("calculates precision for 5 answered questions with full consistency (~31%)", () => {
       const score = PrecisionScore.calculate(5, 1.0);
-      expect(score.value).toBeGreaterThanOrEqual(55);
-      expect(score.value).toBeLessThanOrEqual(70);
+      expect(score.value).toBeGreaterThanOrEqual(25);
+      expect(score.value).toBeLessThanOrEqual(35);
     });
 
     it("calculates higher precision for 10 questions", () => {
@@ -80,7 +80,7 @@ describe("PrecisionScore", () => {
     });
 
     it("returns null when max precision reached", () => {
-      const score = PrecisionScore.calculate(20, 1.0);
+      const score = PrecisionScore.calculate(50, 1.0);
       const milestone = score.nextMilestone();
       expect(milestone).toBeNull();
     });

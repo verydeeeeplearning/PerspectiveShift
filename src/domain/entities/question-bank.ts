@@ -9,7 +9,6 @@ export class InsufficientAnchorQuestionsError extends DomainError {
 }
 
 const MIN_ANCHOR_COUNT = 5;
-const CORE_ANCHOR_COUNT = 5;
 
 export class QuestionBank {
   private readonly _anchors: ReadonlyArray<QuestionItem>;
@@ -42,12 +41,7 @@ export class QuestionBank {
   sampleForMode(mode: OnboardingModeKey): QuestionItem[] {
     const targetCount = ONBOARDING_MODES[mode].questionCount;
 
-    if (mode === "QUICK") {
-      // QUICK mode: core 5 anchors only
-      return this._anchors.slice(0, CORE_ANCHOR_COUNT);
-    }
-
-    // STANDARD/PRECISE: all anchors + rotating fill
+    // All modes include all anchors + rotating fill
     const result: QuestionItem[] = [...this._anchors];
     const remaining = targetCount - result.length;
 
@@ -69,6 +63,12 @@ export class QuestionBank {
     ];
 
     return this.shuffleSample(available, additionalCount);
+  }
+
+  /** Returns the first `count` seed questions (anchors first, then rotating). */
+  getSeedQuestions(count: number): QuestionItem[] {
+    const all = [...this._anchors, ...this._rotating];
+    return all.slice(0, count);
   }
 
   private shuffleSample(

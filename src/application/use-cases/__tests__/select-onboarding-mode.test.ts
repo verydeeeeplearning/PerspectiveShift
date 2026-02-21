@@ -29,8 +29,8 @@ function makeBank(): QuestionBank {
     );
   }
 
-  // 30 rotating
-  for (let i = 0; i < 30; i++) {
+  // 50 rotating
+  for (let i = 0; i < 50; i++) {
     questions.push(
       QuestionItem.create({
         id: `r${i + 1}`,
@@ -48,39 +48,48 @@ function makeBank(): QuestionBank {
 }
 
 describe("SelectOnboardingModeUseCase", () => {
-  it("returns QUICK mode questions (5)", async () => {
+  it("returns LITE mode questions (10)", async () => {
     const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
-    const result = await uc.execute("QUICK");
+    const result = await uc.execute("LITE");
 
-    expect(result.mode).toBe("QUICK");
-    expect(result.precisionLevel).toBe("quick");
-    expect(result.questions).toHaveLength(5);
-    expect(result.estimatedMinutes).toBe(2);
+    expect(result.mode).toBe("LITE");
+    expect(result.precisionLevel).toBe("lite");
+    expect(result.questions).toHaveLength(10);
+    expect(result.estimatedMinutes).toBe(3);
     expect(result.precision.displayText).toBeDefined();
   });
 
-  it("returns STANDARD mode questions (10)", async () => {
+  it("returns STANDARD mode questions (20)", async () => {
     const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
     const result = await uc.execute("STANDARD");
 
     expect(result.mode).toBe("STANDARD");
     expect(result.precisionLevel).toBe("standard");
-    expect(result.questions).toHaveLength(10);
-    expect(result.estimatedMinutes).toBe(4);
+    expect(result.questions).toHaveLength(20);
+    expect(result.estimatedMinutes).toBe(7);
   });
 
-  it("returns PRECISE mode questions (20)", async () => {
+  it("returns DEEP mode questions (30)", async () => {
     const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
-    const result = await uc.execute("PRECISE");
+    const result = await uc.execute("DEEP");
 
-    expect(result.mode).toBe("PRECISE");
-    expect(result.precisionLevel).toBe("detailed");
-    expect(result.questions).toHaveLength(20);
+    expect(result.mode).toBe("DEEP");
+    expect(result.precisionLevel).toBe("deep");
+    expect(result.questions).toHaveLength(30);
+  });
+
+  it("returns COMPREHENSIVE mode questions (50)", async () => {
+    const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
+    const result = await uc.execute("COMPREHENSIVE");
+
+    expect(result.mode).toBe("COMPREHENSIVE");
+    expect(result.precisionLevel).toBe("comprehensive");
+    expect(result.questions).toHaveLength(50);
   });
 
   it("includes question metadata in output", async () => {
     const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
-    const result = await uc.execute("QUICK");
+    const result = await uc.execute("LITE");
     const q = result.questions[0];
 
     expect(q.id).toBeDefined();
@@ -92,11 +101,11 @@ describe("SelectOnboardingModeUseCase", () => {
 
   it("supports selecting by precision level", async () => {
     const uc = new SelectOnboardingModeUseCase({ questionBank: makeBank() });
-    const result = await uc.executeByPrecision("detailed");
+    const result = await uc.executeByPrecision("deep");
 
-    expect(result.mode).toBe("PRECISE");
-    expect(result.precisionLevel).toBe("detailed");
-    expect(result.questions).toHaveLength(20);
+    expect(result.mode).toBe("DEEP");
+    expect(result.precisionLevel).toBe("deep");
+    expect(result.questions).toHaveLength(30);
   });
 
   it("throws for invalid mode", async () => {
