@@ -1,9 +1,38 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/app/_shared/hooks/useAuth";
 import { PrimaryButton } from "@/app/_shared/components/PrimaryButton";
 
 export default function Home() {
+  const { isAuthenticated, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return;
+    if (!isAuthenticated) return;
+
+    // Logged in: check if onboarding is done
+    const done = localStorage.getItem("ps_onboarding_done");
+    if (done) {
+      router.replace("/matching");
+    } else {
+      router.replace("/onboarding");
+    }
+  }, [isAuthenticated, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-soft border-t-indigo-depth" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) return null;
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-[var(--container-x)]">
       <div className="max-w-sm w-full text-center space-y-10">

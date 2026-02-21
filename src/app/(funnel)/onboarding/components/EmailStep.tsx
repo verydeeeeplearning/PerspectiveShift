@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/app/_shared/hooks/useAuth";
 import { PrimaryButton } from "@/app/_shared/components/PrimaryButton";
@@ -17,10 +17,11 @@ export function EmailStep({ onComplete }: EmailStepProps) {
   const [error, setError] = useState<string | null>(null);
 
   // Already logged in — skip this step
-  if (isAuthenticated) {
-    onComplete();
-    return null;
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      onComplete();
+    }
+  }, [isAuthenticated, onComplete]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

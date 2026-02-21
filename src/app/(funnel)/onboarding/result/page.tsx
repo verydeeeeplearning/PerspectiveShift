@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { ThoughtMapResult } from "../components/ThoughtMapResult";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import Link from "next/link";
@@ -27,6 +27,10 @@ function ResultContent() {
   let data: ThoughtMapOutput;
   try {
     data = JSON.parse(decodeURIComponent(dataParam));
+    // Mark onboarding as complete
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ps_onboarding_done", "true");
+    }
   } catch {
     return (
       <div className="text-center">
