@@ -90,7 +90,7 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
             `입장: ${persona.stanceLabel}.`,
             persona.description,
             experience ? `경험: ${experience}` : "",
-            `한국어 존댓말로 1-3문장 답하세요. 상대방의 말에 직접 반응하세요.`,
+            `한국어 존댓말로 1-3문장 답하세요. 상대방의 말에 직접 반응하되, 원문을 그대로 인용하지 말고 자기 말로 바꿔서 언급하세요.`,
           ].filter(Boolean).join(" "),
         },
         {
