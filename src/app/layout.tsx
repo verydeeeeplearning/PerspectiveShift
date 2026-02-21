@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PerspectiveShift",
   description: "Bridge opinion gaps through structured dialogue",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
