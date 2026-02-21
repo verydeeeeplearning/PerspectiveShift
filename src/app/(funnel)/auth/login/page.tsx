@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/app/_shared/hooks/useAuth";
@@ -9,6 +9,7 @@ import { PrimaryButton } from "@/app/_shared/components/PrimaryButton";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { loading, loginWithEmail } = useAuth();
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
@@ -27,7 +28,8 @@ export default function LoginPage() {
     if (result.error) {
       setError(result.error);
     } else {
-      router.push("/");
+      const next = searchParams.get("next") || "/friends";
+      router.push(next);
     }
   };
 

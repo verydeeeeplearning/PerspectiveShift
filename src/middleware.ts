@@ -1,6 +1,6 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const COOKIE_NAME = "ps_user_id";
 const PROTECTED_ROUTES = ["/friends", "/chat", "/offline", "/safety/report", "/settings"];
 const AUTH_ROUTES = ["/auth/login"];
 
@@ -23,33 +23,15 @@ export async function middleware(request: NextRequest) {
     request: { headers: request.headers },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          for (const { name, value, options } of cookiesToSet) {
-            request.cookies.set(name, value);
-            response.cookies.set(name, value, options);
-          }
-        },
-      },
-    },
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Check on-spot auth cookie (set by /api/auth/login)
+  const userId = request.cookies.get(COOKIE_NAME)?.value;
+  const isAuthenticated = !!userId;
 
   const isProtected = PROTECTED_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(route + "/"),
   );
 
-  if (isProtected && !user) {
+  if (isProtected && !isAuthenticated) {
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
@@ -59,7 +41,7 @@ export async function middleware(request: NextRequest) {
     (route) => pathname === route || pathname.startsWith(route + "/"),
   );
 
-  if (isAuthRoute && user) {
+  if (isAuthRoute && isAuthenticated) {
     return NextResponse.redirect(new URL("/friends", request.url));
   }
 

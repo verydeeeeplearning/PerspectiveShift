@@ -1,25 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-
-const { mockGetSession, mockOnAuthStateChange, mockSignInWithOAuth, mockSignOut } =
-  vi.hoisted(() => ({
-    mockGetSession: vi.fn(),
-    mockOnAuthStateChange: vi.fn(),
-    mockSignInWithOAuth: vi.fn(),
-    mockSignOut: vi.fn(),
-  }));
-
-vi.mock("@supabase/ssr", () => ({
-  createBrowserClient: () => ({
-    auth: {
-      getSession: mockGetSession,
-      onAuthStateChange: mockOnAuthStateChange,
-      signInWithOAuth: mockSignInWithOAuth,
-      signOut: mockSignOut,
-    },
-  }),
-}));
-
 import { AuthProvider, useAuthContext } from "../AuthProvider";
 
 function TestConsumer() {
@@ -34,26 +14,33 @@ function TestConsumer() {
 }
 
 describe("AuthProvider", () => {
+  const STORAGE_KEY = "perspectiveshift_user";
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockGetSession.mockResolvedValue({
-      data: { session: null },
-    });
-    mockOnAuthStateChange.mockReturnValue({
-      data: { subscription: { unsubscribe: vi.fn() } },
-    });
+    localStorage.clear();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true }), { status: 200 }),
+    );
   });
 
-  it("starts in loading state", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("resolves loading state after initialization", async () => {
     render(
       <AuthProvider>
         <TestConsumer />
       </AuthProvider>,
     );
-    expect(screen.getByTestId("loading").textContent).toBe("true");
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.getByTestId("loading").textContent).toBe("false");
   });
 
-  it("provides unauthenticated state when no session", async () => {
+  it("provides unauthenticated state when no stored user", async () => {
     render(
       <AuthProvider>
         <TestConsumer />
@@ -67,14 +54,13 @@ describe("AuthProvider", () => {
     expect(screen.getByTestId("user").textContent).toBe("none");
   });
 
-  it("provides authenticated state when session exists", async () => {
-    const mockSession = {
-      user: { email: "test@example.com" },
-      access_token: "token",
+  it("provides authenticated state when user stored in localStorage", async () => {
+    const storedUser = {
+      id: "test@example.com",
+      email: "test@example.com",
+      displayAlias: "test",
     };
-    mockGetSession.mockResolvedValue({
-      data: { session: mockSession },
-    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedUser));
 
     render(
       <AuthProvider>
@@ -86,37 +72,28 @@ describe("AuthProvider", () => {
       await Promise.resolve();
     });
 
+    expect(screen.getByTestId("loading").textContent).toBe("false");
     expect(screen.getByTestId("authenticated").textContent).toBe("true");
     expect(screen.getByTestId("user").textContent).toBe("test@example.com");
   });
 
-  it("subscribes to auth state changes", () => {
+  it("handles corrupt localStorage gracefully", async () => {
+    localStorage.setItem(STORAGE_KEY, "not-valid-json");
+
     render(
       <AuthProvider>
         <TestConsumer />
       </AuthProvider>,
     );
-    expect(mockOnAuthStateChange).toHaveBeenCalledOnce();
-  });
 
-  it("unsubscribes on unmount", () => {
-    const unsubscribe = vi.fn();
-    mockOnAuthStateChange.mockReturnValue({
-      data: { subscription: { unsubscribe } },
+    await act(async () => {
+      await Promise.resolve();
     });
 
-    const { unmount } = render(
-      <AuthProvider>
-        <TestConsumer />
-      </AuthProvider>,
-    );
-
-    unmount();
-    expect(unsubscribe).toHaveBeenCalledOnce();
+    expect(screen.getByTestId("authenticated").textContent).toBe("false");
   });
 
   it("throws when useAuthContext is used outside AuthProvider", () => {
-    // Suppress console.error for expected error
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(() => render(<TestConsumer />)).toThrow(
       "useAuthContext must be used within an AuthProvider",

@@ -83,6 +83,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(STORAGE_KEY);
     setUser(null);
     setSession(null);
+    // Clear server-side cookie
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
   }, []);
 
   return (
