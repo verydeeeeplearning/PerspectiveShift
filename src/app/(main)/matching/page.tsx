@@ -26,7 +26,6 @@ export default function MatchingPage() {
   const [personas, setPersonas] = useState<PersonaCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const matchingTopic = "관점이 갈리는 오늘의 이슈";
   const featuredCandidate = candidates[0] ?? null;
   const secondaryCandidates = featuredCandidate ? candidates.slice(1) : [];
 
@@ -57,7 +56,6 @@ export default function MatchingPage() {
         const session = await apiPost<{ id: string }>("/api/dialogue/sessions", {
           candidateType: "agent",
           personaId: candidate.personaId,
-          topic: matchingTopic,
         });
         window.location.href = `/dialogue/${session.id}`;
         return;
@@ -83,7 +81,6 @@ export default function MatchingPage() {
       const session = await apiPost<{ id: string }>("/api/dialogue/sessions", {
         candidateType: "agent",
         personaId,
-        topic: matchingTopic,
       });
       window.location.href = `/dialogue/${session.id}`;
     } catch (e) {
@@ -185,7 +182,6 @@ export default function MatchingPage() {
           <EnergyReactiveMatchCard
             candidate={featuredCandidate}
             candidateCount={candidates.length}
-            topic={matchingTopic}
             onStart={() => {
               void handleStartCandidate(featuredCandidate);
             }}

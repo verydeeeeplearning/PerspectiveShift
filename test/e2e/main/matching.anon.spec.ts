@@ -39,8 +39,8 @@ test.describe("C-002 후보 존재 시 에너지 반응형 카드", () => {
       page.getByRole("radiogroup", { name: "에너지 선택" }),
     ).toBeVisible({ timeout: 10_000 });
 
-    // Match card renders topic and CTA
-    await expect(page.getByText("관점이 갈리는 오늘의 이슈")).toBeVisible();
+    // Match card renders topic placeholder and CTA
+    await expect(page.getByText("대화를 시작하면 주제가 추천됩니다")).toBeVisible();
   });
 });
 

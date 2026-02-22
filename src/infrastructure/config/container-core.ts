@@ -27,6 +27,8 @@ import type { FollowUpCheckinRepository } from "@/domain/interfaces/follow-up-ch
 import type { LightProtocolRepository } from "@/domain/interfaces/light-protocol-repository";
 import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
 import type { PersonaDialogueGenerator } from "@/domain/interfaces/persona-dialogue-generator";
+import type { TopicRepository } from "@/domain/interfaces/topic-repository";
+import type { TopicRecommender } from "@/domain/interfaces/topic-recommender";
 import type { TextSegmenter } from "@/domain/interfaces/text-segmenter";
 import type { TrailerGenerator } from "@/domain/interfaces/trailer-generator";
 import type { DialogueAgent } from "@/domain/interfaces/dialogue-agent";
@@ -72,6 +74,8 @@ import { SupabaseReceiptRepository } from "../persistence/supabase-receipt-repos
 import { SupabaseMeetingRepository } from "../persistence/supabase-meeting-repository";
 import { SupabaseEventRepository } from "../persistence/supabase-event-repository";
 import { InMemoryPersonaRepository } from "../persistence/in-memory-persona-repository";
+import { InMemoryTopicRepository } from "../persistence/in-memory-topic-repository";
+import { StanceBasedTopicRecommender } from "../external/stance-based-topic-recommender";
 import { InMemorySavedPersonaRepository } from "../persistence/in-memory-saved-persona-repository";
 import { InMemoryTuringGuessRepository } from "../persistence/in-memory-turing-guess-repository";
 import { getServerSupabaseClient } from "../persistence/supabase-client";
@@ -172,6 +176,10 @@ export function createCoreDependencies() {
     ? new OpenAIValueExtractor(openaiKey)
     : new FallbackValueExtractor();
   const personaRepository: PersonaRepository = new InMemoryPersonaRepository();
+  const topicRepository: TopicRepository = new InMemoryTopicRepository();
+  const topicRecommender: TopicRecommender = new StanceBasedTopicRecommender(
+    topicRepository,
+  );
   const personaDialogueGenerator: PersonaDialogueGenerator = hasValidKey
     ? new OpenAiPersonaGenerator(openaiKey)
     : new PersonaLlmAdapter();
@@ -233,6 +241,8 @@ export function createCoreDependencies() {
     lightProtocolRepository,
     questionBank,
     personaRepository,
+    topicRepository,
+    topicRecommender,
     personaDialogueGenerator,
     savedPersonaRepository,
     turingGuessRepository,

@@ -47,7 +47,7 @@ function toCtaLabel(key: EnergyLevelKey): string {
 export function EnergyReactiveMatchCard({
   candidate,
   candidateCount,
-  topic = "관점이 갈리는 오늘의 이슈",
+  topic = "대화를 시작하면 주제가 추천됩니다",
   onStart,
   onDecline,
   onEnergyChange,

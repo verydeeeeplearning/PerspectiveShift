@@ -1,6 +1,9 @@
 import { DialogueSession } from "@/domain/entities/dialogue-session";
+import { StanceVector } from "@/domain/entities/stance-vector";
 import type { DialogueRepository } from "@/domain/interfaces/dialogue-repository";
 import type { PersonaRepository } from "@/domain/interfaces/persona-repository";
+import type { StanceRepository } from "@/domain/interfaces/stance-repository";
+import type { TopicRecommender } from "@/domain/interfaces/topic-recommender";
 
 export interface CreateAgentDialogueSessionInput {
   participantSessionId: string;
@@ -19,6 +22,8 @@ export interface CreateAgentDialogueSessionOutput {
 export interface CreateAgentDialogueSessionDeps {
   personaRepository: PersonaRepository;
   dialogueRepository: DialogueRepository;
+  topicRecommender: TopicRecommender;
+  stanceRepository: StanceRepository;
 }
 
 export class CreateAgentDialogueSessionUseCase {
@@ -32,8 +37,12 @@ export class CreateAgentDialogueSessionUseCase {
       throw new Error(`Persona not found: ${input.personaId}`);
     }
 
+    let topic = input.topic?.trim();
+    if (!topic) {
+      topic = await this.recommendTopic(input.participantSessionId);
+    }
+
     const now = new Date();
-    const topic = input.topic?.trim() || "자유 주제";
     const session = DialogueSession.create({
       id: crypto.randomUUID(),
       participantA: input.participantSessionId,
@@ -55,5 +64,26 @@ export class CreateAgentDialogueSessionUseCase {
       status: "ACTIVE",
       personaId: persona.id,
     };
+  }
+
+  private async recommendTopic(sessionId: string): Promise<string> {
+    try {
+      const stanceProfile =
+        await this.deps.stanceRepository.findBySessionId(sessionId);
+      const stanceVector = stanceProfile?.vector ?? StanceVector.neutral();
+
+      const recentSessions =
+        await this.deps.dialogueRepository.findSessionsByParticipant(sessionId);
+      const recentTopicIds: string[] = [];
+      // Exclude topics from recent sessions (not stored as IDs, so skip)
+
+      const recommended = await this.deps.topicRecommender.recommend(
+        stanceVector,
+        recentTopicIds,
+      );
+      return recommended.title;
+    } catch {
+      return "자유 주제";
+    }
   }
 }

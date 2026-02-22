@@ -63,6 +63,8 @@ export function createCoreUseCases(deps: CoreDependencies) {
     createAgentDialogueSessionUseCase: new CreateAgentDialogueSessionUseCase({
       personaRepository: deps.personaRepository,
       dialogueRepository: deps.dialogueRepository,
+      topicRecommender: deps.topicRecommender,
+      stanceRepository: deps.stanceRepository,
     }),
     createMatchProposalUseCase: new CreateMatchProposalUseCase({
       stanceRepository: deps.stanceRepository,
