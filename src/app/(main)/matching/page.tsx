@@ -26,6 +26,7 @@ export default function MatchingPage() {
   const [personas, setPersonas] = useState<PersonaCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const matchingTopic = "관점이 갈리는 오늘의 이슈";
   const featuredCandidate = candidates[0] ?? null;
   const secondaryCandidates = featuredCandidate ? candidates.slice(1) : [];
 
@@ -36,10 +37,10 @@ export default function MatchingPage() {
     // Fetch human candidates and AI personas in parallel
     Promise.all([
       apiGet<{ candidates: MatchCandidateOutput[] }>("/api/matching/candidates")
-        .then((data) => data.candidates)
+        .then((data) => (Array.isArray(data.candidates) ? data.candidates : []))
         .catch(() => [] as MatchCandidateOutput[]),
       apiGet<{ personas: PersonaCard[] }>("/api/matching/personas")
-        .then((data) => data.personas)
+        .then((data) => (Array.isArray(data.personas) ? data.personas : []))
         .catch(() => [] as PersonaCard[]),
     ])
       .then(([humanCandidates, aiPersonas]) => {
@@ -50,11 +51,23 @@ export default function MatchingPage() {
       .finally(() => setLoading(false));
   }, [isReady]);
 
-  const handlePropose = async (targetSessionId: string) => {
+  const handleStartCandidate = async (candidate: MatchCandidateOutput) => {
     try {
-      await apiPost("/api/matching/proposals", { targetSessionId });
+      if (candidate.candidateType === "agent" && candidate.personaId) {
+        const session = await apiPost<{ id: string }>("/api/dialogue/sessions", {
+          candidateType: "agent",
+          personaId: candidate.personaId,
+          topic: matchingTopic,
+        });
+        window.location.href = `/dialogue/${session.id}`;
+        return;
+      }
+
+      await apiPost("/api/matching/proposals", {
+        targetSessionId: candidate.sessionId,
+      });
       setCandidates((prev) =>
-        prev.filter((c) => c.sessionId !== targetSessionId),
+        prev.filter((c) => c.sessionId !== candidate.sessionId),
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "제안 실패");
@@ -70,6 +83,7 @@ export default function MatchingPage() {
       const session = await apiPost<{ id: string }>("/api/dialogue/sessions", {
         candidateType: "agent",
         personaId,
+        topic: matchingTopic,
       });
       window.location.href = `/dialogue/${session.id}`;
     } catch (e) {
@@ -108,6 +122,10 @@ export default function MatchingPage() {
         <p className="text-sm text-text-secondary leading-relaxed">
           당신과 적절한 의견 거리를 가진 상대를 찾아 구조화된 대화를
           시작하세요.
+        </p>
+        <p className="text-sm text-text-tertiary leading-relaxed">
+          온보딩에서 작성한 입장을 기반으로 상대를 추천합니다. 정밀도를 높이면
+          더 정확한 매칭이 가능합니다.
         </p>
       </motion.div>
 
@@ -167,8 +185,9 @@ export default function MatchingPage() {
           <EnergyReactiveMatchCard
             candidate={featuredCandidate}
             candidateCount={candidates.length}
+            topic={matchingTopic}
             onStart={() => {
-              void handlePropose(featuredCandidate.sessionId);
+              void handleStartCandidate(featuredCandidate);
             }}
             onDecline={handleDeclineFeatured}
           />
@@ -182,7 +201,7 @@ export default function MatchingPage() {
                 <AnimatedListItem key={c.sessionId} index={idx}>
                   <CandidateList
                     candidates={[c]}
-                    onPropose={(candidate) => handlePropose(candidate.sessionId)}
+                    onPropose={(candidate) => handleStartCandidate(candidate)}
                   />
                 </AnimatedListItem>
               ))}

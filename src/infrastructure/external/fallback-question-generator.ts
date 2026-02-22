@@ -31,6 +31,10 @@ export class FallbackQuestionGenerator implements QuestionGenerator {
     let available = this.pool.filter(
       (q) => !excludeSet.has(String(q.id)),
     );
+    if (available.length < context.batchSize) {
+      // If pool is exhausted, relax exclude filter to keep flow alive.
+      available = [...this.pool];
+    }
 
     // Prioritize target dimensions if specified
     if (context.targetDimensions.length > 0) {
@@ -42,7 +46,10 @@ export class FallbackQuestionGenerator implements QuestionGenerator {
 
     // Shuffle for variety
     const shuffled = this.shuffle(available);
-    const selected = shuffled.slice(0, context.batchSize);
+    const selected = shuffled.slice(
+      0,
+      Math.max(1, Math.min(context.batchSize, shuffled.length)),
+    );
 
     const questions: GeneratedQuestionData[] = selected.map((q) => ({
       text: q.text,

@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "[build] Running production build..."
+
+if [ -f package.json ] && grep -q '"build"' package.json 2>/dev/null; then
+  pnpm run build
+else
+  echo "[build] No build script configured yet. Skipping."
+fi

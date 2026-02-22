@@ -28,7 +28,7 @@ last_reviewed: 2026-02-18
 - 테스트 flake 시 후속 실행으로 해결 (즉시 블로킹하지 않음)
 
 ## Entropy Management (AI Slop 방지)
-- 골든 principles를 `.agent/invariants/`에 인코딩
+- 골든 principles를 `.claude/invariants/`에 인코딩
 - YOLO-style 데이터 탐색 금지
 - 공유 유틸리티 패키지 선호 (헬퍼 중복 방지)
 - 기술 부채는 작은 증분으로 지속 상환

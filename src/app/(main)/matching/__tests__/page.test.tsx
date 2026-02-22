@@ -177,6 +177,7 @@ describe("matching/page", () => {
       expect(mockApiPost).toHaveBeenCalledWith("/api/dialogue/sessions", {
         candidateType: "agent",
         personaId: "persona-1",
+        topic: "관점이 갈리는 오늘의 이슈",
       });
       expect(window.location.pathname).toBe("/dialogue/dialogue-agent-1");
     });

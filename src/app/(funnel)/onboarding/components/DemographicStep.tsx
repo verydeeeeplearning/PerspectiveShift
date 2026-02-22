@@ -153,6 +153,11 @@ export function DemographicStep({ onComplete }: DemographicStepProps) {
         >
           다음으로
         </PrimaryButton>
+        {!canProceed && (
+          <p className="mt-2 text-xs text-amber-700">
+            연령대와 직업을 모두 선택해주세요
+          </p>
+        )}
         <p className="mt-3 text-xs text-text-tertiary">
           이 정보는 매칭에만 사용되며, 다른 사용자에게 공개되지 않습니다
         </p>

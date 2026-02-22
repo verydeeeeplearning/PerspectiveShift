@@ -24,6 +24,7 @@ export function OnboardingQuestionRenderer({
   if (question.type === "OX") {
     return (
       <OxQuestion
+        key={String(question.id)}
         questionId={question.id}
         text={question.text}
         onAnswer={onAnswer}
@@ -35,6 +36,7 @@ export function OnboardingQuestionRenderer({
   if (question.type === "RUBRIC") {
     return (
       <RubricQuestion
+        key={String(question.id)}
         questionId={question.id}
         text={question.text}
         onAnswer={onAnswer}
@@ -47,6 +49,7 @@ export function OnboardingQuestionRenderer({
 
   return (
     <OpenEndedQuestion
+      key={String(question.id)}
       questionId={question.id}
       text={question.text}
       onAnswer={onAnswer}

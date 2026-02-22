@@ -6,6 +6,7 @@ interface BatchLoadingIndicatorProps {
   targetTotal: number;
   error?: string | null;
   onRetry?: () => void;
+  onContinueWithFallback?: () => void;
 }
 
 export function BatchLoadingIndicator({
@@ -14,6 +15,7 @@ export function BatchLoadingIndicator({
   targetTotal,
   error = null,
   onRetry,
+  onContinueWithFallback,
 }: BatchLoadingIndicatorProps) {
   const progressPercent = Math.round((totalAnswered / targetTotal) * 100);
 
@@ -40,15 +42,26 @@ export function BatchLoadingIndicator({
           질문 생성 중 오류가 발생했어요
         </p>
         <p className="text-center text-xs text-gray-500">{error}</p>
-        {onRetry && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          >
-            다시 시도
-          </button>
-        )}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              다시 시도
+            </button>
+          )}
+          {onContinueWithFallback && (
+            <button
+              type="button"
+              onClick={onContinueWithFallback}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            >
+              기본 질문으로 계속하기
+            </button>
+          )}
+        </div>
       </div>
     );
   }

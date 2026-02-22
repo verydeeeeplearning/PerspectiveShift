@@ -1,26 +1,22 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { type RubricAnswerValue } from "./RubricQuestion";
-import { ProgressBar } from "./ProgressBar";
 import { PrecisionSelector } from "./PrecisionSelector";
 import { BatchLoadingIndicator } from "./BatchLoadingIndicator";
-import { OnboardingQuestionRenderer } from "./OnboardingQuestionRenderer";
+import { DynamicOnboardingQuestionView } from "./DynamicOnboardingQuestionView";
 import {
-  emitOnboardingEvent,
-  getPrecisionSelectEvent,
-  type AnswerMap,
-  type OnboardingEventName,
-  type QuestionData,
+  emitOnboardingEvent, filterAnswersByQuestionSet, getPrecisionSelectEvent,
+  toQuestionIdSet, type AnswerMap, type OnboardingEventName, type QuestionData,
 } from "./onboarding-flow.helpers";
 import {
-  QUESTION_PRECISION_CONFIG,
-  type QuestionPrecision,
+  QUESTION_PRECISION_CONFIG, type QuestionPrecision,
 } from "@/domain/value-objects/question-precision";
 import {
-  useBatchLoader,
-  type GeneratedQuestionMeta,
-  type SeedQuestionMeta,
+  buildLocalFallbackBatch, chunkGeneratedBatches, hasAnswered,
+} from "./dynamic-onboarding.helpers";
+import {
+  useBatchLoader, type GeneratedQuestionMeta, type SeedQuestionMeta,
 } from "./useBatchLoader";
 
 export type { GeneratedQuestionMeta, SeedQuestionMeta };
@@ -36,6 +32,7 @@ export interface DynamicOnboardingFlowProps {
 }
 
 const BATCH_PREFETCH_THRESHOLD = 3;
+const LOCAL_FALLBACK_BATCH_SIZE = 5;
 
 export function DynamicOnboardingFlow({
   seedQuestions,
@@ -44,11 +41,15 @@ export function DynamicOnboardingFlow({
   onEvent,
 }: DynamicOnboardingFlowProps) {
   const [precision, setPrecision] = useState<QuestionPrecision | null>(null);
+  const [isPrecisionEditorOpen, setIsPrecisionEditorOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [generatedBatches, setGeneratedBatches] = useState<
     GeneratedQuestionMeta[][]
   >([]);
+  const [ignoreBatchError, setIgnoreBatchError] = useState(false);
+  const [shouldLoadAfterPrecisionChange, setShouldLoadAfterPrecisionChange] =
+    useState(false);
 
   const emitEvent = useCallback(
     (eventName: OnboardingEventName) => {
@@ -75,7 +76,6 @@ export function DynamicOnboardingFlow({
 
   const batchLoader = useBatchLoader({
     seedMeta,
-    seedCount: seedQuestions.length,
     targetTotal,
     answers,
     allQuestions,
@@ -84,32 +84,116 @@ export function DynamicOnboardingFlow({
 
   const currentQuestion = allQuestions[currentIndex];
   const totalAnswered = Object.keys(answers).length;
-  const allGeneratedMeta = useMemo(
-    () => generatedBatches.flat(),
-    [generatedBatches],
-  );
+  const allGeneratedMeta = useMemo(() => generatedBatches.flat(), [generatedBatches]);
+  const generatedCount = allGeneratedMeta.length;
+  const batchCount = generatedBatches.length;
 
   const loadNextBatch = useCallback(() => {
+    setIgnoreBatchError(false);
     emitEvent("batch_loading");
     batchLoader.load((result) => {
       setGeneratedBatches((prev) => [...prev, result.questions]);
-      setCurrentIndex(
-        seedQuestions.length + generatedBatches.flat().length,
-      );
+      setCurrentIndex(seedQuestions.length + generatedCount);
       emitEvent("batch_loaded");
     });
-  }, [batchLoader, emitEvent, generatedBatches, seedQuestions.length]);
+  }, [batchLoader, emitEvent, generatedCount, seedQuestions.length]);
+
+  useEffect(() => {
+    if (!shouldLoadAfterPrecisionChange) return;
+    setShouldLoadAfterPrecisionChange(false);
+    loadNextBatch();
+  }, [loadNextBatch, shouldLoadAfterPrecisionChange]);
+
+  const handleContinueWithFallback = useCallback(() => {
+    if (!precision) return;
+
+    const remaining = targetTotal - totalAnswered;
+    if (remaining <= 0) {
+      onComplete(answers, allGeneratedMeta);
+      return;
+    }
+
+    const batchSize = Math.min(LOCAL_FALLBACK_BATCH_SIZE, remaining);
+    const nextBatchIndex = batchCount;
+    const fallbackBatch = buildLocalFallbackBatch({
+      existingQuestions: allQuestions,
+      batchIndex: nextBatchIndex,
+      batchSize,
+    });
+
+    if (fallbackBatch.length === 0) return;
+
+    setGeneratedBatches((prev) => [...prev, fallbackBatch]);
+    setIgnoreBatchError(true);
+    setCurrentIndex(seedQuestions.length + generatedCount);
+    emitEvent("batch_loaded");
+  }, [allGeneratedMeta, allQuestions, answers, emitEvent, batchCount, generatedCount,
+    onComplete, precision, seedQuestions.length, targetTotal, totalAnswered]);
 
   const handlePrecisionSelect = useCallback(
     (selected: QuestionPrecision) => {
+      if (precision && precision !== selected) {
+        emitEvent("precision_change_midway");
+      }
       emitEvent(getPrecisionSelectEvent(selected));
+
+      if (!precision) {
+        setPrecision(selected);
+        setCurrentIndex(0);
+        setAnswers({});
+        setGeneratedBatches([]);
+        setIgnoreBatchError(false);
+        setIsPrecisionEditorOpen(false);
+        batchLoader.clearPrefetch();
+        return;
+      }
+
+      const nextTotal = QUESTION_PRECISION_CONFIG[selected].totalQuestions;
+      const maxGeneratedCount = Math.max(0, nextTotal - seedQuestions.length);
+      const trimmedGenerated = allGeneratedMeta.slice(0, maxGeneratedCount);
+      const trimmedBatches = chunkGeneratedBatches(trimmedGenerated);
+      const nextSequence: QuestionData[] = [
+        ...seedQuestions,
+        ...trimmedGenerated.map((question) => ({
+          id: question.id,
+          text: question.text,
+          type: question.type,
+          phase: "generated" as const,
+          dimension: question.dimension,
+          polarity: question.polarity,
+        })),
+      ];
+      const nextAnswers = filterAnswersByQuestionSet(
+        answers,
+        toQuestionIdSet(nextSequence),
+      );
+      const firstUnansweredIndex = nextSequence.findIndex(
+        (question) => !hasAnswered(nextAnswers, question.id),
+      );
+
       setPrecision(selected);
-      setCurrentIndex(0);
-      setAnswers({});
-      setGeneratedBatches([]);
+      setGeneratedBatches(trimmedBatches);
+      setAnswers(nextAnswers);
+      setIgnoreBatchError(false);
+      setIsPrecisionEditorOpen(false);
       batchLoader.clearPrefetch();
+
+      const answeredCount = Object.keys(nextAnswers).length;
+      if (answeredCount >= nextTotal) {
+        setCurrentIndex(Math.max(nextSequence.length - 1, 0));
+        onComplete(nextAnswers, trimmedGenerated);
+        return;
+      }
+
+      if (firstUnansweredIndex === -1) {
+        setCurrentIndex(Math.max(nextSequence.length - 1, 0));
+        setShouldLoadAfterPrecisionChange(true);
+        return;
+      }
+
+      setCurrentIndex(firstUnansweredIndex);
     },
-    [batchLoader, emitEvent],
+    [allGeneratedMeta, answers, batchLoader, emitEvent, onComplete, precision, seedQuestions],
   );
 
   const handleAnswer = useCallback(
@@ -146,18 +230,25 @@ export function DynamicOnboardingFlow({
 
       loadNextBatch();
     },
-    [
-      allGeneratedMeta, allQuestions.length, answers, batchLoader,
-      currentIndex, currentQuestion, emitEvent, loadNextBatch,
-      onComplete, precision, targetTotal,
-    ],
+    [allGeneratedMeta, allQuestions.length, answers, batchLoader, currentIndex,
+      currentQuestion, emitEvent, loadNextBatch, onComplete, precision, targetTotal],
   );
+
+  if (isPrecisionEditorOpen && precision) {
+    return (
+      <PrecisionSelector
+        selectedPrecision={precision}
+        onSelect={handlePrecisionSelect}
+        onClose={() => setIsPrecisionEditorOpen(false)}
+      />
+    );
+  }
 
   if (!precision) {
     return <PrecisionSelector onSelect={handlePrecisionSelect} />;
   }
 
-  if (batchLoader.loading || batchLoader.error) {
+  if (batchLoader.loading || (batchLoader.error && !ignoreBatchError)) {
     return (
       <BatchLoadingIndicator
         batchIndex={generatedBatches.length}
@@ -165,6 +256,7 @@ export function DynamicOnboardingFlow({
         targetTotal={targetTotal}
         error={batchLoader.error}
         onRetry={loadNextBatch}
+        onContinueWithFallback={handleContinueWithFallback}
       />
     );
   }
@@ -174,32 +266,19 @@ export function DynamicOnboardingFlow({
   const config = QUESTION_PRECISION_CONFIG[precision];
 
   return (
-    <div className="flex flex-col gap-8 py-4">
-      <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
-        <p className="text-sm text-gray-600">
-          정밀도: <span className="font-semibold">{config.label}</span> (
-          {config.totalQuestions}문항)
-        </p>
-        <span className="text-xs text-gray-500">
-          {totalAnswered}/{targetTotal}
-        </span>
-      </div>
-
-      <ProgressBar
-        current={Math.min(totalAnswered + 1, targetTotal)}
-        total={targetTotal}
-        phase={currentIndex < seedQuestions.length ? "core" : "extended"}
-      />
-
-      <div className="min-h-[240px]">
-        <OnboardingQuestionRenderer
-          question={currentQuestion}
-          answers={answers}
-          onAnswer={handleAnswer}
-          onCoachClick={() => emitEvent("coach_click")}
-          onExampleSwipe={() => emitEvent("example_swipe")}
-        />
-      </div>
-    </div>
+    <DynamicOnboardingQuestionView
+      label={config.label}
+      totalQuestions={config.totalQuestions}
+      totalAnswered={totalAnswered}
+      targetTotal={targetTotal}
+      currentIndex={currentIndex}
+      seedCount={seedQuestions.length}
+      currentQuestion={currentQuestion}
+      answers={answers}
+      onAnswer={handleAnswer}
+      onCoachClick={() => emitEvent("coach_click")}
+      onExampleSwipe={() => emitEvent("example_swipe")}
+      onEditPrecision={() => setIsPrecisionEditorOpen(true)}
+    />
   );
 }

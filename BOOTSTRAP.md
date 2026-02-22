@@ -174,7 +174,7 @@ AUTONOMY_LEVEL: "medium"  # 자율성 수준: "low" | "medium" | "high"
 │   └── gardening/                         ← [생성] 문서 정원 관리
 │       └── .gitkeep
 │
-├── .agent/                                ← [생성] 에이전트 설정 디렉토리
+├── .claude/                                ← [생성] 에이전트 설정 디렉토리
 │   ├── config.yaml                        ← [생성] 에이전트 런타임 설정
 │   ├── team/                              ← [생성] 에이전트 팀 페르소나
 │   │   ├── planner.md
@@ -199,7 +199,7 @@ AUTONOMY_LEVEL: "medium"  # 자율성 수준: "low" | "medium" | "high"
         └── agent-verify.yaml              ← [생성] CI 워크플로우
 ```
 
-[RULE] `.agent/` 디렉토리는 `.gitignore`에 추가하지 않는다. 이 디렉토리의 모든 파일은 버전 관리 대상이다.
+[RULE] `.claude/` 디렉토리는 `.gitignore`에 추가하지 않는다. 이 디렉토리의 모든 파일은 버전 관리 대상이다.
 
 [RULE] 기존 프로젝트에 동일 이름의 디렉토리/파일이 존재하면, 기존 구조를 존중하고 내용을 **통합/보완**한다. 절대 덮어쓰지 마라.
 
@@ -241,7 +241,7 @@ AUTONOMY_LEVEL: "medium"  # 자율성 수준: "low" | "medium" | "high"
 
 ## Architecture
 - **아키텍처 맵**: → [ARCHITECTURE.md](ARCHITECTURE.md)
-- **의존성 규칙**: → [.agent/invariants/architecture.yaml](.agent/invariants/architecture.yaml)
+- **의존성 규칙**: → [.claude/invariants/architecture.yaml](.claude/invariants/architecture.yaml)
 - **결정 기록**: → [specs/decisions/](specs/decisions/)
 
 ## Tech Stack
@@ -252,17 +252,17 @@ AUTONOMY_LEVEL: "medium"  # 자율성 수준: "low" | "medium" | "high"
 - **린트**: {{LINT_TOOL}}
 
 ## Development Workflow (SDD + PR-First)
-1. 스펙 작성: → [.agent/templates/spec-template.md](.agent/templates/spec-template.md)
+1. 스펙 작성: → [.claude/templates/spec-template.md](.claude/templates/spec-template.md)
 2. 태스크 분해 및 구현
 3. 테스트 + eval 실행
-4. PR 생성: → [.agent/templates/pr-template.md](.agent/templates/pr-template.md)
+4. PR 생성: → [.claude/templates/pr-template.md](.claude/templates/pr-template.md)
 5. 리뷰 → 머지
 - **상세 프로토콜**: → [PROTOCOL.md](PROTOCOL.md)
 
 ## Coding Standards & Invariants
-- **아키텍처 규칙**: → [.agent/invariants/architecture.yaml](.agent/invariants/architecture.yaml)
-- **네이밍 규칙**: → [.agent/invariants/naming.yaml](.agent/invariants/naming.yaml)
-- **품질 게이트**: → [.agent/invariants/quality.yaml](.agent/invariants/quality.yaml)
+- **아키텍처 규칙**: → [.claude/invariants/architecture.yaml](.claude/invariants/architecture.yaml)
+- **네이밍 규칙**: → [.claude/invariants/naming.yaml](.claude/invariants/naming.yaml)
+- **품질 게이트**: → [.claude/invariants/quality.yaml](.claude/invariants/quality.yaml)
 
 ## Testing & Evaluation (EDD)
 - **eval 설정**: → [evals/eval-config.yaml](evals/eval-config.yaml)
@@ -270,18 +270,18 @@ AUTONOMY_LEVEL: "medium"  # 자율성 수준: "low" | "medium" | "high"
 - **회귀 세트**: → [evals/regression/](evals/regression/)
 
 ## Agent Team Roles
-- **Planner**: → [.agent/team/planner.md](.agent/team/planner.md)
-- **Implementer**: → [.agent/team/implementer.md](.agent/team/implementer.md)
-- **Reviewer**: → [.agent/team/reviewer.md](.agent/team/reviewer.md)
-- **Tester**: → [.agent/team/tester.md](.agent/team/tester.md)
+- **Planner**: → [.claude/team/planner.md](.claude/team/planner.md)
+- **Implementer**: → [.claude/team/implementer.md](.claude/team/implementer.md)
+- **Reviewer**: → [.claude/team/reviewer.md](.claude/team/reviewer.md)
+- **Tester**: → [.claude/team/tester.md](.claude/team/tester.md)
 
 ## Policies & Permissions
 - **정책**: → [POLICIES.md](POLICIES.md)
 - **PR 정책**: → [PR_POLICY.md](PR_POLICY.md)
 
 ## Memory & Learnings
-- **글로벌 학습**: → [.agent/memory/global.md](.agent/memory/global.md)
-- **개인 학습**: → [.agent/memory/personal.md](.agent/memory/personal.md)
+- **글로벌 학습**: → [.claude/memory/global.md](.claude/memory/global.md)
+- **개인 학습**: → [.claude/memory/personal.md](.claude/memory/personal.md)
 
 ## Docs Index (Progressive Disclosure)
 - **문서 규약**: → [docs/_meta/doc-conventions.md](docs/_meta/doc-conventions.md)
@@ -445,7 +445,7 @@ last_reviewed: {{TODAY_DATE}}
 | 대량 수정 | 20개 파일 이상 자동 변경 | 리뷰 불가/드리프트 |
 | CI 워크플로 변경 | `.github/workflows/*` | 배포/보안 영향 |
 | 릴리즈/배포 | 태그/배포 명령 | 고위험 |
-| 아키텍처 불변량 변경 | `.agent/invariants/*` 수정 | 구조적 영향 |
+| 아키텍처 불변량 변경 | `.claude/invariants/*` 수정 | 구조적 영향 |
 | 데이터베이스 스키마 변경 | 마이그레이션 파일 | 데이터 무결성 |
 
 ## Allowed by Default (기본 허용)
@@ -454,7 +454,7 @@ last_reviewed: {{TODAY_DATE}}
 - 로컬 테스트/린트/포맷 실행 (`./tools/*`)
 - 문서/스캐폴딩 생성 (안전 범위)
 - `src/`, `tests/`, `docs/`, `specs/`, `evals/` 내 파일 생성/수정
-- `.agent/` 내 설정/메모리 업데이트
+- `.claude/` 내 설정/메모리 업데이트
 - PR 템플릿에 맞는 변경 요약 작성
 
 ## Secrets Handling
@@ -507,7 +507,7 @@ last_reviewed: {{TODAY_DATE}}
 
 ## Phase 3: Execute (구현)
 - 계획 범위 내 변경만 수행
-- 불변량 준수 (`.agent/invariants/`)
+- 불변량 준수 (`.claude/invariants/`)
 - 권한 정책 준수 (`POLICIES.md`)
 
 ## Phase 4: Verify (LOOP UNTIL CLEAN)
@@ -589,7 +589,7 @@ last_reviewed: {{TODAY_DATE}}
 - 테스트 flake 시 후속 실행으로 해결 (즉시 블로킹하지 않음)
 
 ## Entropy Management (AI Slop 방지)
-- 골든 principles를 `.agent/invariants/`에 인코딩
+- 골든 principles를 `.claude/invariants/`에 인코딩
 - YOLO-style 데이터 탐색 금지
 - 공유 유틸리티 패키지 선호 (헬퍼 중복 방지)
 - 기술 부채는 작은 증분으로 지속 상환
@@ -701,19 +701,19 @@ required_paths:
   - tools/test
   - tools/ci
   # 에이전트 설정
-  - .agent/config.yaml
-  - .agent/invariants/architecture.yaml
-  - .agent/invariants/naming.yaml
-  - .agent/invariants/quality.yaml
-  - .agent/team/planner.md
-  - .agent/team/implementer.md
-  - .agent/team/reviewer.md
-  - .agent/team/tester.md
-  - .agent/memory/global.md
-  - .agent/memory/personal.md
-  - .agent/templates/spec-template.md
-  - .agent/templates/adr-template.md
-  - .agent/templates/pr-template.md
+  - .claude/config.yaml
+  - .claude/invariants/architecture.yaml
+  - .claude/invariants/naming.yaml
+  - .claude/invariants/quality.yaml
+  - .claude/team/planner.md
+  - .claude/team/implementer.md
+  - .claude/team/reviewer.md
+  - .claude/team/tester.md
+  - .claude/memory/global.md
+  - .claude/memory/personal.md
+  - .claude/templates/spec-template.md
+  - .claude/templates/adr-template.md
+  - .claude/templates/pr-template.md
 
 # === 표준 엔트리포인트 계약 ===
 entrypoint_contract:
@@ -844,7 +844,7 @@ done
 # --- 4) Agent config ---
 echo ""
 echo "[doctor] Checking agent config..."
-for f in .agent/config.yaml .agent/invariants/architecture.yaml .agent/invariants/naming.yaml .agent/invariants/quality.yaml; do
+for f in .claude/config.yaml .claude/invariants/architecture.yaml .claude/invariants/naming.yaml .claude/invariants/quality.yaml; do
   if [ ! -e "$f" ]; then
     echo "  ✗ MISSING: $f"
     errors=$((errors + 1))
@@ -1145,13 +1145,13 @@ last_reviewed: {{TODAY_DATE}}
 
 ---
 
-## 9. 파일 생성: .agent/invariants/
+## 9. 파일 생성: .claude/invariants/
 
-[EXECUTE] `.agent/invariants/` 디렉토리에 3개의 불변량 정의 파일을 생성하라.
+[EXECUTE] `.claude/invariants/` 디렉토리에 3개의 불변량 정의 파일을 생성하라.
 
 ### 9.1 architecture.yaml
 
-[TEMPLATE: .agent/invariants/architecture.yaml]
+[TEMPLATE: .claude/invariants/architecture.yaml]
 
 ```yaml
 # Architecture Invariants — {{PROJECT_NAME}}
@@ -1210,7 +1210,7 @@ invariants:
 
 ### 9.2 naming.yaml
 
-[TEMPLATE: .agent/invariants/naming.yaml]
+[TEMPLATE: .claude/invariants/naming.yaml]
 
 ```yaml
 # Naming Invariants — {{PROJECT_NAME}}
@@ -1256,7 +1256,7 @@ invariants:
 
 ### 9.3 quality.yaml
 
-[TEMPLATE: .agent/invariants/quality.yaml]
+[TEMPLATE: .claude/invariants/quality.yaml]
 
 ```yaml
 # Quality Invariants — {{PROJECT_NAME}}
@@ -1310,13 +1310,13 @@ invariants:
 
 ---
 
-## 10. 파일 생성: .agent/team/ (에이전트 팀 페르소나)
+## 10. 파일 생성: .claude/team/ (에이전트 팀 페르소나)
 
-[EXECUTE] `.agent/team/` 디렉토리에 4개의 에이전트 페르소나 파일을 생성하라.
+[EXECUTE] `.claude/team/` 디렉토리에 4개의 에이전트 페르소나 파일을 생성하라.
 
 ### 10.1 planner.md
 
-[TEMPLATE: .agent/team/planner.md]
+[TEMPLATE: .claude/team/planner.md]
 
 ```markdown
 # Agent Role: Planner
@@ -1351,7 +1351,7 @@ PROTOCOL.md의 Phase 0 → Phase 1 → Phase 2를 수행한다.
 
 ### 10.2 implementer.md
 
-[TEMPLATE: .agent/team/implementer.md]
+[TEMPLATE: .claude/team/implementer.md]
 
 ```markdown
 # Agent Role: Implementer
@@ -1364,7 +1364,7 @@ PROTOCOL.md의 Phase 0 → Phase 1 → Phase 2를 수행한다.
 - 단순한 버그 수정 (스펙 없이 진행 가능한 경우)
 
 ## Inputs
-- 스펙, ARCHITECTURE.md, .agent/invariants/*.yaml, POLICIES.md
+- 스펙, ARCHITECTURE.md, .claude/invariants/*.yaml, POLICIES.md
 
 ## Outputs
 1. 소스 코드, 테스트 코드, 문서 업데이트
@@ -1392,7 +1392,7 @@ PROTOCOL.md의 Phase 0 → Phase 1 → Phase 2를 수행한다.
 
 ### 10.3 reviewer.md
 
-[TEMPLATE: .agent/team/reviewer.md]
+[TEMPLATE: .claude/team/reviewer.md]
 
 ```markdown
 # Agent Role: Reviewer
@@ -1434,7 +1434,7 @@ PROTOCOL.md의 Phase 0 → Phase 1 → Phase 2를 수행한다.
 
 ### 10.4 tester.md
 
-[TEMPLATE: .agent/team/tester.md]
+[TEMPLATE: .claude/team/tester.md]
 
 ```markdown
 # Agent Role: Tester
@@ -1544,17 +1544,17 @@ case_format:
 
 ---
 
-## 12. 파일 생성: .agent/memory/ + .agent/config.yaml + .agent/templates/
+## 12. 파일 생성: .claude/memory/ + .claude/config.yaml + .claude/templates/
 
-### 12.1 .agent/memory/global.md
+### 12.1 .claude/memory/global.md
 
-[TEMPLATE: .agent/memory/global.md]
+[TEMPLATE: .claude/memory/global.md]
 
 ```markdown
 # Global Memory — {{PROJECT_NAME}}
 
 > 프로젝트 레벨의 학습 기록. 에이전트가 발견한 비자명한 교정, 패턴, 주의사항.
-> 반복되는 교정은 .agent/invariants/로 승격한다.
+> 반복되는 교정은 .claude/invariants/로 승격한다.
 
 ## 기록 형식
 ```
@@ -1570,9 +1570,9 @@ case_format:
 (에이전트: 작업 중 발견한 비자명한 교정을 여기에 기록하라.)
 ```
 
-### 12.2 .agent/memory/personal.md
+### 12.2 .claude/memory/personal.md
 
-[TEMPLATE: .agent/memory/personal.md]
+[TEMPLATE: .claude/memory/personal.md]
 
 ```markdown
 # Personal Memory
@@ -1589,9 +1589,9 @@ case_format:
 (에이전트: 반복 코드 패턴을 파악하면 기록)
 ```
 
-### 12.3 .agent/config.yaml
+### 12.3 .claude/config.yaml
 
-[TEMPLATE: .agent/config.yaml]
+[TEMPLATE: .claude/config.yaml]
 
 ```yaml
 # Agent Configuration — {{PROJECT_NAME}}
@@ -1628,9 +1628,9 @@ entropy_management:
   memory_promotion_review: "weekly"
 ```
 
-### 12.4 .agent/templates/spec-template.md
+### 12.4 .claude/templates/spec-template.md
 
-[TEMPLATE: .agent/templates/spec-template.md]
+[TEMPLATE: .claude/templates/spec-template.md]
 
 ```markdown
 ---
@@ -1682,9 +1682,9 @@ last_reviewed: YYYY-MM-DD
 | | | |
 ```
 
-### 12.5 .agent/templates/adr-template.md
+### 12.5 .claude/templates/adr-template.md
 
-[TEMPLATE: .agent/templates/adr-template.md]
+[TEMPLATE: .claude/templates/adr-template.md]
 
 ```markdown
 ---
@@ -1714,9 +1714,9 @@ last_reviewed: YYYY-MM-DD
 - (관련 스펙, 이슈 링크)
 ```
 
-### 12.6 .agent/templates/pr-template.md
+### 12.6 .claude/templates/pr-template.md
 
-[TEMPLATE: .agent/templates/pr-template.md]
+[TEMPLATE: .claude/templates/pr-template.md]
 
 ```markdown
 ## What
@@ -1863,7 +1863,7 @@ set -eu
 echo "=== [memory-review] Memory → Invariant Promotion Review ==="
 echo ""
 
-if [ ! -f .agent/memory/global.md ]; then
+if [ ! -f .claude/memory/global.md ]; then
   echo "[memory-review] No global memory file found. Nothing to review."
   exit 0
 fi
@@ -1872,19 +1872,19 @@ echo "[memory-review] Current global memory entries:"
 echo ""
 
 # Count entries (lines starting with ### [)
-count=$(grep -c '^### \[' .agent/memory/global.md 2>/dev/null || echo "0")
+count=$(grep -c '^### \[' .claude/memory/global.md 2>/dev/null || echo "0")
 echo "  Total entries: $count"
 
 # Find entries marked as 미승격
-unpromoted=$(grep -c '승격 여부: 미승격' .agent/memory/global.md 2>/dev/null || echo "0")
+unpromoted=$(grep -c '승격 여부: 미승격' .claude/memory/global.md 2>/dev/null || echo "0")
 echo "  Unpromoted entries: $unpromoted"
 
 if [ "$unpromoted" -gt 0 ]; then
   echo ""
   echo "[memory-review] Unpromoted entries (candidates for invariant promotion):"
-  grep -B 3 '승격 여부: 미승격' .agent/memory/global.md 2>/dev/null || true
+  grep -B 3 '승격 여부: 미승격' .claude/memory/global.md 2>/dev/null || true
   echo ""
-  echo "[memory-review] TIP: If a correction appears 2+ times, consider promoting to .agent/invariants/"
+  echo "[memory-review] TIP: If a correction appears 2+ times, consider promoting to .claude/invariants/"
 fi
 
 echo ""
@@ -1916,7 +1916,7 @@ last_reviewed: {{TODAY_DATE}}
 ## P1. 스펙이 Source of Truth다
 
 ### 적용 방법
-- 기능 구현 전 `specs/features/`에 스펙을 작성한다 (.agent/templates/spec-template.md 사용)
+- 기능 구현 전 `specs/features/`에 스펙을 작성한다 (.claude/templates/spec-template.md 사용)
 - 스펙에 명시되지 않은 동작은 버그다
 - 스펙 변경 시 관련 코드도 함께 업데이트한다
 
@@ -1930,7 +1930,7 @@ last_reviewed: {{TODAY_DATE}}
 ### 적용 방법
 - 모든 아키텍처 결정 → specs/decisions/ADR-*.md
 - 모든 기능 스펙 → specs/features/*.spec.md
-- 모든 코딩 컨벤션 → .agent/invariants/
+- 모든 코딩 컨벤션 → .claude/invariants/
 - 모든 도메인 지식 → docs/domain-guides/
 - 구두 합의, 채팅의 결정 → 문서로 옮겨야 유효
 
@@ -2064,20 +2064,20 @@ Phase 4: Tools (표준 엔트리포인트 구축)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Phase 5: Agent Config (에이전트 설정 구축)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-□ 5.1  .agent/config.yaml 생성 (섹션 12.3)
-□ 5.2  .agent/invariants/architecture.yaml 생성 (섹션 9.1)
-□ 5.3  .agent/invariants/naming.yaml 생성 (섹션 9.2)
+□ 5.1  .claude/config.yaml 생성 (섹션 12.3)
+□ 5.2  .claude/invariants/architecture.yaml 생성 (섹션 9.1)
+□ 5.3  .claude/invariants/naming.yaml 생성 (섹션 9.2)
        → PRIMARY_LANGUAGE에 맞게 규칙 조정
-□ 5.4  .agent/invariants/quality.yaml 생성 (섹션 9.3)
-□ 5.5  .agent/team/planner.md 생성 (섹션 10.1)
-□ 5.6  .agent/team/implementer.md 생성 (섹션 10.2)
-□ 5.7  .agent/team/reviewer.md 생성 (섹션 10.3)
-□ 5.8  .agent/team/tester.md 생성 (섹션 10.4)
-□ 5.9  .agent/templates/spec-template.md 생성 (섹션 12.4)
-□ 5.10 .agent/templates/adr-template.md 생성 (섹션 12.5)
-□ 5.11 .agent/templates/pr-template.md 생성 (섹션 12.6)
-□ 5.12 .agent/memory/global.md 생성 (섹션 12.1)
-□ 5.13 .agent/memory/personal.md 생성 (섹션 12.2)
+□ 5.4  .claude/invariants/quality.yaml 생성 (섹션 9.3)
+□ 5.5  .claude/team/planner.md 생성 (섹션 10.1)
+□ 5.6  .claude/team/implementer.md 생성 (섹션 10.2)
+□ 5.7  .claude/team/reviewer.md 생성 (섹션 10.3)
+□ 5.8  .claude/team/tester.md 생성 (섹션 10.4)
+□ 5.9  .claude/templates/spec-template.md 생성 (섹션 12.4)
+□ 5.10 .claude/templates/adr-template.md 생성 (섹션 12.5)
+□ 5.11 .claude/templates/pr-template.md 생성 (섹션 12.6)
+□ 5.12 .claude/memory/global.md 생성 (섹션 12.1)
+□ 5.13 .claude/memory/personal.md 생성 (섹션 12.2)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Phase 6: Evaluation (평가 체계 구축)
@@ -2134,8 +2134,8 @@ Phase 9: Report (완료 보고)
 ### 17.1 Memory → Invariant 승격 루프
 
 ```
-.agent/memory/global.md에서 동일 교정이 2회 이상 발생
-    → .agent/invariants/에 새 규칙으로 승격
+.claude/memory/global.md에서 동일 교정이 2회 이상 발생
+    → .claude/invariants/에 새 규칙으로 승격
     → 해당 규칙의 에러 메시지에 교정 지침 포함
     → global.md에서 해당 항목을 "승격됨"으로 마크
 ```
@@ -2208,18 +2208,18 @@ specs/features/의 각 스펙:
 | 설계 결정 기록 | `specs/decisions/` |
 | 문서 메타데이터 표준 | `docs/_meta/doc-conventions.md` |
 | 실행 계획 | `docs/plans/active/` |
-| 아키텍처 불변량 | `.agent/invariants/architecture.yaml` |
-| 네이밍 규칙 | `.agent/invariants/naming.yaml` |
-| 품질 게이트 | `.agent/invariants/quality.yaml` |
-| 에이전트 설정 | `.agent/config.yaml` |
-| 에이전트 역할 | `.agent/team/` |
-| 스펙 템플릿 | `.agent/templates/spec-template.md` |
-| ADR 템플릿 | `.agent/templates/adr-template.md` |
-| PR 템플릿 | `.agent/templates/pr-template.md` |
+| 아키텍처 불변량 | `.claude/invariants/architecture.yaml` |
+| 네이밍 규칙 | `.claude/invariants/naming.yaml` |
+| 품질 게이트 | `.claude/invariants/quality.yaml` |
+| 에이전트 설정 | `.claude/config.yaml` |
+| 에이전트 역할 | `.claude/team/` |
+| 스펙 템플릿 | `.claude/templates/spec-template.md` |
+| ADR 템플릿 | `.claude/templates/adr-template.md` |
+| PR 템플릿 | `.claude/templates/pr-template.md` |
 | 골든 테스트 | `evals/golden/` |
 | 회귀 테스트 | `evals/regression/` |
-| 프로젝트 학습 기록 | `.agent/memory/global.md` |
-| 개인 학습 기록 | `.agent/memory/personal.md` |
+| 프로젝트 학습 기록 | `.claude/memory/global.md` |
+| 개인 학습 기록 | `.claude/memory/personal.md` |
 | 문서 동기화 검증 | `scripts/gardening/doc-sync-check` |
 | 메모리 승격 검토 | `scripts/gardening/memory-review` |
 
@@ -2244,8 +2244,8 @@ specs/features/의 각 스펙:
 □ ./tools/ci가 fmt→lint→test 순서를 보장
 □ docs/plans/active/000-bootstrap.md에 실행 로그 기록
 □ evals/ skeleton 존재 (README + bootstrap eval)
-□ .agent/invariants/ 3종 존재 (architecture, naming, quality)
-□ .agent/team/ 4종 존재 (planner, implementer, reviewer, tester)
+□ .claude/invariants/ 3종 존재 (architecture, naming, quality)
+□ .claude/team/ 4종 존재 (planner, implementer, reviewer, tester)
 ```
 
 ---

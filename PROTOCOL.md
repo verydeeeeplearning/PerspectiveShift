@@ -26,7 +26,7 @@ last_reviewed: 2026-02-18
 
 ## Phase 3: Execute (구현)
 - 계획 범위 내 변경만 수행
-- 불변량 준수 (`.agent/invariants/`)
+- 불변량 준수 (`.claude/invariants/`)
 - 권한 정책 준수 (`POLICIES.md`)
 
 ## Phase 4: Verify (LOOP UNTIL CLEAN)

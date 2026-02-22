@@ -28,7 +28,10 @@ export class OpenAiQuestionGenerator implements QuestionGenerator {
   private client: OpenAI;
   private model: string;
 
-  constructor(apiKey: string, model: string = "gpt-5-mini") {
+  constructor(
+    apiKey: string,
+    model: string = process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+  ) {
     this.client = new OpenAI({ apiKey });
     this.model = model;
   }

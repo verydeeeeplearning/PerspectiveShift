@@ -3,8 +3,8 @@ set -eu
 
 echo "[test] Running tests..."
 
-if [ -f package.json ] && grep -q '"test"' package.json 2>/dev/null; then
-  pnpm run test
+if [ -f package.json ] && grep -q '"test:run"' package.json 2>/dev/null; then
+  pnpm run test:run
 elif [ -f node_modules/.bin/vitest ]; then
   pnpm exec vitest run
 else

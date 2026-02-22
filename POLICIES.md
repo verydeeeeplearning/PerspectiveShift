@@ -27,7 +27,7 @@ last_reviewed: 2026-02-18
 | 대량 수정 | 20개 파일 이상 자동 변경 | 리뷰 불가/드리프트 |
 | CI 워크플로 변경 | `.github/workflows/*` | 배포/보안 영향 |
 | 릴리즈/배포 | 태그/배포 명령 | 고위험 |
-| 아키텍처 불변량 변경 | `.agent/invariants/*` 수정 | 구조적 영향 |
+| 아키텍처 불변량 변경 | `.claude/invariants/*` 수정 | 구조적 영향 |
 | 데이터베이스 스키마 변경 | 마이그레이션 파일 | 데이터 무결성 |
 
 ## Allowed by Default (기본 허용)
@@ -36,7 +36,7 @@ last_reviewed: 2026-02-18
 - 로컬 테스트/린트/포맷 실행 (`./tools/*`)
 - 문서/스캐폴딩 생성 (안전 범위)
 - `src/`, `tests/`, `docs/`, `specs/`, `evals/` 내 파일 생성/수정
-- `.agent/` 내 설정/메모리 업데이트
+- `.claude/` 내 설정/메모리 업데이트
 - PR 템플릿에 맞는 변경 요약 작성
 
 ## Secrets Handling

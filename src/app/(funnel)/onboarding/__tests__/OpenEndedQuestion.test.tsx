@@ -112,4 +112,31 @@ describe("OpenEndedQuestion", () => {
     fireEvent.click(screen.getByText("Coach"));
     expect(screen.getByText(/설득력이 올라가요/)).toBeInTheDocument();
   });
+
+  it("resets textarea when component remounts for a different question", () => {
+    const { rerender } = render(
+      <OpenEndedQuestion
+        key="question-9"
+        questionId={9}
+        text="질문 A"
+        onAnswer={vi.fn()}
+      />,
+    );
+
+    const textarea = screen.getByPlaceholderText("자유롭게 작성해주세요...");
+    fireEvent.change(textarea, { target: { value: "이전 답변" } });
+
+    rerender(
+      <OpenEndedQuestion
+        key="question-10"
+        questionId={10}
+        text="질문 B"
+        onAnswer={vi.fn()}
+      />,
+    );
+
+    expect(
+      (screen.getByPlaceholderText("자유롭게 작성해주세요...") as HTMLTextAreaElement).value,
+    ).toBe("");
+  });
 });

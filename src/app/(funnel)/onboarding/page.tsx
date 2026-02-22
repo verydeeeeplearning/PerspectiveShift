@@ -15,6 +15,7 @@ const DYNAMIC_QUESTIONS_ENABLED =
   process.env.NEXT_PUBLIC_DYNAMIC_QUESTIONS === "true";
 
 const SEED_QUESTION_COUNT = 10;
+const THOUGHT_MAP_STORAGE_KEY = "ps-thought-map";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -47,6 +48,26 @@ export default function OnboardingPage() {
     setDemographic(info);
     setStep("questions");
   }, []);
+
+  const navigateToResult = useCallback(
+    (nextResult: ThoughtMapOutput) => {
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem(
+            THOUGHT_MAP_STORAGE_KEY,
+            JSON.stringify(nextResult),
+          );
+        } catch {
+          // Ignore storage failures and continue navigation.
+        }
+      }
+
+      router.push(
+        `/onboarding/result?data=${encodeURIComponent(JSON.stringify(nextResult))}`,
+      );
+    },
+    [router],
+  );
 
   const runCalculateStance = useCallback(
     async (answers: AnswerMap) => {
@@ -86,13 +107,11 @@ export default function OnboardingPage() {
 
   const handleSkipExtended = useCallback(() => {
     if (result) {
-      router.push(
-        `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
-      );
+      navigateToResult(result);
     } else if (lastAnswersRef.current) {
       runCalculateStance(lastAnswersRef.current);
     }
-  }, [result, router, runCalculateStance]);
+  }, [navigateToResult, result, runCalculateStance]);
 
   const handleRetry = useCallback(() => {
     if (lastAnswersRef.current) {
@@ -132,11 +151,9 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (result) {
-      router.push(
-        `/onboarding/result?data=${encodeURIComponent(JSON.stringify(result))}`,
-      );
+      navigateToResult(result);
     }
-  }, [result, router]);
+  }, [navigateToResult, result]);
 
   if (loading) {
     return (

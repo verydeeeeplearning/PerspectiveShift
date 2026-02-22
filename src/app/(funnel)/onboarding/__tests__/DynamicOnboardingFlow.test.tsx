@@ -176,4 +176,70 @@ describe("DynamicOnboardingFlow", () => {
       expect.any(Array),
     );
   });
+
+  it("preserves answered questions when precision changes", () => {
+    const tenSeeds: QuestionData[] = Array.from({ length: 10 }, (_, i) => ({
+      id: i + 1,
+      text: `질문${i + 1}`,
+      type: "OX" as const,
+      phase: "core" as const,
+      dimension: "TECH_REGULATION",
+      polarity: 1 as const,
+    }));
+    const tenMeta = tenSeeds.map((q) => ({
+      id: q.id as number,
+      text: q.text,
+      type: q.type as "OX",
+      dimension: "TECH_REGULATION",
+      polarity: 1 as const,
+    }));
+
+    render(
+      <DynamicOnboardingFlow
+        seedQuestions={tenSeeds}
+        seedMeta={tenMeta}
+        onComplete={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("라이트"));
+    fireEvent.click(screen.getByText("O"));
+    fireEvent.click(screen.getByText("O"));
+
+    expect(screen.getByText("질문3")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("[변경]"));
+    fireEvent.click(screen.getByText("표준 분석"));
+
+    expect(screen.getByText("질문3")).toBeInTheDocument();
+    expect(screen.getByText("2/20")).toBeInTheDocument();
+  });
+
+  it("continues with local fallback questions when retry is not possible", async () => {
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    renderFlow();
+    fireEvent.click(screen.getByText("표준 분석"));
+    fireEvent.click(screen.getByText("O"));
+    fireEvent.click(screen.getByText("X"));
+    fireEvent.click(screen.getByText("동의"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("기본 질문으로 계속하기"),
+      ).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("기본 질문으로 계속하기"));
+
+    await waitFor(() => {
+      expect(screen.getByText(/플랫폼 기업/)).toBeInTheDocument();
+    });
+
+    vi.unstubAllGlobals();
+  });
 });

@@ -48,12 +48,16 @@ export function ShareCard({ data, onShare }: ShareCardProps) {
     const typeUrl = `${window.location.origin}/types/${slug}`;
 
     if (typeof navigator.share === "function") {
-      await navigator.share({
-        title: `PerspectiveShift - ${data.mapType.alias}`,
-        text,
-        url: typeUrl,
-      });
-      return;
+      try {
+        await navigator.share({
+          title: `PerspectiveShift - ${data.mapType.alias}`,
+          text,
+          url: typeUrl,
+        });
+        return;
+      } catch {
+        // Fall back to clipboard when share sheet is dismissed or unavailable.
+      }
     }
 
     if (navigator.clipboard?.writeText) {

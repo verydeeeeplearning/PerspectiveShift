@@ -47,6 +47,7 @@ const STEP_EXAMPLES: Record<string, string[]> = {
 
 interface TurnSubmissionFormProps {
   currentStep: string;
+  topic?: string;
   onSubmit: (content: string) => Promise<void>;
   disabled?: boolean;
   onCoachOpen?: () => void;
@@ -54,6 +55,7 @@ interface TurnSubmissionFormProps {
 
 export function TurnSubmissionForm({
   currentStep,
+  topic,
   onSubmit,
   disabled = false,
   onCoachOpen,
@@ -62,7 +64,17 @@ export function TurnSubmissionForm({
   const [submitting, setSubmitting] = useState(false);
   const [exampleIdx, setExampleIdx] = useState(0);
   const [isCoachHighlighted, setIsCoachHighlighted] = useState(false);
-  const prompt = STEP_PROMPTS[currentStep] ?? STEP_PROMPTS.POSITION;
+  const topicLabel = topic?.trim() || "자유 주제";
+  const promptBase = STEP_PROMPTS[currentStep] ?? STEP_PROMPTS.POSITION;
+  const prompt =
+    currentStep === "POSITION"
+      ? {
+          ...promptBase,
+          placeholder:
+            `주제: ${topicLabel}\n\n` +
+            "이 주제에 대한 당신의 의견과 그 근거를 적어주세요... (최소 10자)",
+        }
+      : promptBase;
   const examples = STEP_EXAMPLES[currentStep] ?? STEP_EXAMPLES.POSITION;
   const inactive = useInactivityTimer(90_000);
 
@@ -86,6 +98,11 @@ export function TurnSubmissionForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <h3 className="font-medium text-lg">{prompt.title}</h3>
+      {currentStep === "POSITION" && (
+        <p className="text-xs text-blue-700">
+          현재 주제: <span className="font-semibold">{topicLabel}</span>
+        </p>
+      )}
 
       {/* Example carousel */}
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">

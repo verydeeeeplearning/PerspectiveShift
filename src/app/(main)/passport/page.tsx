@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PassportBadge } from "@/domain/value-objects/passport-badge";
+import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import { BadgeGrid } from "./_components/BadgeGrid";
 import { DiscoveryCardList } from "./_components/DiscoveryCardList";
 import {
@@ -37,13 +39,28 @@ const MOCK_SAVED_PERSONAS: SavedPersonaItem[] = [
 ];
 
 type Tab = "badges" | "discoveries" | "saved-persona";
+const THOUGHT_MAP_STORAGE_KEY = "ps-thought-map";
 
 export default function PassportPage() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("badges");
+  const [thoughtMap, setThoughtMap] = useState<ThoughtMapOutput | null>(null);
   const passport = MOCK_PASSPORT;
   const badges = PassportBadge.evaluateAll(passport.totalExploredCount);
   const savedPersonas = MOCK_SAVED_PERSONAS;
+
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem(THOUGHT_MAP_STORAGE_KEY);
+      if (!cached) {
+        setThoughtMap(null);
+        return;
+      }
+      setThoughtMap(JSON.parse(cached) as ThoughtMapOutput);
+    } catch {
+      setThoughtMap(null);
+    }
+  }, []);
 
   const handleResumePersona = (personaId: string) => {
     router.push(`/matching?mode=ai-practice&personaId=${personaId}`);
@@ -68,6 +85,36 @@ export default function PassportPage() {
           <p className="text-xs text-gray-400">누적 탐색</p>
         </div>
       </div>
+
+      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-4">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold text-gray-900">내 사고 지도</h2>
+          {thoughtMap && (
+            <Link
+              href="/onboarding/result"
+              className="text-xs font-medium text-blue-700 underline underline-offset-2"
+            >
+              자세히 보기
+            </Link>
+          )}
+        </div>
+        {thoughtMap ? (
+          <div className="mt-2 space-y-1">
+            <p className="text-sm font-medium text-gray-800">
+              {thoughtMap.mapType.emoji} {thoughtMap.mapType.alias}
+            </p>
+            <p className="text-xs text-gray-500">
+              {thoughtMap.precision === "refined"
+                ? "확장 질문 포함 정밀 프로필"
+                : "핵심 질문 기반 초기 프로필"}
+            </p>
+          </div>
+        ) : (
+          <p className="mt-2 text-xs text-gray-500">
+            아직 저장된 사고 지도가 없습니다. 온보딩을 완료하면 여기에 표시됩니다.
+          </p>
+        )}
+      </section>
 
       {/* Tabs */}
       <div className="mt-6 flex rounded-lg bg-gray-100 p-1">

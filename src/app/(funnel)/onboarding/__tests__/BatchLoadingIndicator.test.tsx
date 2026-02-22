@@ -78,4 +78,21 @@ describe("BatchLoadingIndicator", () => {
 
     expect(screen.queryByText("다시 시도")).not.toBeInTheDocument();
   });
+
+  it("renders fallback continue button and calls handler", () => {
+    const onContinueWithFallback = vi.fn();
+    render(
+      <BatchLoadingIndicator
+        batchIndex={1}
+        totalAnswered={15}
+        targetTotal={30}
+        error="서버 오류"
+        onContinueWithFallback={onContinueWithFallback}
+      />,
+    );
+
+    const fallbackButton = screen.getByText("기본 질문으로 계속하기");
+    fireEvent.click(fallbackButton);
+    expect(onContinueWithFallback).toHaveBeenCalledOnce();
+  });
 });

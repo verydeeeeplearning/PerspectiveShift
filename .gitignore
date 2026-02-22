@@ -62,3 +62,10 @@ test/e2e/.auth/
 screenshot-*.png
 respond_result.txt
 .next-dev-*.log
+
+# AI tool state
+.serena/
+
+# Temporary working directories
+.tmp-prodcheck/
+.tmp_*.html

@@ -60,8 +60,10 @@ describe("CreateAgentDialogueSessionUseCase", () => {
 
     expect(result.currentStep).toBe("POSITION");
     expect(result.status).toBe("ACTIVE");
+    expect(result.topic).toBe("자유 주제");
     expect(savedSessions[0]?.participantA).toBe("session-user");
     expect(savedSessions[0]?.participantB).toBe("agent:persona-1");
+    expect(savedSessions[0]?.topic).toBe("자유 주제");
     expect(savedSessions[0]?.id).toBe(result.id);
   });
 

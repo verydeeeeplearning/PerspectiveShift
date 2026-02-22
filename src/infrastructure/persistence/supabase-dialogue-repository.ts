@@ -9,6 +9,7 @@ interface SessionRow {
   id: string;
   participant_a: string;
   participant_b: string;
+  topic?: string | null;
   current_step: string;
   status: string;
   created_at: string;
@@ -35,6 +36,7 @@ export class SupabaseDialogueRepository implements DialogueRepository {
         id: session.id,
         participant_a: session.participantA,
         participant_b: session.participantB,
+        topic: session.topic || null,
         current_step: session.currentStep,
         status: session.status,
         created_at: session.createdAt.toISOString(),
@@ -72,6 +74,7 @@ export class SupabaseDialogueRepository implements DialogueRepository {
       id: row.id,
       participantA: row.participant_a,
       participantB: row.participant_b,
+      topic: row.topic ?? undefined,
       currentStep: row.current_step as DialogueStep,
       status: row.status as SessionStatus,
       turns,
@@ -97,6 +100,7 @@ export class SupabaseDialogueRepository implements DialogueRepository {
         id: row.id,
         participantA: row.participant_a,
         participantB: row.participant_b,
+        topic: row.topic ?? undefined,
         currentStep: row.current_step as DialogueStep,
         status: row.status as SessionStatus,
         turns: [],
@@ -149,6 +153,7 @@ export class SupabaseDialogueRepository implements DialogueRepository {
         id: row.id,
         participantA: row.participant_a,
         participantB: row.participant_b,
+        topic: row.topic ?? undefined,
         currentStep: row.current_step as DialogueStep,
         status: row.status as SessionStatus,
         turns: [],

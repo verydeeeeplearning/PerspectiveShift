@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       typeof body?.candidateType === "string" ? body.candidateType : null;
     const personaId =
       typeof body?.personaId === "string" ? body.personaId.trim() : "";
+    const topic = typeof body?.topic === "string" ? body.topic.trim() : null;
 
     if (candidateType !== "agent" && !personaId) {
       return NextResponse.json(
@@ -61,11 +62,20 @@ export async function POST(request: NextRequest) {
     }
 
     const container = getContainer();
+    const createInput: {
+      participantSessionId: string;
+      personaId: string;
+      topic?: string;
+    } = {
+      participantSessionId: sessionId,
+      personaId,
+    };
+    if (topic) {
+      createInput.topic = topic;
+    }
+
     const created =
-      await container.createAgentDialogueSessionUseCase.execute({
-        participantSessionId: sessionId,
-        personaId,
-      });
+      await container.createAgentDialogueSessionUseCase.execute(createInput);
 
     return NextResponse.json(created, { status: 201 });
   } catch (error) {

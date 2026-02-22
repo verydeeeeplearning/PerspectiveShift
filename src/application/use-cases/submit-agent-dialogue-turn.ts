@@ -7,8 +7,6 @@ import type { AgentTurnSubmissionResult } from "../dtos/dialogue-output";
 import { DialogueTurn } from "@/domain/entities/dialogue-turn";
 import { PersonaResponseDelay } from "@/domain/value-objects/persona-response-delay";
 
-const DEFAULT_TOPIC = "사회 정책과 가치관에 대한 구조화된 대화";
-
 export interface SubmitAgentDialogueTurnDeps {
   dialogueRepository: DialogueRepository;
   piiScrubber: PiiScrubber;
@@ -81,7 +79,7 @@ export class SubmitAgentDialogueTurnUseCase {
           persona,
           history,
           scrubbed.scrubbed,
-          DEFAULT_TOPIC,
+          session.topic || "자유 주제",
         ),
       ]);
 

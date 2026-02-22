@@ -59,7 +59,6 @@ export { SubmitMutualVerificationUseCase } from "./submit-mutual-verification";
 export { SubmitRoleplaySteelmanUseCase } from "./submit-roleplay-steelman";
 export { SaveCommonGroundUseCase } from "./save-common-ground";
 export { DetermineReflectionPolicyUseCase } from "./determine-reflection-policy";
-export { EvaluateJitaiRulesUseCase } from "./evaluate-jitai-rules";
 export { ApplyDownshiftUseCase } from "./apply-downshift";
 export { BuildJointSummaryCardUseCase } from "./build-joint-summary-card";
 export { WriteGiftMessageUseCase } from "./write-gift-message";

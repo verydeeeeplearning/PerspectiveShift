@@ -45,6 +45,23 @@ describe("DialogueSession", () => {
     expect(s.turns).toHaveLength(0);
   });
 
+  it("stores topic when provided", () => {
+    const now = new Date();
+    const s = DialogueSession.create({
+      id: "session-topic-1",
+      participantA: "alice",
+      participantB: "bob",
+      topic: "기본소득 정책",
+      currentStep: "POSITION",
+      status: "ACTIVE",
+      createdAt: now,
+      updatedAt: now,
+      lastActivityAt: now,
+    });
+
+    expect(s.topic).toBe("기본소득 정책");
+  });
+
   it("isParticipant identifies valid participants", () => {
     const s = makeSession();
     expect(s.isParticipant("alice")).toBe(true);

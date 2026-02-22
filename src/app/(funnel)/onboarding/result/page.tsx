@@ -1,48 +1,111 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ThoughtMapResult } from "../components/ThoughtMapResult";
 import type { ThoughtMapOutput } from "@/application/dtos/thought-map-output";
 import Link from "next/link";
 
+const THOUGHT_MAP_STORAGE_KEY = "ps-thought-map";
+
+function parseThoughtMap(raw: string): ThoughtMapOutput | null {
+  try {
+    return JSON.parse(raw) as ThoughtMapOutput;
+  } catch {
+    return null;
+  }
+}
+
 function ResultContent() {
   const searchParams = useSearchParams();
   const dataParam = searchParams.get("data");
+  const [data, setData] = useState<ThoughtMapOutput | null>(null);
+  const [loadedFromCache, setLoadedFromCache] = useState(false);
+  const [errorType, setErrorType] = useState<"missing" | "invalid" | null>(null);
 
-  if (!dataParam) {
+  useEffect(() => {
+    if (dataParam) {
+      let parsed: ThoughtMapOutput | null = null;
+      try {
+        parsed = parseThoughtMap(decodeURIComponent(dataParam));
+      } catch {
+        parsed = null;
+      }
+
+      if (!parsed) {
+        setData(null);
+        setErrorType("invalid");
+        setLoadedFromCache(false);
+        return;
+      }
+
+      setData(parsed);
+      setErrorType(null);
+      setLoadedFromCache(false);
+
+      try {
+        localStorage.setItem(THOUGHT_MAP_STORAGE_KEY, JSON.stringify(parsed));
+      } catch {
+        // Ignore storage failures and continue rendering.
+      }
+
+      return;
+    }
+
+    try {
+      const cached = localStorage.getItem(THOUGHT_MAP_STORAGE_KEY);
+      if (!cached) {
+        setData(null);
+        setErrorType("missing");
+        setLoadedFromCache(false);
+        return;
+      }
+
+      const parsed = parseThoughtMap(cached);
+      if (!parsed) {
+        setData(null);
+        setErrorType("invalid");
+        setLoadedFromCache(false);
+        return;
+      }
+
+      setData(parsed);
+      setErrorType(null);
+      setLoadedFromCache(true);
+    } catch {
+      setData(null);
+      setErrorType("missing");
+      setLoadedFromCache(false);
+    }
+  }, [dataParam]);
+
+  if (!data) {
     return (
       <div className="text-center">
-        <p className="text-gray-600">결과 데이터가 없습니다.</p>
+        <p className="text-gray-600">
+          {errorType === "invalid"
+            ? "결과를 불러올 수 없습니다."
+            : "결과 데이터가 없습니다."}
+        </p>
         <Link
           href="/onboarding"
           className="mt-4 inline-block rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
         >
-          온보딩 시작하기
-        </Link>
-      </div>
-    );
-  }
-
-  let data: ThoughtMapOutput;
-  try {
-    data = JSON.parse(decodeURIComponent(dataParam));
-  } catch {
-    return (
-      <div className="text-center">
-        <p className="text-gray-600">결과를 불러올 수 없습니다.</p>
-        <Link
-          href="/onboarding"
-          className="mt-4 inline-block rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
-        >
-          다시 시작하기
+          {errorType === "invalid" ? "다시 시작하기" : "온보딩 시작하기"}
         </Link>
       </div>
     );
   }
 
   return (
-    <ThoughtMapResult data={data} />
+    <div className="space-y-4">
+      {loadedFromCache && (
+        <p className="rounded-lg bg-blue-50 px-4 py-2 text-center text-xs text-blue-700">
+          최근 저장된 결과를 불러왔어요.
+        </p>
+      )}
+      <ThoughtMapResult data={data} />
+    </div>
   );
 }
 

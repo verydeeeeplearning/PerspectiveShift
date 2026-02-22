@@ -106,9 +106,19 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    console.error("[next-batch] Error:", error);
+    if (error instanceof Error) {
+      console.error("[next-batch] Failed to generate batch:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
+    } else {
+      console.error("[next-batch] Failed to generate batch:", error);
+    }
     return NextResponse.json(
-      { error: "Failed to generate next batch" },
+      {
+        error: "질문 생성 중 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+      },
       { status: 500 },
     );
   }

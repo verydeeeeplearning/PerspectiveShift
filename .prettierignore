@@ -5,3 +5,6 @@ build/
 dist/
 coverage/
 pnpm-lock.yaml
+.serena/
+.tmp-prodcheck/
+.tmp_*.html

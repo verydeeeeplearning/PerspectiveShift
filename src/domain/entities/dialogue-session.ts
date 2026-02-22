@@ -19,6 +19,7 @@ export interface DialogueSessionProps {
   id: string;
   participantA: string;
   participantB: string;
+  topic?: string;
   currentStep: DialogueStep;
   status: SessionStatus;
   turns: DialogueTurn[];
@@ -31,6 +32,7 @@ export class DialogueSession {
   readonly id: string;
   readonly participantA: string;
   readonly participantB: string;
+  readonly topic: string;
   private _currentStep: DialogueStep;
   private _status: SessionStatus;
   private _turns: DialogueTurn[];
@@ -42,6 +44,7 @@ export class DialogueSession {
     this.id = props.id;
     this.participantA = props.participantA;
     this.participantB = props.participantB;
+    this.topic = props.topic?.trim() ?? "";
     this._currentStep = props.currentStep;
     this._status = props.status;
     this._turns = [...props.turns];

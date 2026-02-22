@@ -74,7 +74,7 @@ export function MatchCardV3({
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <span className="text-[11px] font-semibold uppercase tracking-widest text-accent-primary">
-          TODAY&apos;S MATCH
+          입장 기반 추천
         </span>
         <span className="rounded-pill bg-accent-primary-soft px-2.5 py-0.5 text-[11px] font-medium text-text-secondary">
           🔒 익명

@@ -66,6 +66,11 @@ export function ThoughtMapResult({ data, onEvent }: ThoughtMapResultProps) {
     });
   }, [data.percentiles, data.precision]);
 
+  const actionableRecommendations = useMemo(
+    () => recommendations.filter((recommendation) => recommendation.type !== "share_card"),
+    [recommendations],
+  );
+
   const handleRecommendationClick = (type: RecommendationType) => {
     if (type === "precision_upsell") {
       emitEvent("thought_map_precision_upsell");
@@ -116,77 +121,73 @@ export function ThoughtMapResult({ data, onEvent }: ThoughtMapResultProps) {
         대화 상대 찾기
       </Link>
 
-      <details
-        open={isRecommendationOpen}
-        onToggle={(event) =>
-          setIsRecommendationOpen((event.currentTarget as HTMLDetailsElement).open)
-        }
-        className="rounded-xl border border-gray-200 bg-white p-4"
-      >
-        <summary className="cursor-pointer text-sm font-semibold text-gray-800">
-          상황 기반 추천 보기
-        </summary>
-        <div className="mt-3 space-y-2">
-          {recommendations.map((recommendation) => {
-            if (recommendation.type === "share_card") {
-              return (
-                <div key={recommendation.type}>
-                  <p className="mb-2 text-sm font-medium text-gray-700">
+      <section className="rounded-xl border border-gray-200 bg-white p-4">
+        <h2 className="mb-3 text-sm font-semibold text-gray-800">나의 입장 카드</h2>
+        <ShareCard
+          data={data}
+          onShare={() => emitEvent("thought_map_share_click")}
+        />
+      </section>
+
+      {actionableRecommendations.length > 0 && (
+        <details
+          open={isRecommendationOpen}
+          onToggle={(event) =>
+            setIsRecommendationOpen((event.currentTarget as HTMLDetailsElement).open)
+          }
+          className="rounded-xl border border-gray-200 bg-white p-4"
+        >
+          <summary className="cursor-pointer text-sm font-semibold text-gray-800">
+            상황 기반 추천 보기
+          </summary>
+          <div className="mt-3 space-y-2">
+            {actionableRecommendations.map((recommendation) => {
+              if (recommendation.type === "precision_upsell") {
+                return (
+                  <Link
+                    key={recommendation.type}
+                    href="/onboarding"
+                    onClick={() => handleRecommendationClick(recommendation.type)}
+                    className="block rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                  >
                     {RECOMMENDATION_LABELS[recommendation.type]}
-                  </p>
-                  <ShareCard
-                    data={data}
-                    onShare={() => emitEvent("thought_map_share_click")}
-                  />
-                </div>
-              );
-            }
+                  </Link>
+                );
+              }
 
-            if (recommendation.type === "precision_upsell") {
+              if (recommendation.type === "ai_practice") {
+                return (
+                  <Link
+                    key={recommendation.type}
+                    href="/matching?mode=ai-practice"
+                    onClick={() => handleRecommendationClick(recommendation.type)}
+                    className="block rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    {RECOMMENDATION_LABELS[recommendation.type]}
+                  </Link>
+                );
+              }
+
               return (
-                <Link
+                <button
                   key={recommendation.type}
-                  href="/onboarding"
+                  type="button"
                   onClick={() => handleRecommendationClick(recommendation.type)}
-                  className="block rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   {RECOMMENDATION_LABELS[recommendation.type]}
-                </Link>
+                </button>
               );
-            }
+            })}
 
-            if (recommendation.type === "ai_practice") {
-              return (
-                <Link
-                  key={recommendation.type}
-                  href="/matching?mode=ai-practice"
-                  onClick={() => handleRecommendationClick(recommendation.type)}
-                  className="block rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                >
-                  {RECOMMENDATION_LABELS[recommendation.type]}
-                </Link>
-              );
-            }
-
-            return (
-              <button
-                key={recommendation.type}
-                type="button"
-                onClick={() => handleRecommendationClick(recommendation.type)}
-                className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                {RECOMMENDATION_LABELS[recommendation.type]}
-              </button>
-            );
-          })}
-
-          {isMisperceptionHintOpen && (
-            <p className="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
-              오해 교정 카드는 다음 단계에서 상대 예측과 실제 분포의 간극을 보여줍니다.
-            </p>
-          )}
-        </div>
-      </details>
+            {isMisperceptionHintOpen && (
+              <p className="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
+                오해 교정 카드는 다음 단계에서 상대 예측과 실제 분포의 간극을 보여줍니다.
+              </p>
+            )}
+          </div>
+        </details>
+      )}
     </div>
   );
 }

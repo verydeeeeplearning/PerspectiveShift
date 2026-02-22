@@ -50,6 +50,7 @@ describe("POST /api/dialogue/sessions", () => {
   it("creates agent session and returns 201", async () => {
     mockExecute.mockResolvedValue({
       id: "dialogue-1",
+      topic: "AI 기술 규제",
       currentStep: "POSITION",
       status: "ACTIVE",
       personaId: "persona-1",
@@ -57,7 +58,11 @@ describe("POST /api/dialogue/sessions", () => {
 
     const res = await POST(
       makeRequest(
-        { candidateType: "agent", personaId: "persona-1" },
+        {
+          candidateType: "agent",
+          personaId: "persona-1",
+          topic: "AI 기술 규제",
+        },
         { "x-session-id": "session-1" },
       ),
     );
@@ -66,10 +71,12 @@ describe("POST /api/dialogue/sessions", () => {
     expect(mockExecute).toHaveBeenCalledWith({
       participantSessionId: "session-1",
       personaId: "persona-1",
+      topic: "AI 기술 규제",
     });
     const body = await res.json();
     expect(body).toEqual({
       id: "dialogue-1",
+      topic: "AI 기술 규제",
       currentStep: "POSITION",
       status: "ACTIVE",
       personaId: "persona-1",

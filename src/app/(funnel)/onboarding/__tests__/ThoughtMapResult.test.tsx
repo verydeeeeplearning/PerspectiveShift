@@ -97,6 +97,8 @@ describe("ThoughtMapResult", () => {
     expect(
       screen.getByRole("link", { name: "대화 상대 찾기" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("나의 입장 카드")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "공유하기" })).toBeInTheDocument();
     expect(
       screen.getByText("상황 기반 추천 보기"),
     ).toBeInTheDocument();

@@ -22,6 +22,7 @@ export class GetDialogueSessionUseCase {
 
     return {
       id: session.id,
+      topic: session.topic || "자유 주제",
       currentStep: session.currentStep,
       status: session.status,
       mySubmitted: session.hasSubmitted(
@@ -56,6 +57,7 @@ export class GetDialogueSessionUseCase {
 
     return sessions.map((session) => ({
       id: session.id,
+      topic: session.topic || "자유 주제",
       currentStep: session.currentStep,
       status: session.status,
       mySubmitted: session.hasSubmitted(

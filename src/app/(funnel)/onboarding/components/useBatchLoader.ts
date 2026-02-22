@@ -30,7 +30,6 @@ export interface BatchResponse {
 
 interface UseBatchLoaderParams {
   seedMeta: SeedQuestionMeta[];
-  seedCount: number;
   targetTotal: number;
   answers: AnswerMap;
   allQuestions: QuestionData[];
@@ -39,7 +38,6 @@ interface UseBatchLoaderParams {
 
 export function useBatchLoader({
   seedMeta,
-  seedCount,
   targetTotal,
   answers,
   allQuestions,
@@ -88,7 +86,24 @@ export function useBatchLoader({
       });
 
       if (!response.ok) {
-        throw new Error(`Batch generation failed: ${response.status}`);
+        let message = `Batch generation failed: ${response.status}`;
+        try {
+          const body = await response.json() as {
+            error?: string;
+            details?: string;
+          };
+          if (typeof body.error === "string" && body.error.length > 0) {
+            message = body.error;
+          } else if (
+            typeof body.details === "string" &&
+            body.details.length > 0
+          ) {
+            message = body.details;
+          }
+        } catch {
+          // Ignore JSON parse failures and keep status-based message.
+        }
+        throw new Error(message);
       }
 
       return response.json();

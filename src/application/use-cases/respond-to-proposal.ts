@@ -61,6 +61,7 @@ export class RespondToProposalUseCase {
         id: crypto.randomUUID(),
         participantA: proposal.initiatorSessionId,
         participantB: proposal.targetSessionId,
+        topic: "자유 주제",
         currentStep: "POSITION",
         status: "ACTIVE",
         createdAt: now,

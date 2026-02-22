@@ -85,6 +85,11 @@ export default function DialogueDetailPage() {
     <main className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
         <StepIndicator currentStep={session.currentStep} />
+        <div className="mt-3">
+          <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+            주제: {session.topic || "자유 주제"}
+          </span>
+        </div>
       </div>
 
       {session.status === "COMPLETED" && (
@@ -137,6 +142,7 @@ export default function DialogueDetailPage() {
       {showForm && (
         <TurnSubmissionForm
           currentStep={session.currentStep}
+          topic={session.topic}
           onSubmit={handleSubmit}
         />
       )}

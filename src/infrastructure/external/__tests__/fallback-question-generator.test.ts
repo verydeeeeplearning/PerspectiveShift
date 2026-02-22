@@ -83,4 +83,18 @@ describe("FallbackQuestionGenerator", () => {
     expect(result.questions.length).toBeGreaterThan(0);
     expect(result.questions.length).toBeLessThanOrEqual(5);
   });
+
+  it("returns fallback questions when exclude list exhausts the pool", async () => {
+    const gen = new FallbackQuestionGenerator();
+    const result = await gen.generate({
+      previousAnswers: [],
+      targetDimensions: [],
+      excludeQuestionIds: Array.from({ length: 500 }, (_, i) => String(i + 1)),
+      batchSize: 5,
+      batchIndex: 0,
+    });
+
+    expect(result.questions.length).toBeGreaterThanOrEqual(1);
+    expect(result.questions.length).toBeLessThanOrEqual(5);
+  });
 });

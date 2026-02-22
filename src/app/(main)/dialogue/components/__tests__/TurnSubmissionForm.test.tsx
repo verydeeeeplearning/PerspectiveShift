@@ -31,4 +31,18 @@ describe("TurnSubmissionForm", () => {
 
     expect(screen.getByText("Coach")).toBeInTheDocument();
   });
+
+  it("shows topic context in POSITION step", () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    render(
+      <TurnSubmissionForm
+        currentStep="POSITION"
+        topic="AI 규제 정책"
+        onSubmit={onSubmit}
+      />,
+    );
+
+    expect(screen.getByText("현재 주제:")).toBeInTheDocument();
+    expect(screen.getByText("AI 규제 정책")).toBeInTheDocument();
+  });
 });

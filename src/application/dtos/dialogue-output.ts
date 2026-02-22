@@ -9,6 +9,7 @@ export interface DialogueTurnOutput {
 
 export interface DialogueSessionOutput {
   id: string;
+  topic: string;
   currentStep: string;
   status: string;
   mySubmitted: boolean;
