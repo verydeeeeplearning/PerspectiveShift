@@ -44,7 +44,9 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
     if (result3) return result3;
 
     console.error(`[PersonaGenerator] All 3 attempts failed for ${persona.name}`);
-    return `그 부분에 대해 저도 생각이 있는데요, 좀 더 자세히 말씀해주시겠어요?`;
+    // Topic-aware fallback using persona's experience
+    const experience = persona.experienceBank[0] ?? persona.description;
+    return `${topic}에 대해 생각해보면, ${experience} 이 부분에서 좀 더 이야기를 나눠보고 싶어요.`;
   }
 
   private async callApi(

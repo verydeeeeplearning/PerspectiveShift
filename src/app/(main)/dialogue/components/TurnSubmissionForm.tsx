@@ -98,11 +98,6 @@ export function TurnSubmissionForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <h3 className="font-medium text-lg">{prompt.title}</h3>
-      {currentStep === "POSITION" && (
-        <p className="text-xs text-blue-700">
-          현재 주제: <span className="font-semibold">{topicLabel}</span>
-        </p>
-      )}
 
       {/* Example carousel */}
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
