@@ -27,14 +27,14 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
       { role: "user", content: personaUserPrompt(conversationHistory, userMessage) },
     ];
 
-    // Attempt 1: Full prompt
-    const result1 = await this.callApi(messages, 1024);
+    // Attempt 1: Full prompt (reasoning model needs extra tokens for thinking)
+    const result1 = await this.callApi(messages, 4096);
     if (result1) return result1;
 
     // Attempt 2: Retry full prompt after delay
     await delay(2000);
     console.warn(`[PersonaGenerator] Attempt 1 failed for ${persona.name}, retrying full prompt...`);
-    const result2 = await this.callApi(messages, 1024);
+    const result2 = await this.callApi(messages, 4096);
     if (result2) return result2;
 
     // Attempt 3: Simplified prompt after delay
@@ -100,7 +100,7 @@ export class OpenAiPersonaGenerator implements PersonaDialogueGenerator {
           content: `"${userMessage}" — ${topic} 맥락에서 나의 경험과 입장으로 답하세요.`,
         },
       ],
-      512,
+      2048,
     );
   }
 }
